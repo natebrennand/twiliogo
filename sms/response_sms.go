@@ -43,7 +43,6 @@ type SmsResponse struct {
 }
 
 func Unmarshal(data []byte, msg *SmsResponse) error {
-
 	var msgJson SmsResponseJson
 	err := json.Unmarshal(data, &msgJson)
 	if err != nil {
@@ -68,12 +67,11 @@ func Unmarshal(data []byte, msg *SmsResponse) error {
 		return errors.New(fmt.Sprintf("Error while parsing date_created => %s", err.Error()))
 	}
 
-	if msgJson.JsonDateSent != "" {
+	if msgJson.JsonDateSent != "" { // date sent is not always instantiated
 		msg.DateSent, err = time.Parse(twilioTimeFormat, msgJson.JsonDateSent)
 		if err != nil {
 			return errors.New(fmt.Sprintf("Error while parsing date_sent => %s", err.Error()))
 		}
 	}
-
 	return nil
 }
