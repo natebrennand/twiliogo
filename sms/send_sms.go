@@ -10,6 +10,11 @@ import (
 	"net/http"
 )
 
+type SmsAccount struct {
+	AccountSid string
+	Token      string
+}
+
 // Represents the data used in creating an outbound sms message.
 // "From" & "To" are required attributes.
 // Either a Body or a MediaUrl must also be provided.
@@ -22,6 +27,16 @@ type Post struct {
 	MediaUrl       string
 	StatusCallback string
 	ApplicationSid string
+}
+
+func validateSmsPost(p Post) error {
+	if p.From == "" || p.To == "" {
+		return errors.New("Both \"From\" and \"To\" must be set in Post.")
+	}
+	if p.Body == "" && p.MediaUrl == "" {
+		return errors.New("Either \"Body\" or \"MediaUrl\" must be set.")
+	}
+	return nil
 }
 
 // Represents the callback sent everytime the status of the message is updated.
@@ -54,7 +69,12 @@ func sendSms(url string, msg io.Reader, resp *Response) error {
 }
 
 // Sends a post request to Twilio to send a sms request.
-func Send(p Post) (Response, error) {
+func (act SmsAccount) Send(p Post) (Response, error) {
+	err := validateSmsPost(p)
+	if err != nil {
+		return Response{}, errors.New(fmt.Sprintf("Error validating sms post => %s.\n", err.Error()))
+	}
+
 	// marshal json string
 	body, err := json.Marshal(p)
 	if err != nil {
@@ -63,7 +83,7 @@ func Send(p Post) (Response, error) {
 
 	var r Response
 	jReader := bytes.NewBuffer(body)
-	err = sendSms(postUrl, jReader, &r)
+	err = sendSms(fmt.Sprintf(postUrl, act.AccountSid), jReader, &r)
 
 	return r, nil
 }

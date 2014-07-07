@@ -2,6 +2,7 @@ package twiliogo
 
 import (
 	"fmt"
+	"github.com/natebrennand/twiliogo/sms"
 	"os"
 	"regexp"
 	"strings"
@@ -15,6 +16,7 @@ const (
 type Account struct {
 	AccountSid string
 	Token      string
+	Sms        sms.SmsAccount // redundancy for usability
 }
 
 func NewAccount(sid, token string) Account {
@@ -28,6 +30,7 @@ func NewAccount(sid, token string) Account {
 	return Account{
 		AccountSid: sid,
 		Token:      token,
+		Sms:        sms.SmsAccount{sid, token},
 	}
 }
 

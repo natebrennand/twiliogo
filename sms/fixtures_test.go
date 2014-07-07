@@ -1,5 +1,10 @@
 package sms
 
+var (
+	testNumber1                      = "+15558675309"
+	testNumber2                      = "+14158141829"
+	testSmsResponseFixtureAccountSid = "AC5ef8732a3c49700934481addd5ce1659"
+)
 var testSmsPostFixture = `{
 	"body":"Jenny please?! I love you <3",
 	"to":"+15558675309",
@@ -7,9 +12,7 @@ var testSmsPostFixture = `{
 	"media_url":"http://www.example.com/hearts.png"
 }`
 
-var testSmsResponseFixtureAccountSid = "AC5ef8732a3c49700934481addd5ce1659"
-var testSmsResponseFixture = `
-{
+var testSmsResponseFixture = `{
 	"account_sid": "AC5ef8732a3c49700934481addd5ce1659",
 	"api_version": "2010-04-01",
 	"body": "Jenny please?! I love you <3",
