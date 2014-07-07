@@ -53,6 +53,7 @@ func sendSms(url string, msg io.Reader, resp *Response) error {
 	return nil
 }
 
+// Sends a post request to Twilio to send a sms request.
 func Send(p Post) (Response, error) {
 	// marshal json string
 	body, err := json.Marshal(p)

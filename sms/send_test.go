@@ -18,10 +18,11 @@ func TestSendSms(t *testing.T) {
 	}))
 	defer testPostServer.Close()
 
-	var r *Response
+	var r Response
 	jReader := bytes.NewBuffer([]byte(testSmsPostFixture))
-	err := sendSms(testPostServer.URL, jReader, r)
+	err := sendSms(testPostServer.URL, jReader, &r)
 	if err != nil {
 		t.Errorf("Error while sending post request => %s", err.Error())
 	}
+	fmt.Printf("%#v\n", r)
 }

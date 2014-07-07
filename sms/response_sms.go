@@ -40,6 +40,7 @@ type Response struct {
 	DateSent    time.Time
 }
 
+// Unmarshals a twilio sms response into a Response struct.
 func Unmarshal(data []byte, msg *Response) error {
 	var msgJson SmsResponseJson
 	err := json.Unmarshal(data, &msgJson)
@@ -47,49 +48,48 @@ func Unmarshal(data []byte, msg *Response) error {
 		return errors.New(fmt.Sprintf("Error while decoding json => %s", err.Error()))
 	}
 
-	// copy in sms core to struct
-	msg.responseCore = msgJson.responseCore
+	var (
+		numSegments, numMedia int
+		price                 float64
+		dateCreated, dateSent time.Time
+	)
 
-	msg.NumSegments, err = strconv.Atoi(msgJson.JsonNumSegments)
+	numSegments, err = strconv.Atoi(msgJson.JsonNumSegments)
 	if err != nil {
 		return errors.New(fmt.Sprintf("Error while converting num_segments to an integer => %s", err.Error()))
 	}
 
-	msg.NumMedia, err = strconv.Atoi(msgJson.JsonNumMedia)
+	numMedia, err = strconv.Atoi(msgJson.JsonNumMedia)
 	if err != nil {
 		return errors.New(fmt.Sprintf("Error while converting num_media to an integer => %s", err.Error()))
 	}
 
 	if msgJson.JsonPrice != "" {
-		msg.Price, err = strconv.ParseFloat(msgJson.JsonPrice, 64)
+		price, err = strconv.ParseFloat(msgJson.JsonPrice, 64)
 		if err != nil {
 			return errors.New(fmt.Sprintf("Error while parsing price => %s", err.Error()))
 		}
 	}
 
-	msg.DateCreated, err = time.Parse(twilioTimeFormat, msgJson.JsonDateCreated)
+	dateCreated, err = time.Parse(twilioTimeFormat, msgJson.JsonDateCreated)
 	if err != nil {
 		return errors.New(fmt.Sprintf("Error while parsing date_created => %s", err.Error()))
 	}
 
 	if msgJson.JsonDateSent != "" { // date sent is not always instantiated
-		msg.DateSent, err = time.Parse(twilioTimeFormat, msgJson.JsonDateSent)
+		dateSent, err = time.Parse(twilioTimeFormat, msgJson.JsonDateSent)
 		if err != nil {
 			return errors.New(fmt.Sprintf("Error while parsing date_sent => %s", err.Error()))
 		}
 	}
 
-	/*
-		newMsg := Response{
-			responseCore: msgJson.responseCore,
-			NumSegments:  msg.NumSegments,
-			NumMedia:     msg.NumMedia,
-			Price:        msg.Price,
-			DateCreated:  msg.DateCreated,
-			DateSent:     msg.DateSent,
-		}
-		msg = &newMsg
-	*/
-
+	*msg = Response{
+		responseCore: msgJson.responseCore,
+		NumSegments:  numSegments,
+		NumMedia:     numMedia,
+		Price:        price,
+		DateCreated:  dateCreated,
+		DateSent:     dateSent,
+	}
 	return nil
 }
