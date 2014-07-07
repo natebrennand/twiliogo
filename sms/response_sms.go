@@ -8,9 +8,7 @@ import (
 	"time"
 )
 
-const twilioTimeFormat = time.RFC1123Z
-
-type SmsResponseCore struct {
+type responseCore struct {
 	AccountSid   string `json:"account_sid"`
 	ApiVersion   string `json:"api_version"`
 	Body         string `json:"body"`
@@ -25,7 +23,7 @@ type SmsResponseCore struct {
 }
 
 type SmsResponseJson struct {
-	SmsResponseCore
+	responseCore
 	JsonNumSegments string `json:"num_segments"`
 	JsonNumMedia    string `json:"num_media"`
 	JsonDateCreated string `json:"date_created"`
@@ -33,16 +31,16 @@ type SmsResponseJson struct {
 	JsonPrice       string `json:"price"`
 }
 
-type SmsResponse struct {
-	SmsResponseCore
+type Response struct {
+	responseCore
 	NumSegments int
 	NumMedia    int
-	Price       float32
+	Price       float64
 	DateCreated time.Time
 	DateSent    time.Time
 }
 
-func Unmarshal(data []byte, msg *SmsResponse) error {
+func Unmarshal(data []byte, msg *Response) error {
 	var msgJson SmsResponseJson
 	err := json.Unmarshal(data, &msgJson)
 	if err != nil {
@@ -50,7 +48,7 @@ func Unmarshal(data []byte, msg *SmsResponse) error {
 	}
 
 	// copy in sms core to struct
-	msg.SmsResponseCore = msgJson.SmsResponseCore
+	msg.responseCore = msgJson.responseCore
 
 	msg.NumSegments, err = strconv.Atoi(msgJson.JsonNumSegments)
 	if err != nil {
@@ -60,6 +58,13 @@ func Unmarshal(data []byte, msg *SmsResponse) error {
 	msg.NumMedia, err = strconv.Atoi(msgJson.JsonNumMedia)
 	if err != nil {
 		return errors.New(fmt.Sprintf("Error while converting num_media to an integer => %s", err.Error()))
+	}
+
+	if msgJson.JsonPrice != "" {
+		msg.Price, err = strconv.ParseFloat(msgJson.JsonPrice, 64)
+		if err != nil {
+			return errors.New(fmt.Sprintf("Error while parsing price => %s", err.Error()))
+		}
 	}
 
 	msg.DateCreated, err = time.Parse(twilioTimeFormat, msgJson.JsonDateCreated)
