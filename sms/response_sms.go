@@ -4,26 +4,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/natebrennand/twiliogo/common"
 	"strconv"
 	"time"
 )
 
-type responseCore struct {
-	AccountSid   string `json:"account_sid"`
-	ApiVersion   string `json:"api_version"`
-	Body         string `json:"body"`
-	Direction    string `json:"direction"`
-	ErrorCode    string `json:"error_code"`
-	ErrorMessage string `json:"error_message"`
-	From         string `json:"from"`
-	Sid          string `json:"sid"`
-	Status       string `json:"status"`
-	To           string `json:"to"`
-	Uri          string `json:"uri"`
-}
-
 type SmsResponseJson struct {
-	responseCore
+	common.ResponseCore
 	JsonNumSegments string `json:"num_segments"`
 	JsonNumMedia    string `json:"num_media"`
 	JsonDateCreated string `json:"date_created"`
@@ -32,7 +19,7 @@ type SmsResponseJson struct {
 }
 
 type Response struct {
-	responseCore
+	common.ResponseCore
 	NumSegments int
 	NumMedia    int
 	Price       float64
@@ -84,7 +71,7 @@ func Unmarshal(data []byte, msg *Response) error {
 	}
 
 	*msg = Response{
-		responseCore: msgJson.responseCore,
+		ResponseCore: msgJson.ResponseCore,
 		NumSegments:  numSegments,
 		NumMedia:     numMedia,
 		Price:        price,
