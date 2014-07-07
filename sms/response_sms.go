@@ -78,5 +78,18 @@ func Unmarshal(data []byte, msg *Response) error {
 			return errors.New(fmt.Sprintf("Error while parsing date_sent => %s", err.Error()))
 		}
 	}
+
+	/*
+		newMsg := Response{
+			responseCore: msgJson.responseCore,
+			NumSegments:  msg.NumSegments,
+			NumMedia:     msg.NumMedia,
+			Price:        msg.Price,
+			DateCreated:  msg.DateCreated,
+			DateSent:     msg.DateSent,
+		}
+		msg = &newMsg
+	*/
+
 	return nil
 }
