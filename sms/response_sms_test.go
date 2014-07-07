@@ -25,7 +25,7 @@ func TestJsonEncode(t *testing.T) {
 		t.Errorf("Unmarshal improperly converted strings to numbers")
 	}
 
-	if msg.AccountSid != "AC5ef8732a3c49700934481addd5ce1659" {
+	if msg.AccountSid != testSmsResponseFixtureAccountSid {
 		t.Errorf("Improperly parsed AccountSid")
 	}
 }

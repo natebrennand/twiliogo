@@ -13,7 +13,10 @@ const (
 )
 
 func TestSendSms(t *testing.T) {
+	// start a server to recieve post request
+	serverRequested := false
 	testPostServer := httptest.NewServer(http.HandlerFunc(func(resp http.ResponseWriter, r *http.Request) {
+		serverRequested = true
 		fmt.Fprint(resp, testSmsResponseFixture)
 	}))
 	defer testPostServer.Close()
@@ -24,5 +27,10 @@ func TestSendSms(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error while sending post request => %s", err.Error())
 	}
-	fmt.Printf("%#v\n", r)
+	if serverRequested != true {
+		t.Error("Server never recieved a request.")
+	}
+	if r.AccountSid != testSmsResponseFixtureAccountSid {
+		t.Error("Unmarshal failed to properly parse the response.")
+	}
 }

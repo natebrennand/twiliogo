@@ -7,6 +7,7 @@ var testSmsPostFixture = `{
 	"media_url":"http://www.example.com/hearts.png"
 }`
 
+var testSmsResponseFixtureAccountSid = "AC5ef8732a3c49700934481addd5ce1659"
 var testSmsResponseFixture = `
 {
 	"account_sid": "AC5ef8732a3c49700934481addd5ce1659",
