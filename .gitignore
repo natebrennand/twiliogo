@@ -1,1 +1,6 @@
 .DS_Store
+# example binaries
+main
+
+# credentials
+secrets.sh
