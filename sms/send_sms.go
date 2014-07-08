@@ -1,13 +1,12 @@
 package sms
 
 import (
-	"bytes"
-	"encoding/json"
 	"errors"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"net/http"
+	"net/url"
+	"strings"
 )
 
 type SmsAccount struct {
@@ -48,11 +47,23 @@ type Callback struct {
 }
 
 // Internal function for sending the post request to twilio.
-func sendSms(url string, msg io.Reader, resp *Response) error {
+func (act SmsAccount) sendSms(destUrl string, msg Post, resp *Response) error {
 	// send post request to twilio
-	c := &http.Client{}
-	twilioResp, err := c.Post(url, "application/json", msg)
-	if twilioResp.StatusCode != 200 {
+	c := http.Client{}
+	v := url.Values{}
+	v.Set("To", msg.To)
+	v.Set("From", msg.From)
+	v.Set("Body", msg.Body)
+	v.Set("MediaUrl", msg.MediaUrl)
+	v.Set("StatusCallback", msg.StatusCallback)
+	v.Set("ApplicationSid", msg.ApplicationSid)
+	req, err := http.NewRequest("POST", destUrl, strings.NewReader(v.Encode()))
+	req.SetBasicAuth(act.AccountSid, act.Token)
+	req.Header.Add("Accept", "application/json")
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	twilioResp, err := c.Do(req)
+
+	if twilioResp.StatusCode != 201 {
 		return errors.New(fmt.Sprintf("Error recieved from Twilio => %s", twilioResp.Status))
 	}
 
@@ -76,14 +87,12 @@ func (act SmsAccount) Send(p Post) (Response, error) {
 	}
 
 	// marshal json string
-	body, err := json.Marshal(p)
 	if err != nil {
 		return Response{}, errors.New(fmt.Sprintf("Error encoding json => %s", err.Error()))
 	}
 
 	var r Response
-	jReader := bytes.NewBuffer(body)
-	err = sendSms(fmt.Sprintf(postUrl, act.AccountSid), jReader, &r)
+	err = act.sendSms(fmt.Sprintf(postUrl, act.AccountSid), p, &r)
 
-	return r, nil
+	return r, err
 }

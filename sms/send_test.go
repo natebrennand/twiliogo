@@ -1,7 +1,6 @@
 package sms
 
 import (
-	"bytes"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -49,6 +48,7 @@ func startMockHttpServer(requests *int) *httptest.Server {
 	testServer := httptest.NewServer(http.HandlerFunc(func(resp http.ResponseWriter, r *http.Request) {
 		*requests += 1
 		if strings.Contains(r.URL.Path, validEndpoint) {
+			resp.WriteHeader(201)
 			fmt.Fprint(resp, testSmsResponseFixtureString)
 		} else if strings.Contains(r.URL.Path, errorEndpoint) {
 			resp.WriteHeader(400)
@@ -60,14 +60,15 @@ func startMockHttpServer(requests *int) *httptest.Server {
 }
 
 func TestSendSmsSuccess(t *testing.T) {
+	act := SmsAccount{"act", "token"}
+
 	// start a server to recieve post request
 	numRequests := 0
 	testPostServer := startMockHttpServer(&numRequests)
 	defer testPostServer.Close()
 
 	var r Response
-	jReader := bytes.NewBuffer([]byte(testSmsPostFixture))
-	err := sendSms(testPostServer.URL+validEndpoint, jReader, &r)
+	err := act.sendSms(testPostServer.URL+validEndpoint, testSmsPostFixture, &r)
 	if err != nil {
 		t.Errorf("Error while sending post request => %s", err.Error())
 	}
@@ -80,14 +81,15 @@ func TestSendSmsSuccess(t *testing.T) {
 }
 
 func TestSendSmsFailure(t *testing.T) {
+	act := SmsAccount{"act", "token"}
+
 	// start a server to recieve post request
 	numRequests := 0
 	testPostServer := startMockHttpServer(&numRequests)
 	defer testPostServer.Close()
 
 	var r Response
-	jReader := bytes.NewBuffer([]byte(testSmsPostFixture))
-	err := sendSms(testPostServer.URL+errorEndpoint, jReader, &r)
+	err := act.sendSms(testPostServer.URL+errorEndpoint, testSmsPostFixture, &r)
 	if err == nil {
 		t.Errorf("post should've failed with 400")
 	}
@@ -95,8 +97,7 @@ func TestSendSmsFailure(t *testing.T) {
 		t.Error("server never recieved a request.")
 	}
 
-	jReader = bytes.NewBuffer([]byte(testSmsPostFixture))
-	err = sendSms(testPostServer.URL+badJsonEndpoint, jReader, &r)
+	err = act.sendSms(testPostServer.URL+badJsonEndpoint, testSmsPostFixture, &r)
 	if err == nil {
 		t.Errorf("post should've failed with 400")
 	}
