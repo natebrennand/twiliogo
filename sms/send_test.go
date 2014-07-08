@@ -49,11 +49,11 @@ func startMockHttpServer(requests *int) *httptest.Server {
 	testServer := httptest.NewServer(http.HandlerFunc(func(resp http.ResponseWriter, r *http.Request) {
 		*requests += 1
 		if strings.Contains(r.URL.Path, validEndpoint) {
-			fmt.Fprint(resp, testSmsResponseFixture)
+			fmt.Fprint(resp, testSmsResponseFixtureString)
 		} else if strings.Contains(r.URL.Path, errorEndpoint) {
 			resp.WriteHeader(400)
 		} else if strings.Contains(r.URL.Path, badJsonEndpoint) {
-			fmt.Fprint(resp, testSmsResponseFixture[0:20])
+			fmt.Fprint(resp, testSmsResponseFixtureString[0:20])
 		}
 	}))
 	return testServer
