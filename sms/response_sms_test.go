@@ -1,18 +1,19 @@
 package sms
 
 import (
+	"github.com/natebrennand/twiliogo/common"
 	"testing"
 	"time"
 )
 
-func TestJsonEncode(t *testing.T) {
+func TestJsonEncodeSuccessful(t *testing.T) {
 	var msg Response
-	err := Unmarshal([]byte(testSmsResponseFixture), &msg)
+	err := Unmarshal([]byte(testSmsResponseFixtureString), &msg)
 	if err != nil {
 		t.Errorf("Json failed to marshal with error => %s\n", err.Error())
 	}
 
-	if msg.DateSent != (time.Time{}) {
+	if msg.DateSent != (common.JsonTime{time.Time{}}) {
 		t.Errorf("Unmarshal tried to assign a time to DateSent")
 	}
 
