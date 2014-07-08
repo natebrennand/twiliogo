@@ -1,6 +1,7 @@
 package sms
 
 import (
+	"encoding/json"
 	"github.com/natebrennand/twiliogo/common"
 	"testing"
 	"time"
@@ -8,7 +9,7 @@ import (
 
 func TestJsonEncodeSuccessful(t *testing.T) {
 	var msg Response
-	err := Unmarshal([]byte(testSmsResponseFixtureString), &msg)
+	err := json.Unmarshal([]byte(testSmsResponseFixtureString), &msg)
 	if err != nil {
 		t.Errorf("Json failed to marshal with error => %s\n", err.Error())
 	}

@@ -1,6 +1,7 @@
 package sms
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -78,7 +79,7 @@ func (act SmsAccount) sendSms(destUrl string, msg Post, resp *Response) error {
 	if err != nil {
 		return errors.New(fmt.Sprintf("Error while reading json from buffer => %s", err.Error()))
 	}
-	err = Unmarshal(bodyBytes, resp)
+	err = json.Unmarshal(bodyBytes, resp)
 	if err != nil {
 		return errors.New(fmt.Sprintf("Error while decoding json => %s, recieved msg => %s", err.Error(), string(bodyBytes)))
 	}
