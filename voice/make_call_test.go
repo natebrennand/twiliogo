@@ -67,7 +67,7 @@ func TestSendSuccess(t *testing.T) {
 
 	var r Response
 	jReader := bytes.NewBuffer([]byte(testPostFixture))
-	err := send(testPostServer.URL+validEndpoint, jReader, &r)
+	err := makeCall(testPostServer.URL+validEndpoint, jReader, &r)
 	if err != nil {
 		t.Errorf("Error while sending post request => %s", err.Error())
 	}
