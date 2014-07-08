@@ -69,8 +69,6 @@ func (act SmsAccount) sendSms(destUrl string, msg Post, resp *Response) error {
 	twilioResp, err := c.Do(req)
 
 	if twilioResp.StatusCode != 201 {
-		s, _ := ioutil.ReadAll(twilioResp.Body)
-		fmt.Println(string(s))
 		return errors.New(fmt.Sprintf("Error recieved from Twilio => %s", twilioResp.Status))
 	}
 

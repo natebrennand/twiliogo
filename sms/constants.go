@@ -1,12 +1,7 @@
 package sms
 
-import (
-	"time"
-)
-
 const (
-	twilioTimeFormat = time.RFC1123Z
-	postUrl          = "https://api.twilio.com/2010-04-01/Accounts/%s/Messages.json"
+	postUrl = "https://api.twilio.com/2010-04-01/Accounts/%s/Messages.json"
 )
 
 var errorCode map[int]string = map[int]string{

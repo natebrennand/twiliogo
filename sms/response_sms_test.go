@@ -18,7 +18,7 @@ func TestJsonEncodeSuccessful(t *testing.T) {
 		t.Errorf("Unmarshal tried to assign a time to DateSent")
 	}
 
-	dateCreated, _ := time.Parse(twilioTimeFormat, "Wed, 18 Aug 2010 20:01:40 +0000")
+	dateCreated, _ := time.Parse(common.TwilioTimeFormat, "Wed, 18 Aug 2010 20:01:40 +0000")
 	if msg.DateCreated.Second() != dateCreated.Second() { // take seconds to avoid diff in loc pointer addresses
 		t.Errorf("Unmarshal improperly parsed DateCreated")
 	}
