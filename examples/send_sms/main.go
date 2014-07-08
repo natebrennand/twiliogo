@@ -15,10 +15,9 @@ func sendSms() {
 	fmt.Println("Sending")
 	act := twiliogo.NewAccountFromEnv()
 	resp, err := act.Sms.Send(sms.Post{
-		From: "+14248004123",
-		To:   "+13605847116",
-		Body: "Yo",
-		// StatusCallback: "http://172.16.32.138:8001/",
+		From:           "+14248004123",
+		To:             "+3605847116",
+		Body:           "Yo",
 		StatusCallback: "http://1c756787.ngrok.com/",
 	})
 	if err != nil {
