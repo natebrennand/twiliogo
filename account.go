@@ -3,6 +3,7 @@ package twiliogo
 import (
 	"fmt"
 	"github.com/natebrennand/twiliogo/sms"
+	"github.com/natebrennand/twiliogo/voice"
 	"os"
 	"regexp"
 	"strings"
@@ -17,6 +18,7 @@ type Account struct {
 	AccountSid string
 	Token      string
 	Sms        sms.SmsAccount // redundancy for usability
+	Voice      voice.VoiceAccount
 }
 
 func NewAccount(sid, token string) Account {
@@ -31,6 +33,7 @@ func NewAccount(sid, token string) Account {
 		AccountSid: sid,
 		Token:      token,
 		Sms:        sms.SmsAccount{sid, token},
+		Voice:      voice.VoiceAccount{sid, token},
 	}
 }
 
