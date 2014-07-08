@@ -29,7 +29,7 @@ type Post struct {
 	ApplicationSid string
 }
 
-func validateVoicePost(p Post) error {
+func validatePost(p Post) error {
 	if p.From == "" || p.To == "" {
 		return errors.New("Both \"From\" and \"To\" must be set in Post.")
 	}
@@ -39,12 +39,11 @@ func validateVoicePost(p Post) error {
 	return nil
 }
 
-// Represents the callback sent everytime the status of the message is updated.
-// Visit https://www.twilio.com/docs/api/rest/sending-messages#status-callback-parameter for more detaiils
+// Represents the callback sent everytime the status of the call is updated.
 type Callback struct {
 	standardRequest
-	RecordingUrl  string
-	CallDuration  string
+	RecordingUrl string
+	CallDuration string
 }
 
 // Internal function for sending the post request to twilio.
@@ -61,6 +60,7 @@ func makeCall(url string, msg io.Reader, resp *Response) error {
 	if err != nil {
 		return errors.New(fmt.Sprintf("Error while reading json from buffer => %s", err.Error()))
 	}
+
 	err = Unmarshal(bodyBytes, resp)
 	if err != nil {
 		return errors.New(fmt.Sprintf("Error while decoding json => %s, recieved msg => %s", err.Error(), string(bodyBytes)))
@@ -70,7 +70,7 @@ func makeCall(url string, msg io.Reader, resp *Response) error {
 
 // Sends a post request to Twilio to send a sms request.
 func (act VoiceAccount) Call(p Post) (Response, error) {
-	err := validateVoicePost(p)
+	err := validatePost(p)
 	if err != nil {
 		return Response{}, errors.New(fmt.Sprintf("Error validating sms post => %s.\n", err.Error()))
 	}
