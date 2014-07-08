@@ -1,8 +1,10 @@
 package voice
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -16,9 +18,8 @@ type VoiceAccount struct {
 
 // Represents the data used in creating an outbound voice message.
 // "From" & "To" are required attributes.
-// Either a Body or a MediaUrl must also be provided.
-// "StatusCallback" and "ApplicationSid" are both optional.
-// Visit https://www.twilio.com/docs/api/rest/sending-messages#post for more details.
+// Either a ApplicationSid or a Url must also be provided.
+// Visit https://www.twilio.com/docs/api/rest/making-calls#post-parameters for more details.
 type Post struct {
 	From           string
 	To             string
@@ -45,21 +46,31 @@ type Callback struct {
 	CallDuration string
 }
 
+func (p Post) getReader() io.Reader {
+	vals := url.Values{}
+	if p.To != "" {
+		vals.Set("To", p.To)
+	}
+	if p.From != "" {
+		vals.Set("From", p.From)
+	}
+	if p.Url != "" {
+		vals.Set("Url", p.Url)
+	}
+	if p.ApplicationSid != "" {
+		vals.Set("ApplicationSid", p.ApplicationSid)
+	}
+
+	return strings.NewReader(vals.Encode())
+
+}
+
 // Internal function for sending the post request to twilio.
 func (act VoiceAccount) makeCall(dest string, msg Post, resp *Response) error {
 	// send post request to twilio
 	c := http.Client{}
-	vals := url.Values{}
-	vals.Set("To", msg.To)
-	vals.Set("From", msg.From)
-	vals.Set("Url", msg.Url)
-	vals.Set("ApplicationSid", msg.ApplicationSid)
-	req, err := http.NewRequest("POST", dest, strings.NewReader(vals.Encode()))
+	req, err := http.NewRequest("POST", dest, msg.getReader())
 
-	if req == nil {
-		return errors.New(fmt.Sprintf("Error with req => %s", err.Error()))
-
-	}
 	if err != nil {
 		return errors.New(fmt.Sprintf("Error with req => %s", err.Error()))
 	}
@@ -79,8 +90,7 @@ func (act VoiceAccount) makeCall(dest string, msg Post, resp *Response) error {
 	if err != nil {
 		return errors.New(fmt.Sprintf("Error while reading json from buffer => %s", err.Error()))
 	}
-
-	err = Unmarshal(bodyBytes, resp)
+	err = json.Unmarshal(bodyBytes, resp)
 	if err != nil {
 		return errors.New(fmt.Sprintf("Error while decoding json => %s, recieved msg => %s", err.Error(), string(bodyBytes)))
 	}
@@ -92,10 +102,6 @@ func (act VoiceAccount) Call(p Post) (Response, error) {
 	err := validatePost(p)
 	if err != nil {
 		return Response{}, errors.New(fmt.Sprintf("Error validating voice post => %s.\n", err.Error()))
-	}
-
-	if err != nil {
-		return Response{}, errors.New(fmt.Sprintf("Error encoding json => %s", err.Error()))
 	}
 
 	var r Response

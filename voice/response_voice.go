@@ -1,7 +1,6 @@
 package voice
 
 import (
-	"encoding/json"
 	"github.com/natebrennand/twiliogo/common"
 )
 
@@ -18,9 +17,4 @@ type Response struct {
 	AnsweredBy     string          `json:"answered_by"`
 	ForwardedFrom  string          `json:"fowarded_from"`
 	CallerName     string          `json:"caller_name"`
-}
-
-// Unmarshals a twilio sms response into a Response struct.
-func Unmarshal(data []byte, msg *Response) error {
-	return json.Unmarshal(data, msg)
 }
