@@ -4,9 +4,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/natebrennand/twiliogo/common"
 	"strconv"
 	"time"
+
+	"github.com/natebrennand/twilio-go/common"
 )
 
 type SmsResponseJson struct {
