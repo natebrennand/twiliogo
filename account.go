@@ -2,8 +2,8 @@ package twiliogo
 
 import (
 	"fmt"
-	"github.com/natebrennand/twilio-go/sms"
-	"github.com/natebrennand/twilio-go/voice"
+	"github.com/natebrennand/twiliogo/sms"
+	"github.com/natebrennand/twiliogo/voice"
 	"os"
 	"regexp"
 	"strings"

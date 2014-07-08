@@ -61,8 +61,7 @@ func makeCall(url string, msg io.Reader, resp *Response) error {
 		return errors.New(fmt.Sprintf("Error while reading json from buffer => %s", err.Error()))
 	}
 
-	var voiceJson VoiceResponseJson
-	err = json.Unmarshal(bodyBytes, voiceJson)
+	err = Unmarshal(bodyBytes, resp)
 	if err != nil {
 		return errors.New(fmt.Sprintf("Error while decoding json => %s, recieved msg => %s", err.Error(), string(bodyBytes)))
 	}
