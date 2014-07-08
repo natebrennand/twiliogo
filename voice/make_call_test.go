@@ -1,7 +1,6 @@
 package voice
 
 import (
-	"bytes"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -49,25 +48,26 @@ func startMockHttpServer(requests *int) *httptest.Server {
 	testServer := httptest.NewServer(http.HandlerFunc(func(resp http.ResponseWriter, r *http.Request) {
 		*requests += 1
 		if strings.Contains(r.URL.Path, validEndpoint) {
-			fmt.Fprint(resp, testResponseFixture)
+			resp.WriteHeader(201)
+			fmt.Fprint(resp, testResponseFixtureString)
 		} else if strings.Contains(r.URL.Path, errorEndpoint) {
 			resp.WriteHeader(400)
 		} else if strings.Contains(r.URL.Path, badJsonEndpoint) {
-			fmt.Fprint(resp, testResponseFixture[0:20])
+			fmt.Fprint(resp, testResponseFixtureString[0:20])
 		}
 	}))
 	return testServer
 }
 
 func TestSendSuccess(t *testing.T) {
+	act := VoiceAccount{"act", "token"}
 	// start a server to recieve post request
 	numRequests := 0
 	testPostServer := startMockHttpServer(&numRequests)
 	defer testPostServer.Close()
 
 	var r Response
-	jReader := bytes.NewBuffer([]byte(testPostFixture))
-	err := makeCall(testPostServer.URL+validEndpoint, jReader, &r)
+	err := act.makeCall(testPostServer.URL+validEndpoint, testPostFixture, &r)
 	if err != nil {
 		t.Errorf("Error while sending post request => %s", err.Error())
 	}
@@ -80,14 +80,14 @@ func TestSendSuccess(t *testing.T) {
 }
 
 func TestSendFailure(t *testing.T) {
+	act := VoiceAccount{"act", "token"}
 	// start a server to recieve post request
 	numRequests := 0
 	testPostServer := startMockHttpServer(&numRequests)
 	defer testPostServer.Close()
 
 	var r Response
-	jReader := bytes.NewBuffer([]byte(testPostFixture))
-	err := makeCall(testPostServer.URL+errorEndpoint, jReader, &r)
+	err := act.makeCall(testPostServer.URL+errorEndpoint, testPostFixture, &r)
 	if err == nil {
 		t.Errorf("post should've failed with 400")
 	}
@@ -95,8 +95,7 @@ func TestSendFailure(t *testing.T) {
 		t.Error("server never recieved a request.")
 	}
 
-	jReader = bytes.NewBuffer([]byte(testPostFixture))
-	err = makeCall(testPostServer.URL+badJsonEndpoint, jReader, &r)
+	err = act.makeCall(testPostServer.URL+badJsonEndpoint, testPostFixture, &r)
 	if err == nil {
 		t.Errorf("post should've failed with 400")
 	}

@@ -1,17 +1,29 @@
 package voice
 
+import (
+	"github.com/natebrennand/twiliogo/common"
+	"time"
+)
+
 var (
 	testNumber1                   = "+15558675309"
 	testNumber2                   = "+14158141829"
 	testResponseFixtureAccountSid = "ACd03387e99bf959daa1e4810cc945708d"
 )
-var testPostFixture = `{
-	"url":"http://twimlbin.com/558a498f",
-	"to":"+15558675309",
-	"from":"+14158141829"
-}`
 
-var testResponseFixture = `{
+var testPostFixtureString = `{
+		"url":"http://twimlbin.com/558a498f",
+		"to":"+15558675309",
+		"from":"+14158141829",
+	}`
+
+var testPostFixture = Post{
+	Url:  "http://twimlbin.com/558a498f",
+	To:   "+15558675309",
+	From: "+14158141829",
+}
+
+var testResponseFixtureString = `{
 	"sid": "CA7383500ec70ce66bd3a7ac5d2fbbd6a9",
 	"date_created": null,
 	"date_updated": null,
@@ -41,3 +53,19 @@ var testResponseFixture = `{
 		"recordings": "/2010-04-01/Accounts/ACd03387e99bf959daa1e4810cc945708d/Calls/CA7383500ec70ce66bd3a7ac5d2fbbd6a9/Recordings.json"
 	}
 }`
+
+var testResponseFixture = Response{
+	ResponseCore: common.ResponseCore{
+		AccountSid:   "ACd03387e99bf959daa1e4810cc945708d",
+		ApiVersion:   "2010-04-01",
+		Direction:    "outbound-api",
+		ErrorCode:    "",
+		ErrorMessage: "",
+		From:         "+13139202596",
+		To:           "+16164601267",
+		Uri:          "/2010-04-01/Accounts/ACd03387e99bf959daa1e4810cc945708d/Calls/CA7383500ec70ce66bd3a7ac5d2fbbd6a9.json",
+	},
+	DateCreated: common.JsonTime{time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
+	DateUpdated: common.JsonTime{time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
+	Price:       0.0,
+}

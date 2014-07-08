@@ -1,13 +1,12 @@
 package voice
 
 import (
-	"bytes"
-	"encoding/json"
 	"errors"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"net/http"
+	"net/url"
+	"strings"
 )
 
 type VoiceAccount struct {
@@ -15,7 +14,7 @@ type VoiceAccount struct {
 	Token      string
 }
 
-// Represents the data used in creating an outbound sms message.
+// Represents the data used in creating an outbound voice message.
 // "From" & "To" are required attributes.
 // Either a Body or a MediaUrl must also be provided.
 // "StatusCallback" and "ApplicationSid" are both optional.
@@ -47,11 +46,35 @@ type Callback struct {
 }
 
 // Internal function for sending the post request to twilio.
-func makeCall(url string, msg io.Reader, resp *Response) error {
+func (act VoiceAccount) makeCall(dest string, msg Post, resp *Response) error {
 	// send post request to twilio
-	c := &http.Client{}
-	twilioResp, err := c.Post(url, "application/json", msg)
-	if twilioResp.StatusCode != 200 {
+	c := http.Client{}
+	vals := url.Values{}
+	vals.Set("To", msg.To)
+	vals.Set("From", msg.From)
+	vals.Set("Url", msg.Url)
+	vals.Set("ApplicationSid", msg.ApplicationSid)
+	req, err := http.NewRequest("POST", dest, strings.NewReader(vals.Encode()))
+	// if act == nil {
+	// 	return errors.New(fmt.Sprintf("Error with act => %s", err.Error()))
+
+	// }
+
+	if req == nil {
+		return errors.New(fmt.Sprintf("Error with req => %s", err.Error()))
+
+	}
+	if err != nil {
+		return errors.New(fmt.Sprintf("Error with req => %s", err.Error()))
+	}
+	req.SetBasicAuth(act.AccountSid, act.Token)
+	req.Header.Add("Accept", "application/json")
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	twilioResp, err := c.Do(req)
+	if err != nil {
+		return errors.New(fmt.Sprintf("Error with resp => %s", err.Error()))
+	}
+	if twilioResp.StatusCode != 201 {
 		return errors.New(fmt.Sprintf("Error recieved from Twilio => %s", twilioResp.Status))
 	}
 
@@ -68,22 +91,19 @@ func makeCall(url string, msg io.Reader, resp *Response) error {
 	return nil
 }
 
-// Sends a post request to Twilio to send a sms request.
+// Sends a post request to Twilio to send a voice request.
 func (act VoiceAccount) Call(p Post) (Response, error) {
 	err := validatePost(p)
 	if err != nil {
-		return Response{}, errors.New(fmt.Sprintf("Error validating sms post => %s.\n", err.Error()))
+		return Response{}, errors.New(fmt.Sprintf("Error validating voice post => %s.\n", err.Error()))
 	}
 
-	// marshal json string
-	body, err := json.Marshal(p)
 	if err != nil {
 		return Response{}, errors.New(fmt.Sprintf("Error encoding json => %s", err.Error()))
 	}
 
 	var r Response
-	jReader := bytes.NewBuffer(body)
-	err = makeCall(fmt.Sprintf(postUrl, act.AccountSid), jReader, &r)
+	err = act.makeCall(fmt.Sprintf(postUrl, act.AccountSid), p, &r)
 
 	return r, nil
 }

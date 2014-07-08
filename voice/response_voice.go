@@ -3,22 +3,21 @@ package voice
 import (
 	"encoding/json"
 	"github.com/natebrennand/twiliogo/common"
-	"time"
 )
 
 type Response struct {
 	common.ResponseCore
-	Price          float64
-	DateCreated    time.Time
-	DateUpdated    time.Time
+	Price          common.JsonPrice `json:"price"`
+	DateCreated    common.JsonTime  `json:"date_created"`
+	DateUpdated    common.JsonTime  `json:"date_updated"`
 	ParentCallSid  string
 	PhoneNumberSid string
-	StartTime      time.Time
-	EndTime        time.Time
-	Duration       float64
-	AnsweredBy     string
-	ForwardedFrom  string
-	CallerName     string
+	StartTime      common.JsonTime `json:"start_time"`
+	EndTime        common.JsonTime `json:"end_time"`
+	Duration       float64         `json:"duration"`
+	AnsweredBy     string          `json:"answered_by"`
+	ForwardedFrom  string          `json:"fowarded_from"`
+	CallerName     string          `json:"caller_name"`
 }
 
 // Unmarshals a twilio sms response into a Response struct.
