@@ -55,10 +55,6 @@ func (act VoiceAccount) makeCall(dest string, msg Post, resp *Response) error {
 	vals.Set("Url", msg.Url)
 	vals.Set("ApplicationSid", msg.ApplicationSid)
 	req, err := http.NewRequest("POST", dest, strings.NewReader(vals.Encode()))
-	// if act == nil {
-	// 	return errors.New(fmt.Sprintf("Error with act => %s", err.Error()))
-
-	// }
 
 	if req == nil {
 		return errors.New(fmt.Sprintf("Error with req => %s", err.Error()))
