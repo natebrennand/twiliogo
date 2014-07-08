@@ -2,7 +2,7 @@
 
 # Twilio Go
 
-[![Build Status](https://travis-ci.org/natebrennand/twilio-go.svg?branch=master)](https://travis-ci.org/natebrennand/twilio-go)
+[![Build Status](https://travis-ci.org/natebrennand/twiliogo.svg?branch=master)](https://travis-ci.org/natebrennand/twiliogo)
 
 ## Still a work in progress.
 
