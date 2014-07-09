@@ -34,7 +34,7 @@ type Twiml struct {
 // Returns a TwiML representation of the previous calls on the struct as a byte
 // slice.
 func (t *Twiml) Render() (result []byte, err error) {
-	result, err = xml.MarshalIndent(t, "  ", "  ")
+	result, err = xml.MarshalIndent(t, "\t", "\t")
 	if err != nil {
 		return
 	}
