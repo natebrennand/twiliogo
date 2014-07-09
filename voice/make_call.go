@@ -103,7 +103,7 @@ func (p Post) Validate() error {
 // Internal function for sending the post request to twilio.
 func (act VoiceAccount) makeCall(dest string, msg Post, resp *Response) error {
 	// send post request to twilio
-	return common.FormNewPostFormRequest(dest, msg, act, resp, 201)
+	return common.SendPostRequest(dest, msg, act, resp, 201)
 }
 
 // Sends a post request to Twilio to send a voice request.

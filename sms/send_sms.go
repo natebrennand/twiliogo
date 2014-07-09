@@ -73,7 +73,7 @@ func (p Post) Validate() error {
 // Internal function for sending the post request to twilio.
 func (act SmsAccount) sendSms(destUrl string, msg Post, resp *Response) error {
 	// send post request to twilio
-	return common.FormNewPostFormRequest(destUrl, msg, act, resp, 201)
+	return common.SendPostRequest(destUrl, msg, act, resp, 201)
 }
 
 // Sends a post request to Twilio to send a sms request.

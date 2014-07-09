@@ -22,7 +22,7 @@ type TwilioPost interface {
 	Validate() error
 }
 
-func FormNewPostFormRequest(url string, msg TwilioPost, t TwilioAccount, resp TwilioResponse, expectedResponse int) error {
+func SendPostRequest(url string, msg TwilioPost, t TwilioAccount, resp TwilioResponse, expectedResponse int) error {
 	err := msg.Validate()
 	if err != nil {
 		return errors.New(fmt.Sprintf("Error validating sms post => %s.\n", err.Error()))

@@ -12,16 +12,6 @@ func decodeError(err error, body []byte) error {
 	return errors.New(fmt.Sprintf("Error while decoding json => %s, recieved msg => %s", err.Error(), string(body)))
 }
 
-func CheckResponse(resp http.Response, err error) error {
-	if err != nil {
-		return errors.New(fmt.Sprintf("Error sending req => %s", err.Error()))
-	}
-	if resp.StatusCode != 201 {
-		return NewTwilioError(resp)
-	}
-	return nil
-}
-
 type Error struct {
 	Code     int    `json:"code"`
 	Message  string `json:"message"`
