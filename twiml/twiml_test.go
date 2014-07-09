@@ -1,12 +1,27 @@
 package twiml
 
 import (
+	"encoding/xml"
+	"io/ioutil"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 var testTwiml TwimlInterface
+
+func TestEmptyResponse(t *testing.T) {
+	testTwiml = &Twiml{}
+	result, err := testTwiml.Render()
+	assert.NoError(t, err)
+	read, err := ioutil.ReadAll(result)
+	output := string(read)
+	assert.NoError(t, err)
+	assert.Contains(t, output, xml.Header)
+	assert.Contains(t, output, "<Response>")
+	assert.Contains(t, output, "</Response>")
+	t.Log(output)
+}
 
 func TestSay(t *testing.T) {
 	testTwiml = &Twiml{}

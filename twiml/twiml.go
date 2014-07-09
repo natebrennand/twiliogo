@@ -6,6 +6,11 @@ import (
 	"io"
 )
 
+var (
+	preTwiml  = []byte(xml.Header + "\n<Response>\n")
+	postTwiml = []byte("\n</Response>\n")
+)
+
 type TwimlInterface interface {
 	Render() (io.Reader, error)
 	Say(SayOpts, ...string) TwimlInterface
@@ -27,8 +32,10 @@ type Twiml struct {
 
 // Returns a TwiML representation of the previous calls on the struct, contained
 // inside a Reader interface.
-func (t Twiml) Render() (io.Reader, error) {
-	result, err := xml.MarshalIndent(t.contents, "", "  ")
+func (t *Twiml) Render() (io.Reader, error) {
+	result, err := xml.MarshalIndent(t.contents, "  ", "  ")
+	result = append(preTwiml, result...)
+	result = append(result, postTwiml...)
 	return bytes.NewReader(result), err
 }
 
