@@ -71,6 +71,12 @@ func TestPause(t *testing.T) {
 	assert.NoError(t, err)
 }
 
+func TestSms(t *testing.T) {
+	testTwiml = new(Response)
+	_, err := testTwiml.Sms(SmsOpts{}, "Welcome to catfacts...").Render()
+	assert.NoError(t, err)
+}
+
 func TestGather(t *testing.T) {
 	testTwiml = &Response{}
 	testTwiml.Gather(GatherOpts{Timeout: 10}, new(GatherTwiml).Play(PlayOpts{}, "stuff"))

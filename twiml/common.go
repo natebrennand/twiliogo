@@ -21,3 +21,7 @@ func addSay(t twimlResponse, opts SayOpts, lines []string) {
 func addPause(t twimlResponse, secs int) {
 	t.appendContents(&pause{0, secs})
 }
+
+func addSms(t twimlResponse, opts SmsOpts, text string) {
+	t.appendContents(&sms{0, text, &opts})
+}

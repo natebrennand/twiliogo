@@ -44,3 +44,11 @@ func (t *Response) Gather(opts GatherOpts, nested GatherBody) TwimlInterface {
 
 	return t
 }
+
+// Send an Sms message during a phone call
+//
+// https://www.twilio.com/docs/api/twiml/sms
+func (t *Response) Sms(opts SmsOpts, text string) TwimlInterface {
+	addSms(t, opts, text)
+	return t
+}
