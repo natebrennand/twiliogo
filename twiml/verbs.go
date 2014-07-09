@@ -43,6 +43,16 @@ func (t *Response) Gather(opts GatherOpts, nested GatherBody) TwimlInterface {
 	return t
 }
 
+// Dial various things. Pass a DialBody interface to use Number, Queue,
+// Conference, Sip, and Client nouns inside Dial.
+// Play, and Pause verbs during the Gather.
+//
+// https://www.twilio.com/docs/api/twiml/gather
+func (t *Response) Dial(opts DialOpts, nested DialBody) TwimlInterface {
+	addDial(t, &opts, &nested)
+	return t
+}
+
 // Send an Sms message during a phone call
 //
 // https://www.twilio.com/docs/api/twiml/sms
