@@ -61,4 +61,21 @@ var (
 		NumSegments: 1,
 		NumMedia:    1,
 	}
+	testSmsCallbackFixture = Callback{
+		MessageSid:    "SMa2ff4e37c7cb43b49a820f2d7e3ee135",
+		SmsSid:        "SMa2ff4e37c7cb43b49a820f2d7e3ee135",
+		Body:          "Yo",
+		NumMedia:      0,
+		MessageStatus: "sent",
+		ErrorCode:     "",
+		StandardRequest: common.StandardRequest{
+			AccountSid: "AC381707b751dbe4c74b15c5697ba67afd",
+			From:       "+14248004123",
+			To:         "+13605847116",
+			MediaList:  []common.Media{},
+			Location:   nil,
+		},
+	}
+	testSmsCallbackFixtureFormString        = `MessageSid=SMa2ff4e37c7cb43b49a820f2d7e3ee135&SmsSid=SMa2ff4e37c7cb43b49a820f2d7eee135&Body=Yo&MessageStatus=sent&AccountSid=AC381707b751dbe4c74b15c5697ba67afd&From=+14248004123&To=+13605847116`
+	testSmsCallbackFixtureFormStringFailure = `MessageSid=SMa2ff4e37c7cb43b49a820f2d7e3ee135&SmsSid=SMa2ff4e37c7cb43b49a820f2d7eee135&Body=Yo&MessageStatus=sent&AccountSid=AC381707b751dbe4c74b15c5697ba67afd&From=+14248004123&To=+13605847116&NumMedia=a`
 )

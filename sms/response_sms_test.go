@@ -1,6 +1,7 @@
 package sms
 
 import (
+	"encoding/json"
 	"github.com/natebrennand/twiliogo/common"
 	"testing"
 	"time"
@@ -8,7 +9,7 @@ import (
 
 func TestJsonEncodeSuccessful(t *testing.T) {
 	var msg Response
-	err := Unmarshal([]byte(testSmsResponseFixtureString), &msg)
+	err := json.Unmarshal([]byte(testSmsResponseFixtureString), &msg)
 	if err != nil {
 		t.Errorf("Json failed to marshal with error => %s\n", err.Error())
 	}
@@ -17,7 +18,7 @@ func TestJsonEncodeSuccessful(t *testing.T) {
 		t.Errorf("Unmarshal tried to assign a time to DateSent")
 	}
 
-	dateCreated, _ := time.Parse(twilioTimeFormat, "Wed, 18 Aug 2010 20:01:40 +0000")
+	dateCreated, _ := time.Parse(common.TwilioTimeFormat, "Wed, 18 Aug 2010 20:01:40 +0000")
 	if msg.DateCreated.Second() != dateCreated.Second() { // take seconds to avoid diff in loc pointer addresses
 		t.Errorf("Unmarshal improperly parsed DateCreated")
 	}

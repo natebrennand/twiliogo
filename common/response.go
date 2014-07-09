@@ -53,3 +53,29 @@ type ResponseCore struct {
 	DateSent     JsonTime `json:"date_sent"`
 	DateUpdated  JsonTime `json:"date_updated"`
 }
+
+type Media struct {
+	ContentType string
+	Url         string
+}
+
+type Location struct {
+	FromCity    string
+	FromState   string
+	FromZip     string
+	FromCountry string
+	ToCity      string
+	ToState     string
+	ToZip       string
+	ToCountry   string
+}
+
+// Standard request parameters for Twiml responses
+// https://www.twilio.com/docs/api/twiml/sms/twilio_request#request-parameters
+type StandardRequest struct {
+	AccountSid string
+	From       string
+	To         string
+	MediaList  []Media
+	Location   *Location // Only sent when Twilio can look up the geographic data.
+}

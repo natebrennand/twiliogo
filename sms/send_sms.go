@@ -1,8 +1,12 @@
 package sms
 
 import (
+	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/natebrennand/twiliogo/common"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -28,6 +32,25 @@ type Post struct {
 	ApplicationSid string
 }
 
+func (p Post) ToFormEncoded() io.Reader {
+	v := url.Values{}
+	v.Set("To", p.To)
+	v.Set("From", p.From)
+	if p.Body != "" {
+		v.Set("Body", p.Body)
+	}
+	if p.MediaUrl != "" {
+		v.Set("MediaUrl", p.MediaUrl)
+	}
+	if p.StatusCallback != "" {
+		v.Set("StatusCallback", p.StatusCallback)
+	}
+	if p.ApplicationSid != "" {
+		v.Set("ApplicationSid", p.ApplicationSid)
+	}
+	return strings.NewReader(v.Encode())
+}
+
 func validateSmsPost(p Post) error {
 	if p.From == "" || p.To == "" {
 		return errors.New("Both \"From\" and \"To\" must be set in Post.")
@@ -38,33 +61,32 @@ func validateSmsPost(p Post) error {
 	return nil
 }
 
-// Represents the callback sent everytime the status of the message is updated.
-// Visit https://www.twilio.com/docs/api/rest/sending-messages#status-callback-parameter for more detaiils
-type Callback struct {
-	standardRequest
-	MessageStatus string
-	ErrorCode     string
-}
-
 // Internal function for sending the post request to twilio.
 func (act SmsAccount) sendSms(destUrl string, msg Post, resp *Response) error {
 	// send post request to twilio
 	c := http.Client{}
-	v := url.Values{}
-	v.Set("To", msg.To)
-	v.Set("From", msg.From)
-	v.Set("Body", msg.Body)
-	v.Set("MediaUrl", msg.MediaUrl)
-	v.Set("StatusCallback", msg.StatusCallback)
-	v.Set("ApplicationSid", msg.ApplicationSid)
-	req, err := http.NewRequest("POST", destUrl, strings.NewReader(v.Encode()))
+	req, err := http.NewRequest("POST", destUrl, msg.ToFormEncoded())
+
 	req.SetBasicAuth(act.AccountSid, act.Token)
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	twilioResp, err := c.Do(req)
 
 	if twilioResp.StatusCode != 201 {
-		return errors.New(fmt.Sprintf("Error recieved from Twilio => %s", twilioResp.Status))
+		var (
+			twilioErr common.Error
+			buf       bytes.Buffer
+		)
+		_, err := buf.ReadFrom(req.Body)
+		if err != nil {
+			return errors.New(fmt.Sprintf("Twilio error encountered, failure while reading body => %s", err.Error()))
+		}
+
+		err = json.Unmarshal(buf.Bytes(), &twilioErr)
+		if err != nil {
+			return errors.New(fmt.Sprintf("Twilio error encountered, failure while parsing => %s", err.Error()))
+		}
+		return twilioErr
 	}
 
 	// parse twilio response
@@ -72,7 +94,7 @@ func (act SmsAccount) sendSms(destUrl string, msg Post, resp *Response) error {
 	if err != nil {
 		return errors.New(fmt.Sprintf("Error while reading json from buffer => %s", err.Error()))
 	}
-	err = Unmarshal(bodyBytes, resp)
+	err = json.Unmarshal(bodyBytes, resp)
 	if err != nil {
 		return errors.New(fmt.Sprintf("Error while decoding json => %s, recieved msg => %s", err.Error(), string(bodyBytes)))
 	}
