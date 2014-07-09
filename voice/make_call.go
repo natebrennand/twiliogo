@@ -52,7 +52,6 @@ func validatePost(p Post) error {
 			return errors.New("Post's SendDigits can only contain digits, #, * or w")
 		}
 	}
-
 	return nil
 }
 
@@ -106,10 +105,10 @@ func (act VoiceAccount) makeCall(dest string, msg Post, resp *Response) error {
 	// send post request to twilio
 	c := http.Client{}
 	req, err := http.NewRequest("POST", dest, msg.getReader())
-
 	if err != nil {
 		return errors.New(fmt.Sprintf("Error with req => %s", err.Error()))
 	}
+
 	req.SetBasicAuth(act.AccountSid, act.Token)
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
@@ -118,7 +117,7 @@ func (act VoiceAccount) makeCall(dest string, msg Post, resp *Response) error {
 		return errors.New(fmt.Sprintf("Error with resp => %s", err.Error()))
 	}
 	if twilioResp.StatusCode != 201 {
-		return errors.New(fmt.Sprintf("Error recieved from Twilio => %s", twilioResp.Status))
+		return common.NewTwilioError(twilioResp)
 	}
 
 	// parse twilio response
@@ -142,6 +141,5 @@ func (act VoiceAccount) Call(p Post) (Response, error) {
 
 	var r Response
 	err = act.makeCall(fmt.Sprintf(postUrl, act.AccountSid), p, &r)
-
 	return r, nil
 }

@@ -1,7 +1,6 @@
 package sms
 
 import (
-	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -73,20 +72,7 @@ func (act SmsAccount) sendSms(destUrl string, msg Post, resp *Response) error {
 	twilioResp, err := c.Do(req)
 
 	if twilioResp.StatusCode != 201 {
-		var (
-			twilioErr common.Error
-			buf       bytes.Buffer
-		)
-		_, err := buf.ReadFrom(req.Body)
-		if err != nil {
-			return errors.New(fmt.Sprintf("Twilio error encountered, failure while reading body => %s", err.Error()))
-		}
-
-		err = json.Unmarshal(buf.Bytes(), &twilioErr)
-		if err != nil {
-			return errors.New(fmt.Sprintf("Twilio error encountered, failure while parsing => %s", err.Error()))
-		}
-		return twilioErr
+		return common.NewTwilioError(twilioResp)
 	}
 
 	// parse twilio response
