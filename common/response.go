@@ -14,7 +14,7 @@ type JsonPrice float64
 func (j *JsonPrice) UnmarshalJSON(b []byte) error {
 	s := string(b)
 	if s == "null" {
-		*j = JsonPrice(0.0)
+		j = nil
 		return nil
 	}
 	t, err := strconv.ParseFloat(s, 64)
