@@ -25,7 +25,7 @@ func makeTestCallbackReqFailure() *http.Request {
 func TestParseCallbackSuccess(t *testing.T) {
 	var cb Callback
 	req := makeTestCallbackReq()
-	err := parseCallback(req, &cb)
+	err := cb.Parse(req)
 	if err != nil {
 		t.Errorf("parseCallback failed with => %s", err.Error())
 	}
@@ -42,7 +42,7 @@ func TestParseCallbackFailure(t *testing.T) {
 	var cb Callback
 	req := makeTestCallbackReqFailure()
 
-	err := parseCallback(req, &cb)
+	err := cb.Parse(req)
 	if err == nil {
 		t.Errorf("parseCallback should've failed with a NumMedia error")
 	}

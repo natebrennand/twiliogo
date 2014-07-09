@@ -16,30 +16,40 @@ const (
 
 func TestValidatePostSuccess(t *testing.T) {
 	p := Post{From: testNumber1, To: testNumber2, Url: "http://twimlbin.com/558a498f"}
-	if nil != validatePost(p) {
+	if nil != p.Validate() {
 		t.Error("Validation of valid voice post failed.")
 	}
 
 	p = Post{From: testNumber1, To: testNumber2, ApplicationSid: "AP7e1e264cc0fd7143f3ef378e86bf3184"}
-	if nil != validatePost(p) {
+	if nil != p.Validate() {
 		t.Error("Validation of valid voice post failed.")
+	}
+
+	p = Post{From: testNumber1, To: testNumber2, Url: "http://twimlbin.com/558a498f", SendDigits: "1234"}
+	if nil != p.Validate() {
+		t.Error("Validation of valid voice post failed with SendDigits.")
 	}
 }
 
 func TestValidatePostFailure(t *testing.T) {
 	p := Post{}
-	if nil == validatePost(p) {
+	if nil == p.Validate() {
 		t.Error("Validation of voice post missing To & From failed.")
 	}
 
 	p = Post{From: testNumber1}
-	if nil == validatePost(p) {
+	if nil == p.Validate() {
 		t.Error("Validation of voice post missing From failed.")
 	}
 
 	p = Post{From: testNumber1, To: testNumber2}
-	if nil == validatePost(p) {
+	if nil == p.Validate() {
 		t.Error("Validation of voice post missing Url & ApplicationSid failed.")
+	}
+
+	p = Post{From: testNumber1, To: testNumber2, Url: "http://twimlbin.com/558a498f", SendDigits: "1234a"}
+	if nil == p.Validate() {
+		t.Error("Validation of invalid voice post failed with bad SendDigits.")
 	}
 }
 
@@ -60,7 +70,7 @@ func startMockHttpServer(requests *int) *httptest.Server {
 }
 
 func TestSendSuccess(t *testing.T) {
-	act := VoiceAccount{"act", "token"}
+	act := VoiceAccount{"act", "token", http.Client{}}
 	// start a server to recieve post request
 	numRequests := 0
 	testPostServer := startMockHttpServer(&numRequests)
@@ -80,7 +90,7 @@ func TestSendSuccess(t *testing.T) {
 }
 
 func TestSendFailure(t *testing.T) {
-	act := VoiceAccount{"act", "token"}
+	act := VoiceAccount{"act", "token", http.Client{}}
 	// start a server to recieve post request
 	numRequests := 0
 	testPostServer := startMockHttpServer(&numRequests)

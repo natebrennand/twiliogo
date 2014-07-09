@@ -1,13 +1,10 @@
 package sms
 
 import (
-	"bytes"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/natebrennand/twiliogo/common"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
@@ -16,6 +13,17 @@ import (
 type SmsAccount struct {
 	AccountSid string
 	Token      string
+	Client     http.Client
+}
+
+func (s SmsAccount) GetSid() string {
+	return s.AccountSid
+}
+func (s SmsAccount) GetToken() string {
+	return s.Token
+}
+func (s SmsAccount) GetClient() http.Client {
+	return s.Client
 }
 
 // Represents the data used in creating an outbound sms message.
@@ -32,7 +40,7 @@ type Post struct {
 	ApplicationSid string
 }
 
-func (p Post) ToFormEncoded() io.Reader {
+func (p Post) GetReader() io.Reader {
 	v := url.Values{}
 	v.Set("To", p.To)
 	v.Set("From", p.From)
@@ -51,12 +59,13 @@ func (p Post) ToFormEncoded() io.Reader {
 	return strings.NewReader(v.Encode())
 }
 
-func validateSmsPost(p Post) error {
+// Validates the Voice Post to ensure validity.
+func (p Post) Validate() error {
 	if p.From == "" || p.To == "" {
-		return errors.New("Both \"From\" and \"To\" must be set in Post.")
+		return errors.New(`Both "From" and "To" must be set in Post.`)
 	}
 	if p.Body == "" && p.MediaUrl == "" {
-		return errors.New("Either \"Body\" or \"MediaUrl\" must be set.")
+		return errors.New(`Either "Body" or "MediaUrl" must be set.`)
 	}
 	return nil
 }
@@ -64,57 +73,12 @@ func validateSmsPost(p Post) error {
 // Internal function for sending the post request to twilio.
 func (act SmsAccount) sendSms(destUrl string, msg Post, resp *Response) error {
 	// send post request to twilio
-	c := http.Client{}
-	req, err := http.NewRequest("POST", destUrl, msg.ToFormEncoded())
-
-	req.SetBasicAuth(act.AccountSid, act.Token)
-	req.Header.Add("Accept", "application/json")
-	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-	twilioResp, err := c.Do(req)
-
-	if twilioResp.StatusCode != 201 {
-		var (
-			twilioErr common.Error
-			buf       bytes.Buffer
-		)
-		_, err := buf.ReadFrom(req.Body)
-		if err != nil {
-			return errors.New(fmt.Sprintf("Twilio error encountered, failure while reading body => %s", err.Error()))
-		}
-
-		err = json.Unmarshal(buf.Bytes(), &twilioErr)
-		if err != nil {
-			return errors.New(fmt.Sprintf("Twilio error encountered, failure while parsing => %s", err.Error()))
-		}
-		return twilioErr
-	}
-
-	// parse twilio response
-	bodyBytes, err := ioutil.ReadAll(twilioResp.Body)
-	if err != nil {
-		return errors.New(fmt.Sprintf("Error while reading json from buffer => %s", err.Error()))
-	}
-	err = json.Unmarshal(bodyBytes, resp)
-	if err != nil {
-		return errors.New(fmt.Sprintf("Error while decoding json => %s, recieved msg => %s", err.Error(), string(bodyBytes)))
-	}
-	return nil
+	return common.SendPostRequest(destUrl, msg, act, resp, 201)
 }
 
 // Sends a post request to Twilio to send a sms request.
 func (act SmsAccount) Send(p Post) (Response, error) {
-	err := validateSmsPost(p)
-	if err != nil {
-		return Response{}, errors.New(fmt.Sprintf("Error validating sms post => %s.\n", err.Error()))
-	}
-
-	// marshal json string
-	if err != nil {
-		return Response{}, errors.New(fmt.Sprintf("Error encoding json => %s", err.Error()))
-	}
-
 	var r Response
-	err = act.sendSms(fmt.Sprintf(postUrl, act.AccountSid), p, &r)
-
+	err := act.sendSms(fmt.Sprintf(postUrl, act.AccountSid), p, &r)
 	return r, err
 }

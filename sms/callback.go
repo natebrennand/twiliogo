@@ -8,6 +8,11 @@ import (
 	"strconv"
 )
 
+type Media struct {
+	ContentType string
+	Url         string
+}
+
 // Represents the callback sent everytime the status of the message is updated.
 // Visit https://www.twilio.com/docs/api/rest/sending-messages#status-callback-parameter for more detaiils
 type Callback struct {
@@ -17,11 +22,12 @@ type Callback struct {
 	NumMedia      int
 	MessageStatus string
 	ErrorCode     string
+	MediaList     []Media
 	common.StandardRequest
 }
 
 // Parses the form encoded callback into a Callback struct
-func parseCallback(req *http.Request, cb *Callback) error {
+func (cb *Callback) Parse(req *http.Request) error {
 	numMediaString := req.PostFormValue("NumMedia")
 	numMedia, err := strconv.Atoi(numMediaString)
 	if err != nil && numMediaString != "" {
@@ -29,9 +35,9 @@ func parseCallback(req *http.Request, cb *Callback) error {
 	}
 
 	// creates an array of Media Contents (typically empty)
-	mediaArray := make([]common.Media, numMedia)
+	mediaArray := make([]Media, numMedia)
 	for i := 0; i < numMedia; i++ {
-		mediaArray[i] = common.Media{
+		mediaArray[i] = Media{
 			ContentType: req.PostFormValue(fmt.Sprintf("MediaContentType%d", i)),
 			Url:         req.PostFormValue(fmt.Sprintf("MediaUrl%d", i)),
 		}
@@ -58,11 +64,11 @@ func parseCallback(req *http.Request, cb *Callback) error {
 		NumMedia:      numMedia,
 		MessageStatus: req.PostFormValue("MessageStatus"),
 		ErrorCode:     req.PostFormValue("ErrorCode"),
+		MediaList:     mediaArray,
 		StandardRequest: common.StandardRequest{
 			AccountSid: req.PostFormValue("AccountSid"),
 			From:       req.PostFormValue("From"),
 			To:         req.PostFormValue("To"),
-			MediaList:  mediaArray,
 			Location:   msgLocation,
 		},
 	}
@@ -73,7 +79,7 @@ func parseCallback(req *http.Request, cb *Callback) error {
 func CallbackHandler(callbackChan chan Callback) http.HandlerFunc {
 	var cb Callback
 	return http.HandlerFunc(func(resp http.ResponseWriter, req *http.Request) {
-		err := parseCallback(req, &cb)
+		err := cb.Parse(req)
 		if err != nil {
 			resp.WriteHeader(http.StatusBadRequest)
 			return
