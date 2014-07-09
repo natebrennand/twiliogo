@@ -71,14 +71,14 @@ func (p Post) Validate() error {
 }
 
 // Internal function for sending the post request to twilio.
-func (act SmsAccount) sendSms(destUrl string, msg Post, resp *Response) error {
+func (act SmsAccount) sendSms(destUrl string, msg Post, resp *Message) error {
 	// send post request to twilio
 	return common.SendPostRequest(destUrl, msg, act, resp, 201)
 }
 
 // Sends a post request to Twilio to send a sms request.
-func (act SmsAccount) Send(p Post) (Response, error) {
-	var r Response
-	err := act.sendSms(fmt.Sprintf(postUrl, act.AccountSid), p, &r)
-	return r, err
+func (act SmsAccount) Send(p Post) (Message, error) {
+	var m Message
+	err := act.sendSms(fmt.Sprintf(postUrl, act.AccountSid), p, &m)
+	return m, err
 }

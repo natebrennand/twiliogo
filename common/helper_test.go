@@ -1,4 +1,4 @@
-package sms
+package common
 
 import (
 	"fmt"
@@ -14,42 +14,13 @@ const (
 	badJsonEndpoint = "/badJson"
 )
 
-func TestValidateSmsPostSuccess(t *testing.T) {
-	p := Post{From: testNumber1, To: testNumber2, Body: "test"}
-	if nil != p.Validate() {
-		t.Error("Validation of valid sms post failed.")
-	}
-
-	p = Post{From: testNumber1, To: testNumber2, MediaUrl: "https://www.twilio.com/"}
-	if nil != p.Validate() {
-		t.Error("Validation of valid sms post failed.")
-	}
-}
-
-func TestValidateSmsPostFailure(t *testing.T) {
-	p := Post{}
-	if nil == p.Validate() {
-		t.Error("Validation of sms post missing To & From failed.")
-	}
-
-	p = Post{From: testNumber1}
-	if nil == p.Validate() {
-		t.Error("Validation of sms post missing From failed.")
-	}
-
-	p = Post{From: testNumber1, To: testNumber2}
-	if nil == p.Validate() {
-		t.Error("Validation of sms post missing Body & MediaUrl failed.")
-	}
-}
-
 func startMockHttpServer(requests *int) *httptest.Server {
 	// start a server to recieve post request
 	testServer := httptest.NewServer(http.HandlerFunc(func(resp http.ResponseWriter, r *http.Request) {
 		*requests += 1
 		if strings.Contains(r.URL.Path, validEndpoint) {
 			resp.WriteHeader(201)
-			fmt.Fprint(resp, testSmsResponseFixtureString)
+			fmt.Fprint(resp, testMessageFixtureString)
 		} else if strings.Contains(r.URL.Path, errorEndpoint) {
 			resp.WriteHeader(400)
 		} else if strings.Contains(r.URL.Path, badJsonEndpoint) {
@@ -59,37 +30,48 @@ func startMockHttpServer(requests *int) *httptest.Server {
 	return testServer
 }
 
-func TestSendSmsSuccess(t *testing.T) {
-	act := SmsAccount{"act", "token", http.Client{}}
+func TestSendPostRequest(t *testing.T) {
+}
+
+func TestSendSuccess(t *testing.T) {
+	act := testAccount{"act", "token", http.Client{}}
 
 	// start a server to recieve post request
 	numRequests := 0
 	testPostServer := startMockHttpServer(&numRequests)
 	defer testPostServer.Close()
 
-	var m Message
-	err := act.sendSms(testPostServer.URL+validEndpoint, testSmsPostFixture, &m)
+	var m testMessage
+	err := act.sendSms(testPostServer.URL+validEndpoint, testPostFixture, &m)
 	if err != nil {
 		t.Errorf("Error while sending post request => %s", err.Error())
 	}
 	if numRequests != 1 {
 		t.Error("Server never recieved a request.")
 	}
-	if m.AccountSid != testSmsResponseFixtureAccountSid {
+	if m.Foo != "Bar" {
 		t.Error("Unmarshal failed to properly parse the response.")
 	}
 }
 
-func TestSendSmsFailure(t *testing.T) {
-	act := SmsAccount{"act", "token", http.Client{}}
+func TestSendFailure(t *testing.T) {
+	act := testAccount{"act", "token", http.Client{}}
 
 	// start a server to recieve post request
 	numRequests := 0
 	testPostServer := startMockHttpServer(&numRequests)
 	defer testPostServer.Close()
 
-	var m Message
-	err := act.sendSms(testPostServer.URL+errorEndpoint, testSmsPostFixture, &m)
+	var m testMessage
+	err := act.sendSms(testPostServer.URL+badJsonEndpoint, testPostFixtureInvalid, &m)
+	if err == nil {
+		t.Errorf("post should've failed with an invalid post")
+	}
+	if numRequests != 0 {
+		t.Error("server recieved a request.")
+	}
+
+	err = act.sendSms(testPostServer.URL+errorEndpoint, testPostFixture, &m)
 	if err == nil {
 		t.Errorf("post should've failed with 400")
 	}
@@ -97,11 +79,12 @@ func TestSendSmsFailure(t *testing.T) {
 		t.Error("server never recieved a request.")
 	}
 
-	err = act.sendSms(testPostServer.URL+badJsonEndpoint, testSmsPostFixture, &m)
+	err = act.sendSms(testPostServer.URL+badJsonEndpoint, testPostFixture, &m)
 	if err == nil {
 		t.Errorf("post should've failed with 400")
 	}
 	if numRequests != 2 {
 		t.Error("server never recieved a request.")
 	}
+
 }
