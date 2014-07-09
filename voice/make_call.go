@@ -45,7 +45,8 @@ type Post struct {
 	StatusCallbackMethod string
 	SendDigits           string
 	IfMachine            string
-	TimeOut              *bool
+	TimeOut              *int64
+	Record               *bool
 }
 
 func (p Post) GetReader() io.Reader {
@@ -77,7 +78,10 @@ func (p Post) GetReader() io.Reader {
 		vals.Set("IfMachine", p.IfMachine)
 	}
 	if p.TimeOut != nil {
-		vals.Set("TimeOut", strconv.FormatBool(*p.TimeOut))
+		vals.Set("TimeOut", strconv.FormatInt(*p.TimeOut, 10))
+	}
+	if p.Record != nil {
+		vals.Set("Record", strconv.FormatBool(*p.Record))
 	}
 
 	return strings.NewReader(vals.Encode())
