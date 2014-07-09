@@ -8,6 +8,11 @@ import (
 	"strconv"
 )
 
+type Media struct {
+	ContentType string
+	Url         string
+}
+
 // Represents the callback sent everytime the status of the message is updated.
 // Visit https://www.twilio.com/docs/api/rest/sending-messages#status-callback-parameter for more detaiils
 type Callback struct {
@@ -17,6 +22,7 @@ type Callback struct {
 	NumMedia      int
 	MessageStatus string
 	ErrorCode     string
+	MediaList     []Media
 	common.StandardRequest
 }
 
@@ -29,9 +35,9 @@ func parseCallback(req *http.Request, cb *Callback) error {
 	}
 
 	// creates an array of Media Contents (typically empty)
-	mediaArray := make([]common.Media, numMedia)
+	mediaArray := make([]Media, numMedia)
 	for i := 0; i < numMedia; i++ {
-		mediaArray[i] = common.Media{
+		mediaArray[i] = Media{
 			ContentType: req.PostFormValue(fmt.Sprintf("MediaContentType%d", i)),
 			Url:         req.PostFormValue(fmt.Sprintf("MediaUrl%d", i)),
 		}
@@ -58,11 +64,11 @@ func parseCallback(req *http.Request, cb *Callback) error {
 		NumMedia:      numMedia,
 		MessageStatus: req.PostFormValue("MessageStatus"),
 		ErrorCode:     req.PostFormValue("ErrorCode"),
+		MediaList:     mediaArray,
 		StandardRequest: common.StandardRequest{
 			AccountSid: req.PostFormValue("AccountSid"),
 			From:       req.PostFormValue("From"),
 			To:         req.PostFormValue("To"),
-			MediaList:  mediaArray,
 			Location:   msgLocation,
 		},
 	}

@@ -9,7 +9,7 @@ import (
 
 func TestNewTwilioError(t *testing.T) {
 	resp := http.Response{Body: ioutil.NopCloser(strings.NewReader(testErrorFixtureString))}
-	err := NewTwilioError(&resp)
+	err := NewTwilioError(resp)
 	if err == nil {
 		t.Error("NewTwilioError failed to create a twilio error")
 	}

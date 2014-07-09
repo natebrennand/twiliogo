@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/natebrennand/twiliogo/sms"
 	"github.com/natebrennand/twiliogo/voice"
+	"net/http"
 	"os"
 	"regexp"
 	"strings"
@@ -32,8 +33,8 @@ func NewAccount(sid, token string) Account {
 	return Account{
 		AccountSid: sid,
 		Token:      token,
-		Sms:        sms.SmsAccount{sid, token},
-		Voice:      voice.VoiceAccount{sid, token},
+		Sms:        sms.SmsAccount{sid, token, http.Client{}},
+		Voice:      voice.VoiceAccount{sid, token, http.Client{}},
 	}
 }
 

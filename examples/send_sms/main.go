@@ -40,5 +40,5 @@ func main() {
 	go printStatus(cp)
 
 	http.Handle("/", sms.CallbackHandler(cp))
-	http.ListenAndServe(":500", nil)
+	http.ListenAndServe("0.0.0.0:8000", nil)
 }

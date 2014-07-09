@@ -17,6 +17,17 @@ import (
 type VoiceAccount struct {
 	AccountSid string
 	Token      string
+	Client     http.Client
+}
+
+func (v VoiceAccount) GetSid() string {
+	return v.AccountSid
+}
+func (v VoiceAccount) GetToken() string {
+	return v.Token
+}
+func (v VoiceAccount) GetClient() http.Client {
+	return v.Client
 }
 
 // Represents the data used in creating an outbound voice message.
@@ -39,7 +50,19 @@ type Post struct {
 	TimeOut              *bool
 }
 
-func validatePost(p Post) error {
+func (p *Post) Build(resp http.Response) error {
+	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return errors.New(fmt.Sprintf("Error while reading json from buffer => %s", err.Error()))
+	}
+	err = json.Unmarshal(bodyBytes, resp)
+	if err != nil {
+		return common.DecodeError(err, bodyBytes)
+	}
+	return nil
+}
+
+func (p Post) Validate() error {
 	if p.From == "" || p.To == "" {
 		return errors.New("Both \"From\" and \"To\" must be set in Post.")
 	}
@@ -55,16 +78,7 @@ func validatePost(p Post) error {
 	return nil
 }
 
-// Represents the callback sent everytime the status of the call is updated.
-type Callback struct {
-	common.StandardRequest
-	CallDuration      string
-	RecordingUrl      string
-	RecordingSid      string
-	RecordingDuration string
-}
-
-func (p Post) getReader() io.Reader {
+func (p Post) GetReader() io.Reader {
 	vals := url.Values{}
 	vals.Set("To", p.To)
 	vals.Set("From", p.From)
@@ -97,44 +111,23 @@ func (p Post) getReader() io.Reader {
 	}
 
 	return strings.NewReader(vals.Encode())
-
 }
 
 // Internal function for sending the post request to twilio.
 func (act VoiceAccount) makeCall(dest string, msg Post, resp *Response) error {
 	// send post request to twilio
-	c := http.Client{}
-	req, err := http.NewRequest("POST", dest, msg.getReader())
+	twilioResp, err := common.FormNewPostRequest(dest, msg, act, 201)
 	if err != nil {
-		return errors.New(fmt.Sprintf("Error with req => %s", err.Error()))
+		return err
 	}
 
-	req.SetBasicAuth(act.AccountSid, act.Token)
-	req.Header.Add("Accept", "application/json")
-	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-	twilioResp, err := c.Do(req)
-	if err != nil {
-		return errors.New(fmt.Sprintf("Error with resp => %s", err.Error()))
-	}
-	if twilioResp.StatusCode != 201 {
-		return common.NewTwilioError(twilioResp)
-	}
-
-	// parse twilio response
-	bodyBytes, err := ioutil.ReadAll(twilioResp.Body)
-	if err != nil {
-		return errors.New(fmt.Sprintf("Error while reading json from buffer => %s", err.Error()))
-	}
-	err = json.Unmarshal(bodyBytes, resp)
-	if err != nil {
-		return errors.New(fmt.Sprintf("Error while decoding json => %s, recieved msg => %s", err.Error(), string(bodyBytes)))
-	}
-	return nil
+	// build twilio response
+	return resp.Build(twilioResp)
 }
 
 // Sends a post request to Twilio to send a voice request.
 func (act VoiceAccount) Call(p Post) (Response, error) {
-	err := validatePost(p)
+	err := p.Validate()
 	if err != nil {
 		return Response{}, errors.New(fmt.Sprintf("Error validating voice post => %s.\n", err.Error()))
 	}

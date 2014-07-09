@@ -16,29 +16,29 @@ const (
 
 func TestValidateSmsPostSuccess(t *testing.T) {
 	p := Post{From: testNumber1, To: testNumber2, Body: "test"}
-	if nil != validateSmsPost(p) {
+	if nil != p.Validate() {
 		t.Error("Validation of valid sms post failed.")
 	}
 
 	p = Post{From: testNumber1, To: testNumber2, MediaUrl: "https://www.twilio.com/"}
-	if nil != validateSmsPost(p) {
+	if nil != p.Validate() {
 		t.Error("Validation of valid sms post failed.")
 	}
 }
 
 func TestValidateSmsPostFailure(t *testing.T) {
 	p := Post{}
-	if nil == validateSmsPost(p) {
+	if nil == p.Validate() {
 		t.Error("Validation of sms post missing To & From failed.")
 	}
 
 	p = Post{From: testNumber1}
-	if nil == validateSmsPost(p) {
+	if nil == p.Validate() {
 		t.Error("Validation of sms post missing From failed.")
 	}
 
 	p = Post{From: testNumber1, To: testNumber2}
-	if nil == validateSmsPost(p) {
+	if nil == p.Validate() {
 		t.Error("Validation of sms post missing Body & MediaUrl failed.")
 	}
 }
@@ -60,7 +60,7 @@ func startMockHttpServer(requests *int) *httptest.Server {
 }
 
 func TestSendSmsSuccess(t *testing.T) {
-	act := SmsAccount{"act", "token"}
+	act := SmsAccount{"act", "token", http.Client{}}
 
 	// start a server to recieve post request
 	numRequests := 0
@@ -81,7 +81,7 @@ func TestSendSmsSuccess(t *testing.T) {
 }
 
 func TestSendSmsFailure(t *testing.T) {
-	act := SmsAccount{"act", "token"}
+	act := SmsAccount{"act", "token", http.Client{}}
 
 	// start a server to recieve post request
 	numRequests := 0

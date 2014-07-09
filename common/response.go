@@ -54,11 +54,6 @@ type ResponseCore struct {
 	DateUpdated  JsonTime `json:"date_updated"`
 }
 
-type Media struct {
-	ContentType string
-	Url         string
-}
-
 type Location struct {
 	FromCity    string
 	FromState   string
@@ -76,6 +71,5 @@ type StandardRequest struct {
 	AccountSid string
 	From       string
 	To         string
-	MediaList  []Media
 	Location   *Location // Only sent when Twilio can look up the geographic data.
 }
