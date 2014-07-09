@@ -32,12 +32,12 @@ func (t *GatherTwiml) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 }
 
 func (t *GatherTwiml) Play(opts PlayOpts, urls ...string) GatherBody {
-	addPlay(t, opts, urls)
+	addPlay(t, &opts, urls)
 	return t
 }
 
 func (t *GatherTwiml) Say(opts SayOpts, lines ...string) GatherBody {
-	addSay(t, opts, lines)
+	addSay(t, &opts, lines)
 	return t
 }
 

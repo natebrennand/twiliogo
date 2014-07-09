@@ -4,7 +4,7 @@ package twiml
 //
 // https://www.twilio.com/docs/api/twiml/say
 func (t *Response) Say(opts SayOpts, lines ...string) TwimlInterface {
-	addSay(t, opts, lines)
+	addSay(t, &opts, lines)
 	return t
 }
 
@@ -12,7 +12,7 @@ func (t *Response) Say(opts SayOpts, lines ...string) TwimlInterface {
 //
 // https://www.twilio.com/docs/api/twiml/play
 func (t *Response) Play(opts PlayOpts, urls ...string) TwimlInterface {
-	addPlay(t, opts, urls)
+	addPlay(t, &opts, urls)
 	return t
 }
 
@@ -20,9 +20,7 @@ func (t *Response) Play(opts PlayOpts, urls ...string) TwimlInterface {
 //
 // https://www.twilio.com/docs/api/twiml/record
 func (t *Response) Record(opts RecordOpts, action string) TwimlInterface {
-	newRecord := &record{0, action, &opts}
-	t.contents = append(t.contents, newRecord)
-
+	addRecord(t, &opts, &action)
 	return t
 }
 
@@ -49,6 +47,6 @@ func (t *Response) Gather(opts GatherOpts, nested GatherBody) TwimlInterface {
 //
 // https://www.twilio.com/docs/api/twiml/sms
 func (t *Response) Sms(opts SmsOpts, text string) TwimlInterface {
-	addSms(t, opts, text)
+	addSms(t, &opts, &text)
 	return t
 }
