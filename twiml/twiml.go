@@ -27,13 +27,13 @@ type TwimlInterface interface {
 	// Reject(...string) TwimlInterface
 }
 
-type Twiml struct {
+type Response struct {
 	contents []interface{}
 }
 
 // Returns a TwiML representation of the previous calls on the struct as a byte
 // slice.
-func (t *Twiml) Render() (result []byte, err error) {
+func (t *Response) Render() (result []byte, err error) {
 	result, err = xml.MarshalIndent(t, "\t", "\t")
 	if err != nil {
 		return
@@ -45,7 +45,7 @@ func (t *Twiml) Render() (result []byte, err error) {
 
 // Returns a TwiML representation of the previous calls on the struct, enclosed
 // in a Reader interface.
-func (t *Twiml) RenderReader() (io.Reader, error) {
+func (t *Response) RenderReader() (io.Reader, error) {
 	result, err := t.Render()
 	if err != nil {
 		return nil, err
@@ -57,7 +57,7 @@ func (t *Twiml) RenderReader() (io.Reader, error) {
 // Say some text during a phone call.
 //
 // https://www.twilio.com/docs/api/twiml/say
-func (t *Twiml) Say(opts SayOpts, lines ...string) TwimlInterface {
+func (t *Response) Say(opts SayOpts, lines ...string) TwimlInterface {
 	for _, line := range lines {
 		t.contents = append(t.contents, &say{0, line, &opts})
 	}
@@ -68,7 +68,7 @@ func (t *Twiml) Say(opts SayOpts, lines ...string) TwimlInterface {
 // Play an audio file during a phone call.
 //
 // https://www.twilio.com/docs/api/twiml/play
-func (t *Twiml) Play(opts PlayOpts, urls ...string) TwimlInterface {
+func (t *Response) Play(opts PlayOpts, urls ...string) TwimlInterface {
 	for _, url := range urls {
 		t.contents = append(t.contents, &play{0, url, &opts})
 	}
@@ -79,7 +79,7 @@ func (t *Twiml) Play(opts PlayOpts, urls ...string) TwimlInterface {
 // Record audio during a phone call.
 //
 // https://www.twilio.com/docs/api/twiml/record
-func (t *Twiml) Record(opts RecordOpts, action string) TwimlInterface {
+func (t *Response) Record(opts RecordOpts, action string) TwimlInterface {
 	newRecord := &record{0, action, &opts}
 	t.contents = append(t.contents, newRecord)
 
