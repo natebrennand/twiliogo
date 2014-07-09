@@ -4,10 +4,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/natebrennand/twiliogo/common"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -19,14 +22,21 @@ type VoiceAccount struct {
 // Represents the data used in creating an outbound voice message.
 // "From" & "To" are required attributes.
 // Either a ApplicationSid or a Url must also be provided.
-// Visit https://www.twilio.com/docs/api/rest/making-calls#post-parameters for more details.
+// Visit https://www.twilio.com/docs/api/rest/making-calls#post-parameters for more details and
+// explanation of other optional parameters.
 type Post struct {
-	From           string
-	To             string
-	Body           string
-	Url            string
-	StatusCallback string
-	ApplicationSid string
+	From                 string
+	To                   string
+	Body                 string
+	Url                  string
+	ApplicationSid       string
+	StatusCallback       string
+	Method               string
+	FallbackUrl          string
+	StatusCallbackMethod string
+	SendDigits           string
+	IfMachine            string
+	TimeOut              *bool
 }
 
 func validatePost(p Post) error {
@@ -36,29 +46,55 @@ func validatePost(p Post) error {
 	if p.ApplicationSid == "" && p.Url == "" {
 		return errors.New("Either \"ApplicationSid\" or \"Url\" must be set.")
 	}
+	if p.SendDigits != "" {
+		match, err := regexp.MatchString(`^[0-9#\*w]+$`, p.SendDigits)
+		if match != true || err != nil {
+			return errors.New("Post's SendDigits can only contain digits, #, * or w")
+		}
+	}
+
 	return nil
 }
 
 // Represents the callback sent everytime the status of the call is updated.
 type Callback struct {
-	standardRequest
-	RecordingUrl string
-	CallDuration string
+	common.StandardRequest
+	CallDuration      string
+	RecordingUrl      string
+	RecordingSid      string
+	RecordingDuration string
 }
 
 func (p Post) getReader() io.Reader {
 	vals := url.Values{}
-	if p.To != "" {
-		vals.Set("To", p.To)
-	}
-	if p.From != "" {
-		vals.Set("From", p.From)
-	}
+	vals.Set("To", p.To)
+	vals.Set("From", p.From)
 	if p.Url != "" {
 		vals.Set("Url", p.Url)
 	}
 	if p.ApplicationSid != "" {
 		vals.Set("ApplicationSid", p.ApplicationSid)
+	}
+	if p.StatusCallback != "" {
+		vals.Set("StatusCallback", p.StatusCallback)
+	}
+	if p.Method != "" {
+		vals.Set("Method", p.Method)
+	}
+	if p.FallbackUrl != "" {
+		vals.Set("FallbackUrl", p.FallbackUrl)
+	}
+	if p.StatusCallbackMethod != "" {
+		vals.Set("StatusCallbackMethod", p.StatusCallbackMethod)
+	}
+	if p.SendDigits != "" {
+		vals.Set("SendDigits", p.SendDigits)
+	}
+	if p.IfMachine != "" {
+		vals.Set("IfMachine", p.IfMachine)
+	}
+	if p.TimeOut != nil {
+		vals.Set("TimeOut", strconv.FormatBool(*p.TimeOut))
 	}
 
 	return strings.NewReader(vals.Encode())

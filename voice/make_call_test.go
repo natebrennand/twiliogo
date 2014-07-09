@@ -24,6 +24,11 @@ func TestValidatePostSuccess(t *testing.T) {
 	if nil != validatePost(p) {
 		t.Error("Validation of valid voice post failed.")
 	}
+
+	p = Post{From: testNumber1, To: testNumber2, Url: "http://twimlbin.com/558a498f", SendDigits: "1234"}
+	if nil != validatePost(p) {
+		t.Error("Validation of valid voice post failed with SendDigits.")
+	}
 }
 
 func TestValidatePostFailure(t *testing.T) {
@@ -40,6 +45,11 @@ func TestValidatePostFailure(t *testing.T) {
 	p = Post{From: testNumber1, To: testNumber2}
 	if nil == validatePost(p) {
 		t.Error("Validation of voice post missing Url & ApplicationSid failed.")
+	}
+
+	p = Post{From: testNumber1, To: testNumber2, Url: "http://twimlbin.com/558a498f", SendDigits: "1234a"}
+	if nil == validatePost(p) {
+		t.Error("Validation of invalid voice post failed with bad SendDigits.")
 	}
 }
 
