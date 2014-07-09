@@ -15,10 +15,18 @@ const endToEndStr = `<?xml version="1.0" encoding="UTF-8"?>
 </Response>
 `
 
-var testTwiml TwimlInterface
+var testTwiml *Response
+
+func TestTwimlSatisfiesXmlInterface(t *testing.T) {
+	assert.Implements(t, (*xml.Marshaler)(nil), new(Response))
+}
+
+// func TestGatherSatisfiesXmlInterface(t *testing.T) {
+// 	assert.Implements(t, (*xml.Marshaler)(nil), new(gather))
+// }
 
 func TestEmptyResponse(t *testing.T) {
-	testTwiml = &Twiml{}
+	testTwiml = &Response{}
 	output, err := testTwiml.Render()
 	str := string(output)
 	assert.NoError(t, err)
@@ -29,7 +37,7 @@ func TestEmptyResponse(t *testing.T) {
 }
 
 func TestEndToEnd(t *testing.T) {
-	testTwiml = new(Twiml)
+	testTwiml = new(Response)
 	output, err := testTwiml.Say(SayOpts{Voice: "alice"}, "My hands are typing words", "Haaaaaaaaaaaaands").Render()
 	assert.NoError(t, err)
 	expected := strings.TrimSpace(strings.Replace(endToEndStr, "\n", "", -1))
@@ -38,21 +46,37 @@ func TestEndToEnd(t *testing.T) {
 }
 
 func TestSay(t *testing.T) {
-	testTwiml = &Twiml{}
+	testTwiml = &Response{}
 	opts := SayOpts{Voice: "alice", Language: "english", Loop: 2}
 	_, err := testTwiml.Say(opts, "line two").Render()
 	assert.NoError(t, err)
 }
 
 func TestPlay(t *testing.T) {
-	testTwiml = &Twiml{}
+	testTwiml = &Response{}
 	_, err := testTwiml.Play(PlayOpts{}, "http://demo.kevinwhinnery.com/audio/zelda.mp3", "http://somesite.com/leroyjenkins.mp3").Render()
 	assert.NoError(t, err)
 }
 
 func TestRecord(t *testing.T) {
-	testTwiml = &Twiml{}
+	testTwiml = &Response{}
 	recOpts := RecordOpts{Method: "POST"}
 	_, err := testTwiml.Record(recOpts, "http://demo.kevinwhinnery.com/audio/zelda.mp3").Render()
 	assert.NoError(t, err)
+}
+
+func TestPause(t *testing.T) {
+	testTwiml = new(Response)
+	_, err := testTwiml.Pause(5).Render()
+	assert.NoError(t, err)
+}
+
+func TestGather(t *testing.T) {
+	testTwiml = &Response{}
+	testTwiml.Gather(GatherOpts{Timeout: 10}, new(GatherTwiml).Play(PlayOpts{}, "stuff"))
+	output, err := testTwiml.Render()
+	assert.NoError(t, err)
+	str := string(output)
+	// Make sure the gather struct doesn't render it's Inner field to xml.
+	assert.NotContains(t, str, "Inner")
 }

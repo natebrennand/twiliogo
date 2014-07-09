@@ -1,41 +1,46 @@
 package twiml
 
-type say struct {
-	XMLName  int    `xml:"Say"`
-	Sentence string `xml:",chardata"`
-	*SayOpts
+// Say some text during a phone call.
+//
+// https://www.twilio.com/docs/api/twiml/say
+func (t *Response) Say(opts SayOpts, lines ...string) TwimlInterface {
+	addSay(t, opts, lines)
+	return t
 }
 
-type SayOpts struct {
-	Voice    string `xml:"voice,attr,omitempty"`
-	Language string `xml:"language,attr,omitempty"`
-	Loop     int    `xml:"loop,attr,omitempty"`
+// Play an audio file during a phone call.
+//
+// https://www.twilio.com/docs/api/twiml/play
+func (t *Response) Play(opts PlayOpts, urls ...string) TwimlInterface {
+	addPlay(t, opts, urls)
+	return t
 }
 
-type play struct {
-	XMLName int    `xml:"Play"`
-	Url     string `xml:",chardata"`
-	*PlayOpts
+// Record audio during a phone call.
+//
+// https://www.twilio.com/docs/api/twiml/record
+func (t *Response) Record(opts RecordOpts, action string) TwimlInterface {
+	newRecord := &record{0, action, &opts}
+	t.contents = append(t.contents, newRecord)
+
+	return t
 }
 
-type PlayOpts struct {
-	Loop   int `xml:"loop,attr,omitempty"`
-	Digits int `xml:"digits,attr,omitempty"`
+// Wait for some number of seconds during a call
+//
+// https://www.twilio.com/docs/api/twiml/pause
+func (t *Response) Pause(length int) TwimlInterface {
+	addPause(t, length)
+	return t
 }
 
-type record struct {
-	XMLName int    `xml:"Record"`
-	Action  string `xml:"action,attr,omitempty"`
-	*RecordOpts
-}
+// Collect digits entered by a caller. Pass anoter TwimlInterface to use Say,
+// Play, and Pause verbs during the Gather.
+//
+// https://www.twilio.com/docs/api/twiml/gather
+func (t *Response) Gather(opts GatherOpts, nested GatherBody) TwimlInterface {
+	newGather := &gather{0, &opts, nested}
+	t.contents = append(t.contents, &newGather)
 
-type RecordOpts struct {
-	Method             string `xml:"method,attr,omitempty"`
-	Timeout            int    `xml:"timeout,attr,omitempty"`
-	FinishOnKey        string `xml:"finishOnKey,attr,omitempty"`
-	MaxLength          int    `xml:"maxLength,attr,omitempty"`
-	Transcribe         bool   `xml:"transcribe,attr,omitempty"`
-	TranscribeCallback string `xml:"transcribeCallback,attr,omitempty"`
-	PlayBeep           *bool  `xml:"playBeep,attr,omitempty"`
-	Trim               string `xml:"trim,attr,omitempty"`
+	return t
 }
