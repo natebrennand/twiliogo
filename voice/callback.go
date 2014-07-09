@@ -1,11 +1,8 @@
 package voice
 
 import (
-	"errors"
-	"fmt"
 	"github.com/natebrennand/twiliogo/common"
 	"net/http"
-	"strings"
 )
 
 // Represents the callback sent everytime the status of the call is updated.
@@ -24,14 +21,8 @@ type Callback struct {
 	CallerName    string
 }
 
-// Creates a Callback struct from a from
+// Creates a Callback struct from a form
 func (cb *Callback) Parse(req *http.Request) error {
-	recUrlString := req.PostFormValue("RecordingUrl")
-	correct := strings.Contains(recUrlString, "http")
-
-	if recUrlString != "" && correct == false {
-		return errors.New(fmt.Sprintf("Invalid url => %s", recUrlString))
-	}
 
 	var msgLocation *common.Location = nil
 	if req.PostFormValue("FromCity") != "" { // ignore location data if possible
@@ -70,8 +61,8 @@ func (cb *Callback) Parse(req *http.Request) error {
 	return nil
 }
 
-func (cb Callback) CallbackHandler(callbackChan chan Callback) http.HandlerFunc {
-	// var cb Callback
+func CallbackHandler(callbackChan chan Callback) http.HandlerFunc {
+	var cb Callback
 	return http.HandlerFunc(func(resp http.ResponseWriter, req *http.Request) {
 		err := cb.Parse(req)
 		if err != nil {

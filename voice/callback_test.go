@@ -34,23 +34,11 @@ func TestParseCallbackSuccess(t *testing.T) {
 	}
 }
 
-func TestCallbackFailure(t *testing.T) {
-	var cb Callback
-	req := makeTestCallbackFailure()
-
-	err := cb.Parse(req)
-	if err == nil {
-		t.Errorf("parseCallback should have failed")
-	}
-}
-
-func TestCallBackHandler(t *testing.T) {
-	var cb Callback
-
+func TestCallbackHandler(t *testing.T) {
 	resp := httptest.NewRecorder()
 	req := makeTestCallbackReq()
 	cbChan := make(chan Callback)
-	handler := cb.CallbackHandler(cbChan)
+	handler := CallbackHandler(cbChan)
 	go func() {
 		cb := <-cbChan
 		if cb.AccountSid != testCallbackFixture.AccountSid {
