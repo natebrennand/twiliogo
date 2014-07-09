@@ -12,15 +12,13 @@ var testTwiml TwimlInterface
 
 func TestEmptyResponse(t *testing.T) {
 	testTwiml = &Twiml{}
-	result, err := testTwiml.Render()
+	output, err := testTwiml.Render()
+	str := string(output)
 	assert.NoError(t, err)
-	read, err := ioutil.ReadAll(result)
-	output := string(read)
-	assert.NoError(t, err)
-	assert.Contains(t, output, xml.Header)
-	assert.Contains(t, output, "<Response>")
-	assert.Contains(t, output, "</Response>")
-	t.Log(output)
+	assert.Contains(t, str, xml.Header)
+	assert.Contains(t, str, "<Response>")
+	assert.Contains(t, str, "</Response>")
+	t.Log(string(str))
 }
 
 func TestSay(t *testing.T) {

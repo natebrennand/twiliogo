@@ -12,7 +12,8 @@ var (
 )
 
 type TwimlInterface interface {
-	Render() (io.Reader, error)
+	Render() ([]byte, error)
+	RenderReader() (io.Reader, error)
 	Say(SayOpts, ...string) TwimlInterface
 	Play(PlayOpts, ...string) TwimlInterface
 	// Dial(...string) TwimlInterface
@@ -30,13 +31,27 @@ type Twiml struct {
 	contents []interface{}
 }
 
-// Returns a TwiML representation of the previous calls on the struct, contained
-// inside a Reader interface.
-func (t *Twiml) Render() (io.Reader, error) {
-	result, err := xml.MarshalIndent(t.contents, "  ", "  ")
+// Returns a TwiML representation of the previous calls on the struct as a byte
+// slice.
+func (t *Twiml) Render() (result []byte, err error) {
+	result, err = xml.MarshalIndent(t, "  ", "  ")
+	if err != nil {
+		return
+	}
 	result = append(preTwiml, result...)
 	result = append(result, postTwiml...)
-	return bytes.NewReader(result), err
+	return
+}
+
+// Returns a TwiML representation of the previous calls on the struct, enclosed
+// in a Reader interface.
+func (t *Twiml) RenderReader() (io.Reader, error) {
+	result, err := t.Render()
+	if err != nil {
+		return nil, err
+	}
+
+	return bytes.NewReader(result), nil
 }
 
 // Say some text during a phone call.
