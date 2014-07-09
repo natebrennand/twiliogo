@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-func DecodeError(err error, body []byte) error {
+func decodeError(err error, body []byte) error {
 	return errors.New(fmt.Sprintf("Error while decoding json => %s, recieved msg => %s", err.Error(), string(body)))
 }
 

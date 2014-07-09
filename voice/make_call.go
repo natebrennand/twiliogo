@@ -1,12 +1,10 @@
 package voice
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/natebrennand/twiliogo/common"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -50,34 +48,6 @@ type Post struct {
 	TimeOut              *bool
 }
 
-func (p *Post) Build(resp http.Response) error {
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return errors.New(fmt.Sprintf("Error while reading json from buffer => %s", err.Error()))
-	}
-	err = json.Unmarshal(bodyBytes, resp)
-	if err != nil {
-		return common.DecodeError(err, bodyBytes)
-	}
-	return nil
-}
-
-func (p Post) Validate() error {
-	if p.From == "" || p.To == "" {
-		return errors.New("Both \"From\" and \"To\" must be set in Post.")
-	}
-	if p.ApplicationSid == "" && p.Url == "" {
-		return errors.New("Either \"ApplicationSid\" or \"Url\" must be set.")
-	}
-	if p.SendDigits != "" {
-		match, err := regexp.MatchString(`^[0-9#\*w]+$`, p.SendDigits)
-		if match != true || err != nil {
-			return errors.New("Post's SendDigits can only contain digits, #, * or w")
-		}
-	}
-	return nil
-}
-
 func (p Post) GetReader() io.Reader {
 	vals := url.Values{}
 	vals.Set("To", p.To)
@@ -113,26 +83,32 @@ func (p Post) GetReader() io.Reader {
 	return strings.NewReader(vals.Encode())
 }
 
+// Validates the Voice Post to ensure validity.
+func (p Post) Validate() error {
+	if p.From == "" || p.To == "" {
+		return errors.New("Both \"From\" and \"To\" must be set in Post.")
+	}
+	if p.ApplicationSid == "" && p.Url == "" {
+		return errors.New("Either \"ApplicationSid\" or \"Url\" must be set.")
+	}
+	if p.SendDigits != "" {
+		match, err := regexp.MatchString(`^[0-9#\*w]+$`, p.SendDigits)
+		if match != true || err != nil {
+			return errors.New("Post's SendDigits can only contain digits, #, * or w")
+		}
+	}
+	return nil
+}
+
 // Internal function for sending the post request to twilio.
 func (act VoiceAccount) makeCall(dest string, msg Post, resp *Response) error {
 	// send post request to twilio
-	twilioResp, err := common.FormNewPostRequest(dest, msg, act, 201)
-	if err != nil {
-		return err
-	}
-
-	// build twilio response
-	return resp.Build(twilioResp)
+	return common.FormNewPostFormRequest(dest, msg, act, resp, 201)
 }
 
 // Sends a post request to Twilio to send a voice request.
 func (act VoiceAccount) Call(p Post) (Response, error) {
-	err := p.Validate()
-	if err != nil {
-		return Response{}, errors.New(fmt.Sprintf("Error validating voice post => %s.\n", err.Error()))
-	}
-
 	var r Response
-	err = act.makeCall(fmt.Sprintf(postUrl, act.AccountSid), p, &r)
-	return r, nil
+	err := act.makeCall(fmt.Sprintf(postUrl, act.AccountSid), p, &r)
+	return r, err
 }

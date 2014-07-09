@@ -22,19 +22,27 @@ type TwilioPost interface {
 	Validate() error
 }
 
-func FormNewPostRequest(url string, msg TwilioPost, t TwilioAccount, expectedResponse int) (*http.Response, error) {
+func FormNewPostFormRequest(url string, msg TwilioPost, t TwilioAccount, resp TwilioResponse, expectedResponse int) error {
+	err := msg.Validate()
+	if err != nil {
+		return errors.New(fmt.Sprintf("Error validating sms post => %s.\n", err.Error()))
+	}
+
 	req, err := http.NewRequest("POST", url, msg.GetReader())
 	req.SetBasicAuth(t.GetSid(), t.GetToken())
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	client := t.GetClient()
-	resp, err := client.Do(req)
+	httpResp, err := client.Do(req)
 	if err != nil {
-		return resp, errors.New(fmt.Sprintf("Error sending req => %s", err.Error()))
+		return errors.New(fmt.Sprintf("Error sending req => %s", err.Error()))
 	}
-	if resp.StatusCode != expectedResponse {
-		return resp, NewTwilioError(*resp)
+	if httpResp.StatusCode != expectedResponse {
+		return NewTwilioError(*httpResp)
 	}
-	return resp, err
+
+	// build response
+	resp.Build(httpResp)
+	return nil
 }

@@ -26,7 +26,7 @@ func (r *Response) Build(resp *http.Response) error {
 	}
 	err = json.Unmarshal(bodyBytes, r)
 	if err != nil {
-		return common.DecodeError(err, bodyBytes)
+		return errors.New(fmt.Sprintf("Error while decoding json => %s, recieved msg => %s", err.Error(), string(bodyBytes)))
 	}
 	return nil
 }

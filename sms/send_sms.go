@@ -59,6 +59,7 @@ func (p Post) GetReader() io.Reader {
 	return strings.NewReader(v.Encode())
 }
 
+// Validates the Voice Post to ensure validity.
 func (p Post) Validate() error {
 	if p.From == "" || p.To == "" {
 		return errors.New(`Both "From" and "To" must be set in Post.`)
@@ -72,29 +73,12 @@ func (p Post) Validate() error {
 // Internal function for sending the post request to twilio.
 func (act SmsAccount) sendSms(destUrl string, msg Post, resp *Response) error {
 	// send post request to twilio
-	twilioResp, err := common.FormNewPostRequest(destUrl, msg, act, 201)
-	if err != nil {
-		return err
-	}
-
-	// parse twilio response
-	return resp.Build(twilioResp)
+	return common.FormNewPostFormRequest(destUrl, msg, act, resp, 201)
 }
 
 // Sends a post request to Twilio to send a sms request.
 func (act SmsAccount) Send(p Post) (Response, error) {
-	err := p.Validate()
-	if err != nil {
-		return Response{}, errors.New(fmt.Sprintf("Error validating sms post => %s.\n", err.Error()))
-	}
-
-	// marshal json string
-	if err != nil {
-		return Response{}, errors.New(fmt.Sprintf("Error encoding json => %s", err.Error()))
-	}
-
 	var r Response
-	err = act.sendSms(fmt.Sprintf(postUrl, act.AccountSid), p, &r)
-
+	err := act.sendSms(fmt.Sprintf(postUrl, act.AccountSid), p, &r)
 	return r, err
 }

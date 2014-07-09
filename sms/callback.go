@@ -27,7 +27,7 @@ type Callback struct {
 }
 
 // Parses the form encoded callback into a Callback struct
-func parseCallback(req *http.Request, cb *Callback) error {
+func (cb *Callback) Parse(req *http.Request) error {
 	numMediaString := req.PostFormValue("NumMedia")
 	numMedia, err := strconv.Atoi(numMediaString)
 	if err != nil && numMediaString != "" {
@@ -79,7 +79,7 @@ func parseCallback(req *http.Request, cb *Callback) error {
 func CallbackHandler(callbackChan chan Callback) http.HandlerFunc {
 	var cb Callback
 	return http.HandlerFunc(func(resp http.ResponseWriter, req *http.Request) {
-		err := parseCallback(req, &cb)
+		err := cb.Parse(req)
 		if err != nil {
 			resp.WriteHeader(http.StatusBadRequest)
 			return
