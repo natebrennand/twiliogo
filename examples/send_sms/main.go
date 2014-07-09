@@ -15,10 +15,10 @@ func sendSms() {
 	fmt.Println("Sending")
 	act := twiliogo.NewAccountFromEnv()
 	resp, err := act.Sms.Send(sms.Post{
-		From:           "+14248004123",
-		To:             "+3605847116",
+		From:           "+{ Your Twilio Number }",
+		To:             "+{ Your Destination Number }",
 		Body:           "Yo",
-		StatusCallback: "http://1c756787.ngrok.com/",
+		StatusCallback: "{ Your callback endpoint }",
 	})
 	if err != nil {
 		fmt.Println("Error sending sms: ", err.Error())
@@ -40,5 +40,5 @@ func main() {
 	go printStatus(cp)
 
 	http.Handle("/", sms.CallbackHandler(cp))
-	http.ListenAndServe("0.0.0.0:8001", nil)
+	http.ListenAndServe(":500", nil)
 }

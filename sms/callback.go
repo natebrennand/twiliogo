@@ -73,12 +73,12 @@ func parseCallback(req *http.Request, cb *Callback) error {
 func CallbackHandler(callbackChan chan Callback) http.HandlerFunc {
 	var cb Callback
 	return http.HandlerFunc(func(resp http.ResponseWriter, req *http.Request) {
-		resp.WriteHeader(200)
 		err := parseCallback(req, &cb)
 		if err != nil {
-			resp.WriteHeader(400)
+			resp.WriteHeader(http.StatusBadRequest)
 			return
 		}
+		resp.WriteHeader(http.StatusOK)
 		callbackChan <- cb
 	})
 }
