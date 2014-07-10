@@ -5,7 +5,7 @@ import (
 	"github.com/natebrennand/twiliogo/sms"
 )
 
-func Example_sendSms() {
+func ExampleSend() {
 	act := twiliogo.NewAccount("AC1234567890abcdefghik1234567890ab", "token")
 	act.Sms.Send(sms.Post{
 		From: "+{Your twilio number}",
