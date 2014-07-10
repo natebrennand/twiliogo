@@ -91,3 +91,11 @@ func (t *Response) Redirect(opts RedirectOpts, target string) TwimlInterface {
 	addRedirect(t, &opts, &target)
 	return t
 }
+
+// Reject an incoming call.
+//
+// https://www.twilio.com/docs/api/twiml/reject
+func (t *Response) Reject(reason string) TwimlInterface {
+	addReject(t, &reason)
+	return t
+}

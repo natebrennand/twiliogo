@@ -32,7 +32,7 @@ type TwimlInterface interface {
 	Hangup() TwimlInterface
 	Redirect(RedirectOpts, string) TwimlInterface
 	Pause(int) TwimlInterface
-	// Reject(...string) TwimlInterface
+	Reject(string) TwimlInterface
 }
 
 type Response struct {

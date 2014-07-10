@@ -145,3 +145,14 @@ func TestRedirect(t *testing.T) {
 	assert.Contains(t, str, "Redirect")
 	assert.Contains(t, str, "POST")
 }
+
+func TestReject(t *testing.T) {
+	testTwiml = &Response{}
+	testTwiml.Reject("busy")
+	output, err := testTwiml.Render()
+	assert.NoError(t, err)
+	str := string(output)
+	assert.Contains(t, str, "Reject")
+	assert.Contains(t, str, `reason="busy"`)
+	t.Log(str)
+}
