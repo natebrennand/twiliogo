@@ -26,9 +26,8 @@ type TwimlInterface interface {
 	Dial(DialOpts, DialBody) TwimlInterface
 	Record(RecordOpts, string) TwimlInterface
 	Gather(GatherOpts, GatherBody) TwimlInterface
-	// Sms(...string) TwimlInterface
+	Sms(SmsOpts, string) TwimlInterface
 	// Hangup(...string) TwimlInterface
-	// Queue(...string) TwimlInterface
 	// Redirect(...string) TwimlInterface
 	Pause(int) TwimlInterface
 	// Reject(...string) TwimlInterface
