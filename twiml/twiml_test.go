@@ -83,6 +83,6 @@ func TestGather(t *testing.T) {
 	output, err := testTwiml.Render()
 	assert.NoError(t, err)
 	str := string(output)
-	// Make sure the gather struct doesn't render it's Inner field to xml.
-	assert.NotContains(t, str, "Inner")
+	// Make sure the gather struct doesn't render it's Body field to xml.
+	assert.NotContains(t, str, "Body")
 }

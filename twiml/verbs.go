@@ -32,14 +32,12 @@ func (t *Response) Pause(length int) TwimlInterface {
 	return t
 }
 
-// Collect digits entered by a caller. Pass anoter TwimlInterface to use Say,
+// Collect digits entered by a caller. Pass a GatherBody interface to use Say,
 // Play, and Pause verbs during the Gather.
 //
 // https://www.twilio.com/docs/api/twiml/gather
 func (t *Response) Gather(opts GatherOpts, nested GatherBody) TwimlInterface {
-	newGather := &gather{0, &opts, nested}
-	t.contents = append(t.contents, &newGather)
-
+	addGather(t, &opts, &nested)
 	return t
 }
 
