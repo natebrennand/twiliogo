@@ -43,34 +43,15 @@ func (cb *Callback) Parse(req *http.Request) error {
 		}
 	}
 
-	var msgLocation *common.Location = nil
-	if req.PostFormValue("FromCity") != "" { // ignore location data if possible
-		msgLocation = &common.Location{
-			FromCity:    req.PostFormValue("FromCity"),
-			FromState:   req.PostFormValue("FromState"),
-			FromZip:     req.PostFormValue("FromZip"),
-			FromCountry: req.PostFormValue("FromCountry"),
-			ToCity:      req.PostFormValue("ToCity"),
-			ToState:     req.PostFormValue("ToState"),
-			ToZip:       req.PostFormValue("ToZip"),
-			ToCountry:   req.PostFormValue("ToCountry"),
-		}
-	}
-
 	*cb = Callback{
-		MessageSid:    req.PostFormValue("MessageSid"),
-		SmsSid:        req.PostFormValue("SmsSid"),
-		Body:          req.PostFormValue("Body"),
-		NumMedia:      numMedia,
-		MessageStatus: req.PostFormValue("MessageStatus"),
-		ErrorCode:     req.PostFormValue("ErrorCode"),
-		MediaList:     mediaArray,
-		StandardRequest: common.StandardRequest{
-			AccountSid: req.PostFormValue("AccountSid"),
-			From:       req.PostFormValue("From"),
-			To:         req.PostFormValue("To"),
-			Location:   msgLocation,
-		},
+		MessageSid:      req.PostFormValue("MessageSid"),
+		SmsSid:          req.PostFormValue("SmsSid"),
+		Body:            req.PostFormValue("Body"),
+		NumMedia:        numMedia,
+		MessageStatus:   req.PostFormValue("MessageStatus"),
+		ErrorCode:       req.PostFormValue("ErrorCode"),
+		MediaList:       mediaArray,
+		StandardRequest: common.ParseStandardRequest(req),
 	}
 	return nil
 }
