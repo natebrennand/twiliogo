@@ -16,7 +16,7 @@ func makeCall() string {
 	resp, err := act.Voice.Call(voice.Post{
 		From: "+16162882901",
 		To:   "+16164601267",
-		Url:  "http://twimlbin.com/558a498f",
+		URL:  "http://twimlbin.com/558a498f",
 	})
 
 	if err != nil {
@@ -33,7 +33,7 @@ func updateCall(sid string) {
 	fmt.Println("Posting update for ", sid)
 
 	resp, err := act.Voice.Update(voice.Update{
-		Url:    "http://twimlbin.com/701ed8a7",
+		URL:    "http://twimlbin.com/701ed8a7",
 		Method: "POST",
 	}, sid)
 

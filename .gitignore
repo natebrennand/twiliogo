@@ -4,3 +4,6 @@ main
 
 # credentials
 secrets.sh
+
+# backups
+*.bk

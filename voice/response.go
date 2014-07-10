@@ -2,7 +2,6 @@ package voice
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"github.com/natebrennand/twiliogo/common"
 	"io/ioutil"
@@ -12,11 +11,11 @@ import (
 
 type Call struct {
 	common.ResponseCore
-	Price          common.JsonPrice `json:"price"`
+	Price          common.JSONPrice `json:"price"`
 	ParentCallSid  string
 	PhoneNumberSid string
-	StartTime      common.JsonTime `json:"start_time"`
-	EndTime        common.JsonTime `json:"end_time"`
+	StartTime      common.JSONTime `json:"start_time"`
+	EndTime        common.JSONTime `json:"end_time"`
 	Duration       string          `json:"duration"`
 	AnsweredBy     string          `json:"answered_by"`
 	ForwardedFrom  string          `json:"fowarded_from"`
@@ -31,12 +30,12 @@ func validateCallSid(sid string) bool {
 func (r *Call) Build(resp *http.Response) error {
 	bodyBytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return errors.New(fmt.Sprintf("Error while reading json from buffer => %s", err.Error()))
+		return fmt.Errorf("Error while reading json from buffer => %s", err.Error())
 	}
 
 	err = json.Unmarshal(bodyBytes, r)
 	if err != nil {
-		return errors.New(fmt.Sprintf("Error while decoding json => %s, recieved msg => %s", err.Error(), string(bodyBytes)))
+		return fmt.Errorf("Error while decoding json => %s, recieved msg => %s", err.Error(), string(bodyBytes))
 	}
 	return nil
 }
@@ -49,11 +48,11 @@ type CallList struct {
 func (l *CallList) Build(resp *http.Response) error {
 	bodyBytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return errors.New(fmt.Sprintf("Error while reading json from buffer => %s", err.Error()))
+		return fmt.Errorf("Error while reading json from buffer => %s", err.Error())
 	}
 	err = json.Unmarshal(bodyBytes, l)
 	if err != nil {
-		return errors.New(fmt.Sprintf("Error while decoding json => %s, recieved msg => %s", err.Error(), string(bodyBytes)))
+		return fmt.Errorf("Error while decoding json => %s, recieved msg => %s", err.Error(), string(bodyBytes))
 	}
 	return nil
 }

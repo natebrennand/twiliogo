@@ -10,10 +10,10 @@ import (
 )
 
 type Update struct {
-	Url                  string `json:"url"`
+	URL                  string `json:"url"`
 	Method               string `json:"method"`
 	Status               string `json:"status"`
-	FallbackUrl          string `json:"fallback_url"`
+	FallbackURL          string `json:"fallback_url"`
 	FallbackMethod       string `json:"fallback_method"`
 	StatusCallback       string `json:"status_callback"`
 	StatusCallbackMethod string `json:"status_callback_method"`
@@ -21,8 +21,8 @@ type Update struct {
 
 func (p Update) GetReader() io.Reader {
 	vals := url.Values{}
-	if p.Url != "" {
-		vals.Set("Url", p.Url)
+	if p.URL != "" {
+		vals.Set("URL", p.URL)
 	}
 	if p.Status != "" {
 		vals.Set("Status", p.Status)
@@ -36,8 +36,8 @@ func (p Update) GetReader() io.Reader {
 	if p.Method != "" {
 		vals.Set("Method", p.Method)
 	}
-	if p.FallbackUrl != "" {
-		vals.Set("FallbackUrl", p.FallbackUrl)
+	if p.FallbackURL != "" {
+		vals.Set("FallbackURL", p.FallbackURL)
 	}
 	if p.FallbackMethod != "" {
 		vals.Set("FallbackMethod", p.FallbackMethod)
@@ -47,8 +47,8 @@ func (p Update) GetReader() io.Reader {
 }
 
 func (p Update) Validate() error {
-	if p.Url == "" && p.Method == "" && p.Status == "" {
-		return errors.New("Url or Status or Method must all be set.")
+	if p.URL == "" && p.Method == "" && p.Status == "" {
+		return errors.New("URL or Status or Method must all be set.")
 	}
 	return nil
 }
@@ -62,6 +62,6 @@ func (act VoiceAccount) postUpdate(dest string, msg Update, resp *Call) error {
 // Sends a post request to Twilio to modify a call
 func (act VoiceAccount) Update(p Update, sid string) (Call, error) {
 	var r Call
-	err := act.postUpdate(fmt.Sprintf(updateUrl, act.AccountSid, string(sid)), p, &r)
+	err := act.postUpdate(fmt.Sprintf(updateURL, act.AccountSid, string(sid)), p, &r)
 	return r, err
 }

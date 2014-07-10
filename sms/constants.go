@@ -1,9 +1,9 @@
 package sms
 
 const (
-	postUrl = "https://api.twilio.com/2010-04-01/Accounts/%s/Messages.json"    // takes an AccountSid
-	getUrl  = "https://api.twilio.com/2010-04-01/Accounts/%s/Messages/%s.json" // takes an AccountSid & MessageSdi
-	listUrl = "https://api.twilio.com/2010-04-01/Accounts/%s/Messages.json"    // takes an AccountSid
+	postURL = "https://api.twilio.com/2010-04-01/Accounts/%s/Messages.json"    // takes an AccountSid
+	getURL  = "https://api.twilio.com/2010-04-01/Accounts/%s/Messages/%s.json" // takes an AccountSid & MessageSdi
+	listURL = "https://api.twilio.com/2010-04-01/Accounts/%s/Messages.json"    // takes an AccountSid
 
 )
 

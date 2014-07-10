@@ -11,11 +11,11 @@ import (
 const (
 	validEndpoint   = "/valid"
 	errorEndpoint   = "/error"
-	badJsonEndpoint = "/badJson"
+	badJSONEndpoint = "/badJSON"
 )
 
 func TestValidatePostSuccess(t *testing.T) {
-	p := Post{From: testNumber1, To: testNumber2, Url: "http://twimlbin.com/558a498f"}
+	p := Post{From: testNumber1, To: testNumber2, URL: "http://twimlbin.com/558a498f"}
 	if nil != p.Validate() {
 		t.Error("Validation of valid voice post failed.")
 	}
@@ -25,7 +25,7 @@ func TestValidatePostSuccess(t *testing.T) {
 		t.Error("Validation of valid voice post failed.")
 	}
 
-	p = Post{From: testNumber1, To: testNumber2, Url: "http://twimlbin.com/558a498f", SendDigits: "1234"}
+	p = Post{From: testNumber1, To: testNumber2, URL: "http://twimlbin.com/558a498f", SendDigits: "1234"}
 	if nil != p.Validate() {
 		t.Error("Validation of valid voice post failed with SendDigits.")
 	}
@@ -44,16 +44,16 @@ func TestValidatePostFailure(t *testing.T) {
 
 	p = Post{From: testNumber1, To: testNumber2}
 	if nil == p.Validate() {
-		t.Error("Validation of voice post missing Url & ApplicationSid failed.")
+		t.Error("Validation of voice post missing URL & ApplicationSid failed.")
 	}
 
-	p = Post{From: testNumber1, To: testNumber2, Url: "http://twimlbin.com/558a498f", SendDigits: "1234a"}
+	p = Post{From: testNumber1, To: testNumber2, URL: "http://twimlbin.com/558a498f", SendDigits: "1234a"}
 	if nil == p.Validate() {
 		t.Error("Validation of invalid voice post failed with bad SendDigits.")
 	}
 }
 
-func startMockHttpServer(requests *int) *httptest.Server {
+func startMockHTTPServer(requests *int) *httptest.Server {
 	// start a server to recieve post request
 	testServer := httptest.NewServer(http.HandlerFunc(func(resp http.ResponseWriter, r *http.Request) {
 		*requests += 1
@@ -62,7 +62,7 @@ func startMockHttpServer(requests *int) *httptest.Server {
 			fmt.Fprint(resp, testResponseFixtureString)
 		} else if strings.Contains(r.URL.Path, errorEndpoint) {
 			resp.WriteHeader(400)
-		} else if strings.Contains(r.URL.Path, badJsonEndpoint) {
+		} else if strings.Contains(r.URL.Path, badJSONEndpoint) {
 			fmt.Fprint(resp, testResponseFixtureString[0:20])
 		}
 	}))
@@ -73,7 +73,7 @@ func TestSendSuccess(t *testing.T) {
 	act := VoiceAccount{"act", "token", http.Client{}}
 	// start a server to recieve post request
 	numRequests := 0
-	testPostServer := startMockHttpServer(&numRequests)
+	testPostServer := startMockHTTPServer(&numRequests)
 	defer testPostServer.Close()
 
 	var r Call
@@ -93,7 +93,7 @@ func TestSendFailure(t *testing.T) {
 	act := VoiceAccount{"act", "token", http.Client{}}
 	// start a server to recieve post request
 	numRequests := 0
-	testPostServer := startMockHttpServer(&numRequests)
+	testPostServer := startMockHTTPServer(&numRequests)
 	defer testPostServer.Close()
 
 	var r Call
@@ -105,7 +105,7 @@ func TestSendFailure(t *testing.T) {
 		t.Error("server never recieved a request.")
 	}
 
-	err = act.makeCall(testPostServer.URL+badJsonEndpoint, testPostFixture, &r)
+	err = act.makeCall(testPostServer.URL+badJSONEndpoint, testPostFixture, &r)
 	if err == nil {
 		t.Errorf("post should've failed with 400")
 	}
