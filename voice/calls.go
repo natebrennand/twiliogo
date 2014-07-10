@@ -116,3 +116,19 @@ func (act VoiceAccount) Call(p Post) (Response, error) {
 	err := act.makeCall(fmt.Sprintf(postUrl, act.AccountSid), p, &r)
 	return r, err
 }
+
+// Internal function for sending the post request to twilio.
+func (act VoiceAccount) getCall(destUrl string, resp *Response) error {
+	// send get request to twilio
+	return common.SendGetRequest(destUrl, act, resp, 200)
+}
+
+func (act VoiceAccount) Get(sid string) (Response, error) {
+	if true != validateCallSid(sid) {
+		return Response{}, errors.New("Invalid sid")
+	}
+
+	var m Response
+	err := act.getCall(fmt.Sprintf(getUrl, act.AccountSid, string(sid)), &m)
+	return m, err
+}
