@@ -54,19 +54,18 @@ func (act VoiceAccount) RecordingList(f RecordingListFilter) (RecordingList, err
 	return rl, err
 }
 
-func (act VoiceAccount) deleteRecording(destUrl string, resp *Recording) error {
+func (act VoiceAccount) deleteRecording(destUrl string) error {
 	// send get request to twilio
-	return common.SendGetRequest(destUrl, act, resp, 204)
+	return common.SendDeleteRequest(destUrl, act, 204)
 }
 
 // Returns data about recording as json
 // Can get .mp3 or .wav of recording from the uri provided in Recording
-func (act VoiceAccount) Delete(recSid string) (Recording, error) {
-	var r Recording
+func (act VoiceAccount) Delete(recSid string) error {
 	if !validateRecSid(recSid) {
-		return r, errors.New("Invalid sid")
+		return errors.New("Invalid sid")
 	}
 
-	err := act.deleteRecording(fmt.Sprintf(recordingUrl, act.AccountSid, string(recSid)), &r)
-	return r, err
+	err := act.deleteRecording(fmt.Sprintf(recordingUrl, act.AccountSid, string(recSid)))
+	return err
 }

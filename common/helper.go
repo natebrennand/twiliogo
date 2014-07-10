@@ -62,3 +62,21 @@ func SendGetRequest(url string, t TwilioAccount, resp TwilioResponse, expectedRe
 	// build response
 	return resp.Build(httpResp)
 }
+
+func SendDeleteRequest(url string, t TwilioAccount, expectedResponse int) error {
+	req, err := http.NewRequest("DELETE", url, nil)
+	req.SetBasicAuth(t.GetSid(), t.GetToken())
+	req.Header.Add("Accept", "application/json")
+
+	client := t.GetClient()
+	httpResp, err := client.Do(req)
+	if err != nil {
+		return errors.New(fmt.Sprintf("Error sending req => %s", err.Error()))
+	}
+	if httpResp.StatusCode != expectedResponse {
+		return NewTwilioError(*httpResp)
+	}
+
+	// build response
+	return nil
+}
