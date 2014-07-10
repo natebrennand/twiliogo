@@ -2,7 +2,9 @@ package sms
 
 const (
 	postUrl = "https://api.twilio.com/2010-04-01/Accounts/%s/Messages.json"    // takes an AccountSid
-	getUrl  = "https://api.twilio.com/2010-04-01/Accounts/%s/Messages/%s.json" // takes an AccountSid & MessageSid
+	getUrl  = "https://api.twilio.com/2010-04-01/Accounts/%s/Messages/%s.json" // takes an AccountSid & MessageSdi
+	listUrl = "https://api.twilio.com/2010-04-01/Accounts/%s/Messages.json"    // takes an AccountSid
+
 )
 
 var errorCode map[int]string = map[int]string{
