@@ -154,9 +154,9 @@ func (f Filter) GetQueryString() string {
 	if f.Status != "" {
 		v.Set("Status", f.Status)
 	}
-	// if f.StartTime != nil {
-	// 	v.Set("StartTime", f.StartTime) //.Format(common.GMTTimeLayout))
-	// }
+	if f.StartTime != nil {
+		v.Set("StartTime", f.StartTime.Format(common.GMTTimeLayout))
+	}
 	if f.ParentCallSid != "" {
 		v.Set("ParentCallSid", f.ParentCallSid)
 	}

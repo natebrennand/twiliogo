@@ -42,7 +42,7 @@ func (r *Call) Build(resp *http.Response) error {
 }
 
 type CallList struct {
-	//common.ListResponseCore
+	common.ListResponseCore
 	Calls *[]Call `json:"calls"`
 }
 
