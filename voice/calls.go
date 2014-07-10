@@ -180,3 +180,16 @@ func (act VoiceAccount) List(f Filter) (CallList, error) {
 	err := act.getList(fmt.Sprintf(listUrl, act.AccountSid), f, &callList)
 	return callList, err
 }
+
+// Internal function for sending the post request to twilio.
+func (act VoiceAccount) postUpdate(dest string, msg Update, resp *Call) error {
+	// send post request to twilio
+	return common.SendPostRequest(dest, msg, act, resp, 200)
+}
+
+// Sends a post request to Twilio to modify a call
+func (act VoiceAccount) Update(p Update, sid string) (Call, error) {
+	var r Call
+	err := act.postUpdate(fmt.Sprintf(updateUrl, act.AccountSid, string(sid)), p, &r)
+	return r, err
+}
