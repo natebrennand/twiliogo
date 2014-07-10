@@ -15,5 +15,5 @@ type SmsOpts struct {
 }
 
 func addSms(t twimlResponse, opts *SmsOpts, text *string) {
-	t.appendContents(&sms{0, opts, text})
+	t.appendContents(&sms{SmsOpts: opts, Text: text})
 }

@@ -15,6 +15,6 @@ type SipOpts struct {
 
 func addSip(t twimlResponse, opts *SipOpts, sips []string) {
 	for _, uri := range sips {
-		t.appendContents(&sip{0, opts, uri})
+		t.appendContents(&sip{SipOpts: opts, Uri: uri})
 	}
 }

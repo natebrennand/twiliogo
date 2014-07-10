@@ -6,5 +6,5 @@ type pause struct {
 }
 
 func addPause(t twimlResponse, secs int) {
-	t.appendContents(&pause{0, secs})
+	t.appendContents(&pause{Length: secs})
 }

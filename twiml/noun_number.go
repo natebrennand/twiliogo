@@ -14,6 +14,6 @@ type NumberOpts struct {
 
 func addNumber(t twimlResponse, opts *NumberOpts, numbers []string) {
 	for _, num := range numbers {
-		t.appendContents(&number{0, opts, num})
+		t.appendContents(&number{NumberOpts: opts, Num: num})
 	}
 }
