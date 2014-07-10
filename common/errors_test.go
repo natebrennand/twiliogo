@@ -43,11 +43,11 @@ var testErrorFixture Error = Error{
 	Code:     400,
 	Message:  "Bad req",
 	MoreInfo: "https://www.twilio.com/docs/errors/reference",
-	Status:   "Failed",
+	Status:   404,
 }
 var testErrorFixtureString = `{
 	"code": 400,
 	"message": "Bad req",
 	"more_info": "https://www.twilio.com/docs/errors/reference",
-	"status": "Failed"
+	"status": 404
 }`

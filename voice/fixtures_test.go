@@ -69,3 +69,25 @@ var testResponseFixture = Response{
 	DateUpdated: common.JsonTime{time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
 	Price:       0.0,
 }
+
+var testCallbackFixture = Callback{
+	CallDuration:      4,
+	RecordingUrl:      "",
+	RecordingSid:      "recordingsid",
+	RecordingDuration: 60,
+	CallSid:           "callsid",
+	CallStatus:        "completed",
+	ApiVersion:        "2010-04-01",
+	Direction:         "outbound-api",
+	ForwardedFrom:     "NianCat",
+	CallerName:        "OwlMonkey",
+	StandardRequest: common.StandardRequest{
+		AccountSid: "ACd03387e99bf959daa1e4810cc945708d",
+		From:       "+13139202596",
+		To:         "+16164601267",
+		Location:   nil,
+	},
+}
+
+var testCallbackFixtureFormString = `CallDuration=4&RecordingSid=recordingsid&RecordingDuration=60&CallSid=callsid&CallStatus=completed&ApiVersion=2010-04-01&Direction=outbound-api&ForwardedFrom=NianCat&CallerName=OwlMonkey&AccountSid=ACd03387e99bf959daa1e4810cc945708d&From=+13139202596&To=+16164601267`
+var testCallbackFixtureFormFailureString = `CallDuration=4&RecordingUrl=4&RecordingSid=recordingsid&RecordingDuration=60&CallSid=callsid&CallStatus=completed&ApiVersion=2010-04-01&Direction=outbound-api&ForwardedFrom=NianCat&CallerName=OwlMonkey&AccountSid=ACd03387e99bf959daa1e4810cc945708d&From=+13139202596&To=+16164601267`
