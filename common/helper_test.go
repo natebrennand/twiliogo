@@ -9,16 +9,20 @@ import (
 )
 
 const (
-	validEndpoint   = "/valid"
-	errorEndpoint   = "/error"
-	badJsonEndpoint = "/badJson"
+	validEndpoint200 = "/valid200"
+	validEndpoint201 = "/valid201"
+	errorEndpoint    = "/error"
+	badJsonEndpoint  = "/badJson"
 )
 
 func startMockHttpServer(requests *int) *httptest.Server {
 	// start a server to recieve post request
 	testServer := httptest.NewServer(http.HandlerFunc(func(resp http.ResponseWriter, r *http.Request) {
 		*requests += 1
-		if strings.Contains(r.URL.Path, validEndpoint) {
+		if strings.Contains(r.URL.Path, validEndpoint200) {
+			resp.WriteHeader(200)
+			fmt.Fprint(resp, testMessageFixtureString)
+		} else if strings.Contains(r.URL.Path, validEndpoint201) {
 			resp.WriteHeader(201)
 			fmt.Fprint(resp, testMessageFixtureString)
 		} else if strings.Contains(r.URL.Path, errorEndpoint) {
@@ -30,9 +34,6 @@ func startMockHttpServer(requests *int) *httptest.Server {
 	return testServer
 }
 
-func TestSendPostRequest(t *testing.T) {
-}
-
 func TestSendSuccess(t *testing.T) {
 	act := testAccount{"act", "token", http.Client{}}
 
@@ -42,7 +43,7 @@ func TestSendSuccess(t *testing.T) {
 	defer testPostServer.Close()
 
 	var m testMessage
-	err := act.sendSms(testPostServer.URL+validEndpoint, testPostFixture, &m)
+	err := act.sendSms(testPostServer.URL+validEndpoint201, testPostFixture, &m)
 	if err != nil {
 		t.Errorf("Error while sending post request => %s", err.Error())
 	}
@@ -86,5 +87,51 @@ func TestSendFailure(t *testing.T) {
 	if numRequests != 2 {
 		t.Error("server never recieved a request.")
 	}
+}
 
+func TestGetSuccess(t *testing.T) {
+	act := testAccount{"act", "token", http.Client{}}
+
+	// start a server to recieve post request
+	numRequests := 0
+	testGetServer := startMockHttpServer(&numRequests)
+	defer testGetServer.Close()
+
+	var m testMessage
+	err := act.getSms(testGetServer.URL+validEndpoint200, &m)
+	if err != nil {
+		t.Errorf("Error while sending post request => %s", err.Error())
+	}
+	if numRequests != 1 {
+		t.Error("Server never recieved a request.")
+	}
+	if m.Foo != "Bar" {
+		t.Error("Unmarshal failed to properly parse the response.")
+	}
+}
+
+func TestGetFailure(t *testing.T) {
+	act := testAccount{"act", "token", http.Client{}}
+
+	// start a server to recieve post request
+	numRequests := 0
+	testGetServer := startMockHttpServer(&numRequests)
+	defer testGetServer.Close()
+
+	var m testMessage
+	err := act.getSms(testGetServer.URL+errorEndpoint, &m)
+	if err == nil {
+		t.Errorf("post should've failed with 400")
+	}
+	if numRequests != 1 {
+		t.Error("server never recieved a request.")
+	}
+
+	err = act.getSms(testGetServer.URL+badJsonEndpoint, &m)
+	if err == nil {
+		t.Errorf("post should've failed with 400")
+	}
+	if numRequests != 2 {
+		t.Error("server never recieved a request.")
+	}
 }

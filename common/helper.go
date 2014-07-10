@@ -42,8 +42,7 @@ func SendPostRequest(url string, msg TwilioPost, t TwilioAccount, resp TwilioRes
 	}
 
 	// build response
-	resp.Build(httpResp)
-	return nil
+	return resp.Build(httpResp)
 }
 
 func SendGetRequest(url string, t TwilioAccount, resp TwilioResponse, expectedResponse int) error {
@@ -61,6 +60,5 @@ func SendGetRequest(url string, t TwilioAccount, resp TwilioResponse, expectedRe
 	}
 
 	// build response
-	resp.Build(httpResp)
-	return nil
+	return resp.Build(httpResp)
 }

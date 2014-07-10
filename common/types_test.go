@@ -33,6 +33,11 @@ func (act testAccount) sendSms(destUrl string, msg testPost, resp *testMessage) 
 	return SendPostRequest(destUrl, msg, act, resp, 201)
 }
 
+func (act testAccount) getSms(destUrl string, resp *testMessage) error {
+	// send post request to twilio
+	return SendGetRequest(destUrl, act, resp, 200)
+}
+
 type testPost struct {
 	From  string
 	To    string
