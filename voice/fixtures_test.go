@@ -71,10 +71,10 @@ var testResponseFixture = Response{
 }
 
 var testCallbackFixture = Callback{
-	CallDuration:      "4.5",
+	CallDuration:      4.5,
 	RecordingUrl:      "",
 	RecordingSid:      "recordingsid",
-	RecordingDuration: "60",
+	RecordingDuration: 60,
 	CallSid:           "callsid",
 	CallStatus:        "completed",
 	ApiVersion:        "2010-04-01",
