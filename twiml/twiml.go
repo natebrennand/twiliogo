@@ -28,6 +28,7 @@ type TwimlInterface interface {
 	Gather(GatherOpts, GatherBody) TwimlInterface
 	Sms(SmsOpts, string) TwimlInterface
 	Enqueue(EnqueueOpts, string) TwimlInterface
+	Leave() TwimlInterface
 	// Hangup(...string) TwimlInterface
 	// Redirect(...string) TwimlInterface
 	Pause(int) TwimlInterface

@@ -117,3 +117,12 @@ func TestEnqueue(t *testing.T) {
 	assert.Contains(t, str, `method="POST"`)
 	assert.Contains(t, str, "infiniteHold")
 }
+
+func TestLeave(t *testing.T) {
+	testTwiml = &Response{}
+	testTwiml.Leave()
+	output, err := testTwiml.Render()
+	assert.NoError(t, err)
+	str := string(output)
+	assert.Contains(t, str, "Leave")
+}

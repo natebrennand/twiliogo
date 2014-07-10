@@ -66,3 +66,12 @@ func (t *Response) Enqueue(opts EnqueueOpts, queue string) TwimlInterface {
 	addEnqueue(t, &opts, &queue)
 	return t
 }
+
+// Remove a caller from a queue and return control to the previously executing
+// TwiML.
+//
+// https://www.twilio.com/docs/api/twiml/leave
+func (t *Response) Leave() TwimlInterface {
+	addLeave(t)
+	return t
+}
