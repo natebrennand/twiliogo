@@ -1,4 +1,4 @@
-package media
+package sms
 
 import (
 	"github.com/natebrennand/twiliogo/common"
@@ -24,19 +24,19 @@ var (
 	"uri":"/2010-04-01/Accounts/AC381707b751dbe4c74b15c5697ba67afd/Messages/MM800f449d0399ed014aae2bcc0cc2f2ec/Media/ME85ebf7e12cb821f84b319340424dcb02.json"
 }`
 	testMediaListFixture = MediaList{
-		/*
+		ListResponseCore: common.ListResponseCore{
 			PreviousPageUri: "",
 			End:             1,
 			Uri:             "/2010-04-01/Accounts/AC381707b751dbe4c74b15c5697ba67afd/Messages/MM800f449d0399ed014aae2bcc0cc2f2ec/Media.json?PageSize=50&Page=0",
 			PageSize:        50,
 			Start:           0,
-			NextPageUri:     null,
+			NextPageUri:     "",
 			NumPages:        1,
 			Total:           2,
 			Page:            0,
 			FirstPageUri:    "/2010-04-01/Accounts/AC381707b751dbe4c74b15c5697ba67afd/Messages/MM800f449d0399ed014aae2bcc0cc2f2ec/Media.json?PageSize=50&Page=0",
 			LastPageUri:     "/2010-04-01/Accounts/AC381707b751dbe4c74b15c5697ba67afd/Messages/MM800f449d0399ed014aae2bcc0cc2f2ec/Media.json?PageSize=50&Page=0",
-		*/
+		},
 		MediaList: &[]Media{
 			Media{
 				Sid:         "ME85ebf7e12cb821f84b319340424dcb02",

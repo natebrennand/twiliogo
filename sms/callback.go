@@ -8,7 +8,7 @@ import (
 	"strconv"
 )
 
-type Media struct {
+type MediaReference struct {
 	ContentType string
 	Url         string
 }
@@ -23,7 +23,7 @@ type Callback struct {
 	NumMedia      int
 	MessageStatus string
 	ErrorCode     string
-	MediaList     []Media
+	MediaList     []MediaReference
 	common.StandardRequest
 }
 
@@ -35,10 +35,10 @@ func (cb *Callback) Parse(req *http.Request) error {
 		return errors.New(fmt.Sprintf("Error parsing NumMedia => %s", err.Error()))
 	}
 
-	// creates an array of Media Contents (typically empty)
-	mediaArray := make([]Media, numMedia)
+	// creates an array of MediaReference Contents (typically empty)
+	mediaArray := make([]MediaReference, numMedia)
 	for i := 0; i < numMedia; i++ {
-		mediaArray[i] = Media{
+		mediaArray[i] = MediaReference{
 			ContentType: req.PostFormValue(fmt.Sprintf("MediaContentType%d", i)),
 			Url:         req.PostFormValue(fmt.Sprintf("MediaUrl%d", i)),
 		}

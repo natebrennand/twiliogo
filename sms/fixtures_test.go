@@ -69,7 +69,7 @@ var (
 		NumMedia:      0,
 		MessageStatus: "sent",
 		ErrorCode:     "",
-		MediaList:     []Media{},
+		MediaList:     []MediaReference{},
 		StandardRequest: common.StandardRequest{
 			AccountSid: "AC381707b751dbe4c74b15c5697ba67afd",
 			From:       "+14248004123",

@@ -1,4 +1,4 @@
-package media
+package sms
 
 import (
 	"encoding/json"
@@ -11,26 +11,10 @@ import (
 )
 
 const (
-	getUrl  = "https://api.twilio.com/2010-04-01/Accounts/%s/Messages/%s/Media/%s.json" // takes an AccountSid, MessageSid & MediaSid
-	listUrl = "https://api.twilio.com/2010-04-01/Accounts/%s/Messages/%s/Media.json"    // takes an AccountSid & MessageSid
+	mediaGetUrl  = "https://api.twilio.com/2010-04-01/Accounts/%s/Messages/%s/Media/%s.json" // takes an AccountSid, MessageSid & MediaSid
+	mediaListUrl = "https://api.twilio.com/2010-04-01/Accounts/%s/Messages/%s/Media.json"    // takes an AccountSid & MessageSid
 
 )
-
-type MediaAccount struct {
-	AccountSid string
-	Token      string
-	Client     http.Client
-}
-
-func (m MediaAccount) GetSid() string {
-	return m.AccountSid
-}
-func (m MediaAccount) GetToken() string {
-	return m.Token
-}
-func (m MediaAccount) GetClient() http.Client {
-	return m.Client
-}
 
 func validateMediaSid(sid string) bool {
 	match, _ := regexp.MatchString(`^ME[0-9a-z]{32}$`, string(sid))
@@ -65,12 +49,12 @@ func (m *Media) Build(resp *http.Response) error {
 }
 
 // Internal function for sending the post request to twilio.
-func (act MediaAccount) getMedia(destUrl string, resp *Media) error {
+func (act SmsAccount) getMedia(destUrl string, resp *Media) error {
 	// send get request to twilio
 	return common.SendGetRequest(destUrl, act, resp, 200)
 }
 
-func (act MediaAccount) Get(mmsSid, mediaSid string) (Media, error) {
+func (act SmsAccount) GetMedia(mmsSid, mediaSid string) (Media, error) {
 	var m Media
 	if !validateMediaSid(mmsSid) {
 		return m, errors.New("Invalid mms message sid")
@@ -78,12 +62,12 @@ func (act MediaAccount) Get(mmsSid, mediaSid string) (Media, error) {
 		return m, errors.New("Invalid media sid")
 	}
 
-	err := act.getMedia(fmt.Sprintf(getUrl, act.AccountSid, mmsSid, mediaSid), &m)
+	err := act.getMedia(fmt.Sprintf(mediaGetUrl, act.AccountSid, mmsSid, mediaSid), &m)
 	return m, err
 }
 
 type MediaList struct {
-	// common.ListResponseCore
+	common.ListResponseCore
 	MediaList *[]Media `json:"media_list"`
 }
 
@@ -100,16 +84,16 @@ func (m *MediaList) Build(resp *http.Response) error {
 }
 
 // Internal function for sending the post request to twilio.
-func (act MediaAccount) getMediaList(destUrl string, resp *Media) error {
+func (act SmsAccount) getMediaList(destUrl string, resp *MediaList) error {
 	// send get request to twilio
 	return common.SendGetRequest(destUrl, act, resp, 200)
 }
 
-func (act MediaAccount) GetList(mmsSid string) (Media, error) {
-	var m Media
+func (act SmsAccount) GetMediaList(mmsSid string) (MediaList, error) {
+	var m MediaList
 	if !validateMediaSid(mmsSid) {
 		return m, errors.New("Invalid mms message sid")
 	}
-	err := act.getMedia(fmt.Sprintf(getUrl, act.AccountSid, mmsSid), &m)
+	err := act.getMediaList(fmt.Sprintf(mediaListUrl, act.AccountSid, mmsSid), &m)
 	return m, err
 }

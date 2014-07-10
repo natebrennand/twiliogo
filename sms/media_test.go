@@ -1,4 +1,4 @@
-package media
+package sms
 
 import (
 	"io/ioutil"
