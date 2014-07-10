@@ -24,8 +24,8 @@ type Call struct {
 
 type Recording struct {
 	Sid         string          `json:"sid"`
-	DateCreated common.JsonTime `json:"date_created"`
-	DateUpdated common.JsonTime `json:"date_updated"`
+	DateCreated common.JSONTime `json:"date_created"`
+	DateUpdated common.JSONTime `json:"date_updated"`
 	AccountSid  string          `json:"account_sid"`
 	CallSid     string          `json:"call_sid"`
 	Duration    string          `json:"duration"`
@@ -69,12 +69,12 @@ func (r *Call) Build(resp *http.Response) error {
 func (r *Recording) Build(resp *http.Response) error {
 	bodyBytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return errors.New(fmt.Sprintf("Error while reading json from buffer => %s", err.Error()))
+		return fmt.Errorf("Error while reading json from buffer => %s", err.Error())
 	}
 
 	err = json.Unmarshal(bodyBytes, r)
 	if err != nil {
-		return errors.New(fmt.Sprintf("Error while decoding json => %s, recieved msg => %s", err.Error(), string(bodyBytes)))
+		return fmt.Errorf("Error while decoding json => %s, recieved msg => %s", err.Error(), string(bodyBytes))
 	}
 	return nil
 }
@@ -82,12 +82,12 @@ func (r *Recording) Build(resp *http.Response) error {
 func (r *RecordingList) Build(resp *http.Response) error {
 	bodyBytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return errors.New(fmt.Sprintf("Error while reading json from buffer => %s", err.Error()))
+		return fmt.Errorf("Error while reading json from buffer => %s", err.Error())
 	}
 
 	err = json.Unmarshal(bodyBytes, r)
 	if err != nil {
-		return errors.New(fmt.Sprintf("Error while decoding json => %s, recieved msg => %s", err.Error(), string(bodyBytes)))
+		return fmt.Errorf("Error while decoding json => %s, recieved msg => %s", err.Error(), string(bodyBytes))
 	}
 	return nil
 }
