@@ -76,7 +76,7 @@ func TestSendSuccess(t *testing.T) {
 	testPostServer := startMockHttpServer(&numRequests)
 	defer testPostServer.Close()
 
-	var r Response
+	var r Call
 	err := act.makeCall(testPostServer.URL+validEndpoint, testPostFixture, &r)
 	if err != nil {
 		t.Errorf("Error while sending post request => %s", err.Error())
@@ -96,7 +96,7 @@ func TestSendFailure(t *testing.T) {
 	testPostServer := startMockHttpServer(&numRequests)
 	defer testPostServer.Close()
 
-	var r Response
+	var r Call
 	err := act.makeCall(testPostServer.URL+errorEndpoint, testPostFixture, &r)
 	if err == nil {
 		t.Errorf("post should've failed with 400")

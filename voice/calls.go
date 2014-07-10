@@ -10,6 +10,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type VoiceAccount struct {
@@ -105,30 +106,73 @@ func (p Post) Validate() error {
 }
 
 // Internal function for sending the post request to twilio.
-func (act VoiceAccount) makeCall(dest string, msg Post, resp *Response) error {
+func (act VoiceAccount) makeCall(dest string, msg Post, resp *Call) error {
 	// send post request to twilio
 	return common.SendPostRequest(dest, msg, act, resp, 201)
 }
 
 // Sends a post request to Twilio to send a voice request.
-func (act VoiceAccount) Call(p Post) (Response, error) {
-	var r Response
+func (act VoiceAccount) Call(p Post) (Call, error) {
+	var r Call
 	err := act.makeCall(fmt.Sprintf(postUrl, act.AccountSid), p, &r)
 	return r, err
 }
 
 // Internal function for sending the post request to twilio.
-func (act VoiceAccount) getCall(destUrl string, resp *Response) error {
+func (act VoiceAccount) getCall(destUrl string, resp *Call) error {
 	// send get request to twilio
 	return common.SendGetRequest(destUrl, act, resp, 200)
 }
 
-func (act VoiceAccount) Get(sid string) (Response, error) {
-	var m Response
+func (act VoiceAccount) Get(sid string) (Call, error) {
+	var m Call
 	if true != validateCallSid(sid) {
 		return m, errors.New("Invalid sid")
 	}
 
 	err := act.getCall(fmt.Sprintf(getUrl, act.AccountSid, string(sid)), &m)
 	return m, err
+}
+
+// Used to filter call logs results
+type Filter struct {
+	To            string
+	From          string
+	Status        string
+	StartTime     *time.Time
+	ParentCallSid string
+}
+
+func (f Filter) GetQueryString() string {
+	v := url.Values{}
+	if f.To != "" {
+		v.Set("To", f.To)
+	}
+	if f.From != "" {
+		v.Set("From", f.From)
+	}
+	if f.Status != "" {
+		v.Set("Status", f.Status)
+	}
+	if f.StartTime != nil {
+		v.Set("StartTime", f.StartTime.Format(common.GMTTimeLayout))
+	}
+	if f.ParentCallSid != "" {
+		v.Set("ParentCallSid", f.ParentCallSid)
+	}
+	encoded := v.Encode()
+	if encoded != "" {
+		encoded = "?" + encoded
+	}
+	return encoded
+}
+
+func (act VoiceAccount) getList(destUrl string, f Filter, resp *CallList) error {
+	return common.SendGetRequest(destUrl+f.GetQueryString(), act, resp, 200)
+}
+
+func (act VoiceAccount) List(f Filter) (CallList, error) {
+	var callList CallList
+	err := act.getList(fmt.Sprintf(listUrl, act.AccountSid), f, &callList)
+	return callList, err
 }
