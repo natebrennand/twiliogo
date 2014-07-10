@@ -18,14 +18,14 @@ type testAccount struct {
 	Client     http.Client
 }
 
-func (t testAccount) GetSid() string {
-	return t.AccountSid
+func (act testAccount) GetSid() string {
+	return act.AccountSid
 }
-func (t testAccount) GetToken() string {
-	return t.Token
+func (act testAccount) GetToken() string {
+	return act.Token
 }
-func (t testAccount) GetClient() http.Client {
-	return t.Client
+func (act testAccount) GetClient() http.Client {
+	return act.Client
 }
 
 func (act testAccount) sendSms(destURL string, msg testPost, resp *testMessage) error {

@@ -19,14 +19,14 @@ type VoiceAccount struct {
 	Client     http.Client
 }
 
-func (v VoiceAccount) GetSid() string {
-	return v.AccountSid
+func (act VoiceAccount) GetSid() string {
+	return act.AccountSid
 }
-func (v VoiceAccount) GetToken() string {
-	return v.Token
+func (act VoiceAccount) GetToken() string {
+	return act.Token
 }
-func (v VoiceAccount) GetClient() http.Client {
-	return v.Client
+func (act VoiceAccount) GetClient() http.Client {
+	return act.Client
 }
 
 // Represents the data used in creating an outbound voice message.

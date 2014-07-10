@@ -17,14 +17,14 @@ type SmsAccount struct {
 	Client     http.Client
 }
 
-func (s SmsAccount) GetSid() string {
-	return s.AccountSid
+func (act SmsAccount) GetSid() string {
+	return act.AccountSid
 }
-func (s SmsAccount) GetToken() string {
-	return s.Token
+func (act SmsAccount) GetToken() string {
+	return act.Token
 }
-func (s SmsAccount) GetClient() http.Client {
-	return s.Client
+func (act SmsAccount) GetClient() http.Client {
+	return act.Client
 }
 
 // Represents the data used in creating an outbound sms message.
