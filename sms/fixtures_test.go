@@ -98,9 +98,7 @@ var (
 				ResponseCore: common.ResponseCore{
 					AccountSid:   "AC381707b751dbe4c74b15c5697ba67afd",
 					ApiVersion:   "2010-04-01",
-					Body:         "Hey Jenny why aren't you returning my calls?",
 					DateCreated:  common.JsonTime{time.Date(2010, time.August, 16, 3, 45, 01, 0, &time.Location{})},
-					DateSent:     common.JsonTime{time.Date(2010, time.August, 16, 3, 45, 03, 0, &time.Location{})},
 					DateUpdated:  common.JsonTime{time.Date(2010, time.August, 16, 3, 45, 03, 0, &time.Location{})},
 					Direction:    "outbound-api",
 					ErrorCode:    "",
@@ -111,6 +109,8 @@ var (
 					To:           "+15558675309",
 					Uri:          "/2010-04-01/Accounts/AC381707b751dbe4c74b15c5697ba67afd/Messages/MM800f449d0399ed014aae2bcc0cc2f2ec.json",
 				},
+				Body:        "Hey Jenny why aren't you returning my calls?",
+				DateSent:    common.JsonTime{time.Date(2010, time.August, 16, 3, 45, 03, 0, &time.Location{})},
 				NumSegments: 1,
 				NumMedia:    0,
 				Price:       -0.02000,
