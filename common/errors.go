@@ -35,5 +35,10 @@ func NewTwilioError(resp http.Response) error {
 	if err != nil {
 		return errors.New(fmt.Sprintf("Twilio error encountered, failure while parsing => %s", err.Error()))
 	}
+
+	if twilioErr.Code == 0 {
+		return errors.New("Twilio error not found, perhaps you set the expected status code incorrectly?")
+	}
+
 	return twilioErr
 }
