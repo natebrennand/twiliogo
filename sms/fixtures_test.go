@@ -40,7 +40,7 @@ var (
 		"to": "+15558675309",
 		"uri": "/2010-04-01/Accounts/AC5ef8732a3c49700934481addd5ce1659/Messages/MM90c6fc909d8504d45ecdb3a3d5b3556e.json"
 	}`
-	testSmsResponseFixture = Response{
+	testSmsResponseFixture = Message{
 		ResponseCore: common.ResponseCore{
 			AccountSid:   "AC5ef8732a3c49700934481addd5ce1659",
 			ApiVersion:   "2010-04-01",
