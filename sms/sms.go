@@ -82,3 +82,18 @@ func (act SmsAccount) Send(p Post) (Message, error) {
 	err := act.sendSms(fmt.Sprintf(postUrl, act.AccountSid), p, &m)
 	return m, err
 }
+
+// Internal function for sending the post request to twilio.
+func (act SmsAccount) getSms(destUrl string, resp *Message) error {
+	// send get request to twilio
+	return common.SendGetRequest(destUrl, act, resp, 200)
+}
+
+func (act SmsAccount) Get(sid string) (Message, error) {
+	if true != validateSmsSid(sid) {
+		return Message{}, errors.New("Invalid sid")
+	}
+	var m Message
+	err := act.getSms(fmt.Sprintf(getUrl, act.AccountSid, string(sid)), &m)
+	return m, err
+}

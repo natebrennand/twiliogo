@@ -33,6 +33,11 @@ func (act testAccount) sendSms(destUrl string, msg testPost, resp *testMessage) 
 	return SendPostRequest(destUrl, msg, act, resp, 201)
 }
 
+func (act testAccount) getSms(destUrl string, resp *testMessage) error {
+	// send post request to twilio
+	return SendGetRequest(destUrl, act, resp, 200)
+}
+
 type testPost struct {
 	From  string
 	To    string
@@ -94,6 +99,21 @@ var (
 		To:    "B",
 		Body:  "Yo",
 		valid: errors.New(""),
+	}
+	testStandardRequestFormString = `AccountSid=AC381707b751dbe4c74b15c5697ba67afd&From=+14248004123&To=+13605847116`
+	testStandardRequest           = StandardRequest{
+		AccountSid: "AC381707b751dbe4c74b15c5697ba67afd",
+		From:       "+14248004123",
+		To:         "+13605847116",
+	}
+	testStandardRequestFormStringWithCity = `AccountSid=AC381707b751dbe4c74b15c5697ba67afd&From=+14248004123&To=+13605847116&FromCity=SF`
+	testStandardRequestWithCity           = StandardRequest{
+		AccountSid: "AC381707b751dbe4c74b15c5697ba67afd",
+		From:       "+14248004123",
+		To:         "+13605847116",
+		Location: &Location{
+			FromCity: "SF",
+		},
 	}
 )
 

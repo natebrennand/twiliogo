@@ -6,11 +6,25 @@ import (
 	"time"
 )
 
+type testPriceStruct struct {
+	Price *JsonPrice `json:"price"`
+}
+
 func TestPriceDecode(t *testing.T) {
-	var price *JsonPrice
-	price.UnmarshalJSON([]byte("null"))
-	if price != nil {
+	var p JsonPrice = 0.01
+	var priceHolder testPriceStruct
+	err := json.Unmarshal([]byte(`{"price":null}`), &priceHolder)
+	if err != nil || priceHolder.Price != nil {
 		t.Error("Price should be set to nil on null")
+	}
+
+	err = json.Unmarshal([]byte(`{"price":0.01}`), &priceHolder)
+	if err != nil {
+		t.Fatalf("Error decoding => %s", err.Error())
+	} else if priceHolder.Price == nil {
+		t.Fatal("Price should be set")
+	} else if *(priceHolder.Price) != p {
+		t.Errorf("Price should be set to $.01, %f", *(priceHolder.Price))
 	}
 }
 

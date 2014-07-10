@@ -7,16 +7,19 @@ import (
 	"github.com/natebrennand/twiliogo/common"
 	"io/ioutil"
 	"net/http"
+	"regexp"
 )
+
+func validateSmsSid(sid string) bool {
+	match, _ := regexp.MatchString(`^(SM|MM)[0-9a-z]{32}$`, string(sid))
+	return match
+}
 
 type Message struct {
 	common.ResponseCore
 	NumSegments int              `json:"num_segments,string"`
 	NumMedia    int              `json:"num_media,string"`
 	Price       common.JsonPrice `json:"price"`
-	DateCreated common.JsonTime  `json:"date_created"`
-	DateSent    common.JsonTime  `json:"date_sent"`
-	DateUpdated common.JsonTime  `json:"date_updated"`
 }
 
 func (r *Message) Build(resp *http.Response) error {

@@ -1,6 +1,7 @@
 package common
 
 import (
+	// "fmt"
 	"strconv"
 	"time"
 )
@@ -12,12 +13,10 @@ const (
 type JsonPrice float64
 
 func (j *JsonPrice) UnmarshalJSON(b []byte) error {
-	s := string(b)
-	if s == "null" {
-		j = nil
+	t, err := strconv.ParseFloat(string(b), 64)
+	if err != nil {
 		return nil
 	}
-	t, err := strconv.ParseFloat(s, 64)
 	*j = JsonPrice(t)
 	return err
 }
@@ -52,24 +51,4 @@ type ResponseCore struct {
 	DateCreated  JsonTime `json:"date_created"`
 	DateSent     JsonTime `json:"date_sent"`
 	DateUpdated  JsonTime `json:"date_updated"`
-}
-
-type Location struct {
-	FromCity    string
-	FromState   string
-	FromZip     string
-	FromCountry string
-	ToCity      string
-	ToState     string
-	ToZip       string
-	ToCountry   string
-}
-
-// Standard request parameters for Twiml responses
-// https://www.twilio.com/docs/api/twiml/sms/twilio_request#request-parameters
-type StandardRequest struct {
-	AccountSid string
-	From       string
-	To         string
-	Location   *Location // Only sent when Twilio can look up the geographic data.
 }
