@@ -26,20 +26,6 @@ type Callback struct {
 
 // Creates a Callback struct from a form
 func (cb *Callback) Parse(req *http.Request) error {
-	var msgLocation *common.Location = nil
-	if req.PostFormValue("FromCity") != "" { // ignore location data if possible
-		msgLocation = &common.Location{
-			FromCity:    req.PostFormValue("FromCity"),
-			FromState:   req.PostFormValue("FromState"),
-			FromZip:     req.PostFormValue("FromZip"),
-			FromCountry: req.PostFormValue("FromCountry"),
-			ToCity:      req.PostFormValue("ToCity"),
-			ToState:     req.PostFormValue("ToState"),
-			ToZip:       req.PostFormValue("ToZip"),
-			ToCountry:   req.PostFormValue("ToCountry"),
-		}
-	}
-
 	callDurString := req.PostFormValue("CallDuration")
 
 	var err error
@@ -73,12 +59,7 @@ func (cb *Callback) Parse(req *http.Request) error {
 		Direction:         req.PostFormValue("Direction"),
 		ForwardedFrom:     req.PostFormValue("ForwardedFrom"),
 		CallerName:        req.PostFormValue("CallerName"),
-		StandardRequest: common.StandardRequest{
-			AccountSid: req.PostFormValue("AccountSid"),
-			From:       req.PostFormValue("From"),
-			To:         req.PostFormValue("To"),
-			Location:   msgLocation,
-		},
+		StandardRequest:   common.ParseStandardRequest(req),
 	}
 
 	return nil

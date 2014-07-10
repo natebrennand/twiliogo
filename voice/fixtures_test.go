@@ -64,10 +64,11 @@ var testResponseFixture = Response{
 		From:         "+13139202596",
 		To:           "+16164601267",
 		Uri:          "/2010-04-01/Accounts/ACd03387e99bf959daa1e4810cc945708d/Calls/CA7383500ec70ce66bd3a7ac5d2fbbd6a9.json",
+		DateCreated:  common.JsonTime{time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
+		DateUpdated:  common.JsonTime{time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
 	},
-	DateCreated: common.JsonTime{time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
-	DateUpdated: common.JsonTime{time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
-	Price:       0.0,
+
+	Price: 0.0,
 }
 
 var testCallbackFixture = Callback{
