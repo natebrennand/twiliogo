@@ -17,6 +17,8 @@ func validateSmsSid(sid string) bool {
 
 type Message struct {
 	common.ResponseCore
+	Body        string           `json:"body"`
+	DateSent    common.JsonTime  `json:"date_sent"`
 	NumSegments int              `json:"num_segments,string"`
 	NumMedia    int              `json:"num_media,string"`
 	Price       common.JsonPrice `json:"price"`

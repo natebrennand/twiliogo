@@ -42,9 +42,9 @@ var (
 	}`
 	testSmsResponseFixture = Message{
 		ResponseCore: common.ResponseCore{
-			AccountSid:   "AC5ef8732a3c49700934481addd5ce1659",
-			ApiVersion:   "2010-04-01",
-			Body:         "Jenny please?! I love you <3",
+			AccountSid: "AC5ef8732a3c49700934481addd5ce1659",
+			ApiVersion: "2010-04-01",
+
 			Direction:    "outbound-api",
 			ErrorCode:    "",
 			ErrorMessage: "",
@@ -55,8 +55,9 @@ var (
 			Uri:          "/2010-04-01/Accounts/AC5ef8732a3c49700934481addd5ce1659/Messages/MM90c6fc909d8504d45ecdb3a3d5b3556e.json",
 			DateCreated:  common.JsonTime{time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
 			DateUpdated:  common.JsonTime{time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
-			DateSent:     common.JsonTime{time.Time{}},
 		},
+		Body:        "Jenny please?! I love you <3",
+		DateSent:    common.JsonTime{time.Time{}},
 		Price:       0.0,
 		NumSegments: 1,
 		NumMedia:    1,
