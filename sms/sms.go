@@ -106,7 +106,7 @@ type Filter struct {
 	DateSent *time.Time
 }
 
-func (f Filter) GetReader() io.Reader {
+func (f Filter) GetQueryString() string {
 	v := url.Values{}
 	if f.To != "" {
 		v.Set("To", f.To)
@@ -117,7 +117,11 @@ func (f Filter) GetReader() io.Reader {
 	if f.DateSent != nil {
 		v.Set("DateSent", f.DateSent.Format(common.GMTTimeLayout))
 	}
-	return strings.NewReader(v.Encode())
+	encoded := v.Encode()
+	if encoded != "" {
+		encoded = "?" + encoded
+	}
+	return encoded
 }
 
 func (f Filter) Validate() error {
@@ -125,7 +129,7 @@ func (f Filter) Validate() error {
 }
 
 func (act SmsAccount) getList(destUrl string, f Filter, resp *MessageList) error {
-	return common.SendGetRequest(destUrl, act, resp, 200)
+	return common.SendGetRequest(destUrl+f.GetQueryString(), act, resp, 200)
 }
 
 func (act SmsAccount) List(f Filter) (MessageList, error) {

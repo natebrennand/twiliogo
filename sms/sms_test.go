@@ -1,7 +1,6 @@
 package sms
 
 import (
-	"bytes"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -122,30 +121,29 @@ func TestValidateListFilter(t *testing.T) {
 }
 
 func TestListFilterReader(t *testing.T) {
-	buf := new(bytes.Buffer)
-
 	// empty filter
 	f := Filter{}
-	buf.ReadFrom(f.GetReader())
-	if "" != buf.String() {
+	if "" != f.GetQueryString() {
 		t.Error("url encoding of filter should be empty")
 	}
-	buf.Reset()
+
+	// w/ To
+	f = Filter{To: "12345"}
+	if f.GetQueryString() != "?To=12345" {
+		t.Errorf("url encoding of filter should include To&From key:value pairs, found => %s", f.GetQueryString())
+	}
 
 	// w/ To & From
 	f = Filter{To: "12345", From: "678"}
-	buf.ReadFrom(f.GetReader())
-	if !strings.Contains(buf.String(), "To=12345") || !strings.Contains(buf.String(), "From=678") {
-		t.Errorf("url encoding of filter should include To&From key:value pairs, found => %s", buf.String())
+	if !strings.Contains(f.GetQueryString(), "To=12345") || !strings.Contains(f.GetQueryString(), "From=678") {
+		t.Errorf("url encoding of filter should include To&From key:value pairs, found => %s", f.GetQueryString())
 	}
-	buf.Reset()
 
 	// w/ Date
 	tm := time.Date(2010, time.August, 16, 3, 45, 01, 0, &time.Location{})
 	f = Filter{DateSent: &tm}
-	buf.ReadFrom(f.GetReader())
-	if "DateSent=2010-08-16" != buf.String() {
-		t.Errorf("url encoding of filter should encode dates in GMT, found => %s", buf.String())
+	if "?DateSent=2010-08-16" != f.GetQueryString() {
+		t.Errorf("url encoding of filter should encode dates in GMT, found => %s", f.GetQueryString())
 	}
 
 }
@@ -160,7 +158,6 @@ func TestGetSmsListSuccess(t *testing.T) {
 
 	var ml MessageList
 	err := act.getList(testServer.URL+validEndpoint+listEndpoint, Filter{}, &ml)
-	fmt.Printf("%#v\n", err)
 	if err != nil {
 		t.Errorf("Error while sending get request => %s", err.Error())
 	}

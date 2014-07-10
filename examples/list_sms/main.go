@@ -8,7 +8,9 @@ import (
 
 func main() {
 	act := twiliogo.NewAccountFromEnv()
-	resp, err := act.Sms.List(sms.Filter{})
+	resp, err := act.Sms.List(sms.Filter{
+		From: "+{ Your phone # }",
+	})
 	if err != nil {
 		fmt.Println("Error sending sms: ", err.Error())
 	}
