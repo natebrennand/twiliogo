@@ -126,3 +126,12 @@ func TestLeave(t *testing.T) {
 	str := string(output)
 	assert.Contains(t, str, "Leave")
 }
+
+func TestHangup(t *testing.T) {
+	testTwiml = &Response{}
+	testTwiml.Hangup()
+	output, err := testTwiml.Render()
+	assert.NoError(t, err)
+	str := string(output)
+	assert.Contains(t, str, "Hangup")
+}

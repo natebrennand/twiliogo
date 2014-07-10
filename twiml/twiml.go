@@ -29,7 +29,7 @@ type TwimlInterface interface {
 	Sms(SmsOpts, string) TwimlInterface
 	Enqueue(EnqueueOpts, string) TwimlInterface
 	Leave() TwimlInterface
-	// Hangup(...string) TwimlInterface
+	Hangup() TwimlInterface
 	// Redirect(...string) TwimlInterface
 	Pause(int) TwimlInterface
 	// Reject(...string) TwimlInterface

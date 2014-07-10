@@ -75,3 +75,11 @@ func (t *Response) Leave() TwimlInterface {
 	addLeave(t)
 	return t
 }
+
+// Hangup during a phone call
+//
+// https://www.twilio.com/docs/api/twiml/hangup
+func (t *Response) Hangup() TwimlInterface {
+	addHangup(t)
+	return t
+}
