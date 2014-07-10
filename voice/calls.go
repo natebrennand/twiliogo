@@ -126,7 +126,7 @@ func (act VoiceAccount) getCall(destURL string, resp *Call) error {
 
 func (act VoiceAccount) Get(sid string) (Call, error) {
 	var m Call
-	if true != validateCallSid(sid) {
+	if !validateCallSid(sid) {
 		return m, errors.New("Invalid sid")
 	}
 
