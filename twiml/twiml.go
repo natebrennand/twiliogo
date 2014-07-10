@@ -30,7 +30,7 @@ type TwimlInterface interface {
 	Enqueue(EnqueueOpts, string) TwimlInterface
 	Leave() TwimlInterface
 	Hangup() TwimlInterface
-	// Redirect(...string) TwimlInterface
+	Redirect(RedirectOpts, string) TwimlInterface
 	Pause(int) TwimlInterface
 	// Reject(...string) TwimlInterface
 }

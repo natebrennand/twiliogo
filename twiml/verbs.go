@@ -83,3 +83,11 @@ func (t *Response) Hangup() TwimlInterface {
 	addHangup(t)
 	return t
 }
+
+// Redirect TwiML flow to another page.
+//
+// https://www.twilio.com/docs/api/twiml/redirect
+func (t *Response) Redirect(opts RedirectOpts, target string) TwimlInterface {
+	addRedirect(t, &opts, &target)
+	return t
+}

@@ -135,3 +135,13 @@ func TestHangup(t *testing.T) {
 	str := string(output)
 	assert.Contains(t, str, "Hangup")
 }
+
+func TestRedirect(t *testing.T) {
+	testTwiml = &Response{}
+	testTwiml.Redirect(RedirectOpts{Method: "POST"}, "http://mysite/otherTwiml")
+	output, err := testTwiml.Render()
+	assert.NoError(t, err)
+	str := string(output)
+	assert.Contains(t, str, "Redirect")
+	assert.Contains(t, str, "POST")
+}
