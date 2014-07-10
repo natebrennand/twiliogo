@@ -2,6 +2,7 @@ package twiml
 
 import (
 	"encoding/xml"
+	"io/ioutil"
 	"strings"
 	"testing"
 
@@ -21,13 +22,17 @@ func TestTwimlSatisfiesXmlInterface(t *testing.T) {
 	assert.Implements(t, (*xml.Marshaler)(nil), new(Response))
 }
 
+func TestGatherTwimlSatisfiesGatherBody(t *testing.T) {
+	assert.Implements(t, (*GatherBody)(nil), new(GatherTwiml))
+}
+
 func TestMessageTwimlSatisfiesMessageBody(t *testing.T) {
 	assert.Implements(t, (*MessageBody)(nil), new(MessageTwiml))
 }
 
-// func TestGatherSatisfiesXmlInterface(t *testing.T) {
-// 	assert.Implements(t, (*xml.Marshaler)(nil), new(gather))
-// }
+func TestDialTwimlSatisfiesDialBody(t *testing.T) {
+	assert.Implements(t, (*DialBody)(nil), new(DialTwiml))
+}
 
 func TestEmptyResponse(t *testing.T) {
 	testTwiml = &Response{}
@@ -42,6 +47,17 @@ func TestEmptyResponse(t *testing.T) {
 func TestEndToEnd(t *testing.T) {
 	testTwiml = new(Response)
 	output, err := testTwiml.Say(SayOpts{Voice: "alice"}, "My hands are typing words", "Haaaaaaaaaaaaands").Render()
+	assert.NoError(t, err)
+	expected := strings.TrimSpace(strings.Replace(endToEndStr, "\n", "", -1))
+	actual := strings.TrimSpace(strings.Replace(string(output), "\n", "", -1))
+	assert.Exactly(t, expected, actual)
+}
+
+func TestEndToEndReader(t *testing.T) {
+	testTwiml = new(Response)
+	reader, err := testTwiml.Say(SayOpts{Voice: "alice"}, "My hands are typing words", "Haaaaaaaaaaaaands").RenderReader()
+	assert.NoError(t, err)
+	output, err := ioutil.ReadAll(reader)
 	assert.NoError(t, err)
 	expected := strings.TrimSpace(strings.Replace(endToEndStr, "\n", "", -1))
 	actual := strings.TrimSpace(strings.Replace(string(output), "\n", "", -1))
@@ -82,12 +98,22 @@ func TestSms(t *testing.T) {
 
 func TestGather(t *testing.T) {
 	testTwiml = &Response{}
-	testTwiml.Gather(GatherOpts{Timeout: 10}, new(GatherTwiml).Play(PlayOpts{}, "stuff"))
+	innerTwiml := new(GatherTwiml)
+	innerTwiml.
+		Play(PlayOpts{}, "some.mp3").
+		Say(SayOpts{}, "something").
+		Pause(5)
+	testTwiml.Gather(GatherOpts{Timeout: 10}, innerTwiml)
 	output, err := testTwiml.Render()
 	assert.NoError(t, err)
 	str := string(output)
 	// Make sure the gather struct doesn't render it's Body field to xml.
 	assert.NotContains(t, str, "Body")
+	assert.Contains(t, str, "Gather")
+	assert.Contains(t, str, "Play")
+	assert.Contains(t, str, "Say")
+	assert.Contains(t, str, "Pause")
+	assert.Contains(t, str, `length="5"`)
 }
 
 func TestDial(t *testing.T) {
@@ -183,5 +209,4 @@ func TestMessage(t *testing.T) {
 	assert.Contains(t, str, "Message")
 	assert.Contains(t, str, `method="POST"`)
 	assert.Contains(t, str, "Body")
-	t.Log(str)
 }
