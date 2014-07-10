@@ -33,6 +33,8 @@ type TwimlInterface interface {
 	Redirect(RedirectOpts, string) TwimlInterface
 	Pause(int) TwimlInterface
 	Reject(string) TwimlInterface
+	Message(MessageOpts, ...string) TwimlInterface
+	MessageMedia(MessageOpts, MessageBody) TwimlInterface
 }
 
 type Response struct {

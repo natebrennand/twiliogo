@@ -99,3 +99,16 @@ func (t *Response) Reject(reason string) TwimlInterface {
 	addReject(t, &reason)
 	return t
 }
+
+// Send a message with text and / or media.
+//
+// https://www.twilio.com/docs/api/twiml/sms/message
+func (t *Response) MessageMedia(opts MessageOpts, body MessageBody) TwimlInterface {
+	addMessage(t, &opts, body)
+	return t
+}
+
+func (t *Response) Message(opts MessageOpts, text ...string) TwimlInterface {
+	addMessageText(t, &opts, text)
+	return t
+}

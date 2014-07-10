@@ -21,6 +21,10 @@ func TestTwimlSatisfiesXmlInterface(t *testing.T) {
 	assert.Implements(t, (*xml.Marshaler)(nil), new(Response))
 }
 
+func TestMessageTwimlSatisfiesMessageBody(t *testing.T) {
+	assert.Implements(t, (*MessageBody)(nil), new(MessageTwiml))
+}
+
 // func TestGatherSatisfiesXmlInterface(t *testing.T) {
 // 	assert.Implements(t, (*xml.Marshaler)(nil), new(gather))
 // }
@@ -154,5 +158,30 @@ func TestReject(t *testing.T) {
 	str := string(output)
 	assert.Contains(t, str, "Reject")
 	assert.Contains(t, str, `reason="busy"`)
+}
+
+func TestMessageMedia(t *testing.T) {
+	testTwiml = new(Response)
+	innerTwiml := new(MessageTwiml)
+	innerTwiml.Body("Welcome to owl facts").Media("https://demo.twilio.com/owl.png")
+	testTwiml.MessageMedia(MessageOpts{Method: "POST"}, innerTwiml)
+	output, err := testTwiml.Render()
+	assert.NoError(t, err)
+	str := string(output)
+	assert.Contains(t, str, "Message")
+	assert.Contains(t, str, `method="POST"`)
+	assert.Contains(t, str, "Media")
+	assert.Contains(t, str, "Body")
+}
+
+func TestMessage(t *testing.T) {
+	testTwiml = new(Response)
+	testTwiml.Message(MessageOpts{Method: "POST"}, "Welcome to owl facts", `Text "hoot" to unsibscribe`)
+	output, err := testTwiml.Render()
+	assert.NoError(t, err)
+	str := string(output)
+	assert.Contains(t, str, "Message")
+	assert.Contains(t, str, `method="POST"`)
+	assert.Contains(t, str, "Body")
 	t.Log(str)
 }
