@@ -89,8 +89,8 @@ func (act SmsAccount) getSms(destUrl string, resp *Message) error {
 	return common.SendGetRequest(destUrl, act, resp, 200)
 }
 
-func (act SmsAccount) Get(sid MsgSid) (Message, error) {
-	if true != sid.Validate() {
+func (act SmsAccount) Get(sid string) (Message, error) {
+	if true != validateSmsSid(sid) {
 		return Message{}, errors.New("Invalid sid")
 	}
 	var m Message

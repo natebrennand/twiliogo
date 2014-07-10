@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/natebrennand/twiliogo"
-	"github.com/natebrennand/twiliogo/sms"
 	"os"
 )
 
@@ -14,7 +13,7 @@ func main() {
 	fmt.Printf("Sending a GET for {%s}\n", sid[0:34])
 
 	act := twiliogo.NewAccountFromEnv()
-	resp, err := act.Sms.Get(sms.MsgSid(sid[0:34]))
+	resp, err := act.Sms.Get(sid[0:34])
 	if err != nil {
 		fmt.Println("Error sending sms: ", err.Error())
 	}

@@ -10,10 +10,8 @@ import (
 	"regexp"
 )
 
-type MsgSid string
-
-func (m MsgSid) Validate() bool {
-	match, _ := regexp.MatchString(`^(SM|MM)[0-9a-z]{32}$`, string(m))
+func validateSmsSid(sid string) bool {
+	match, _ := regexp.MatchString(`^(SM|MM)[0-9a-z]{32}$`, string(sid))
 	return match
 }
 
