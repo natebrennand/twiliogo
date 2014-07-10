@@ -58,3 +58,11 @@ func (t *Response) Sms(opts SmsOpts, text string) TwimlInterface {
 	addSms(t, &opts, &text)
 	return t
 }
+
+// Move a caller into a queue.
+//
+// https://www.twilio.com/docs/api/twiml/enqueue
+func (t *Response) Enqueue(opts EnqueueOpts, queue string) TwimlInterface {
+	addEnqueue(t, &opts, &queue)
+	return t
+}

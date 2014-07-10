@@ -106,3 +106,14 @@ func TestDial(t *testing.T) {
 	assert.Contains(t, str, "Client")
 	assert.Contains(t, str, "Conference")
 }
+
+func TestEnqueue(t *testing.T) {
+	testTwiml = &Response{}
+	testTwiml.Enqueue(EnqueueOpts{Method: "POST"}, "infiniteHold")
+	output, err := testTwiml.Render()
+	assert.NoError(t, err)
+	str := string(output)
+	assert.Contains(t, str, "Enqueue")
+	assert.Contains(t, str, `method="POST"`)
+	assert.Contains(t, str, "infiniteHold")
+}
