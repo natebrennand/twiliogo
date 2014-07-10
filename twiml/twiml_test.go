@@ -33,7 +33,6 @@ func TestEmptyResponse(t *testing.T) {
 	assert.Contains(t, str, xml.Header)
 	assert.Contains(t, str, "<Response>")
 	assert.Contains(t, str, "</Response>")
-	t.Log(string(str))
 }
 
 func TestEndToEnd(t *testing.T) {
