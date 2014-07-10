@@ -71,7 +71,7 @@ var testResponseFixture = Response{
 }
 
 var testCallbackFixture = Callback{
-	CallDuration:      4.5,
+	CallDuration:      4,
 	RecordingUrl:      "",
 	RecordingSid:      "recordingsid",
 	RecordingDuration: 60,
@@ -89,5 +89,5 @@ var testCallbackFixture = Callback{
 	},
 }
 
-var testCallbackFixtureFormString = `CallDuration=4.5&RecordingSid=recordingsid&RecordingDuration=60&CallSid=callsid&CallStatus=completed&ApiVersion=2010-04-01&Direction=outbound-api&ForwardedFrom=NianCat&CallerName=OwlMonkey&AccountSid=ACd03387e99bf959daa1e4810cc945708d&From=+13139202596&To=+16164601267`
-var testCallbackFixtureFormFailureString = `CallDuration=4.5&RecordingUrl=4&RecordingSid=recordingsid&RecordingDuration=60&CallSid=callsid&CallStatus=completed&ApiVersion=2010-04-01&Direction=outbound-api&ForwardedFrom=NianCat&CallerName=OwlMonkey&AccountSid=ACd03387e99bf959daa1e4810cc945708d&From=+13139202596&To=+16164601267`
+var testCallbackFixtureFormString = `CallDuration=4&RecordingSid=recordingsid&RecordingDuration=60&CallSid=callsid&CallStatus=completed&ApiVersion=2010-04-01&Direction=outbound-api&ForwardedFrom=NianCat&CallerName=OwlMonkey&AccountSid=ACd03387e99bf959daa1e4810cc945708d&From=+13139202596&To=+16164601267`
+var testCallbackFixtureFormFailureString = `CallDuration=4&RecordingUrl=4&RecordingSid=recordingsid&RecordingDuration=60&CallSid=callsid&CallStatus=completed&ApiVersion=2010-04-01&Direction=outbound-api&ForwardedFrom=NianCat&CallerName=OwlMonkey&AccountSid=ACd03387e99bf959daa1e4810cc945708d&From=+13139202596&To=+16164601267`

@@ -11,10 +11,10 @@ import (
 // Represents the callback sent everytime the status of the call is updated.
 // https://www.twilio.com/docs/api/rest/making-calls#status-callback-parameter
 type Callback struct {
-	CallDuration      float64 `json:"duration,string"`
+	CallDuration      int `json:"call_duration"`
 	RecordingUrl      string
 	RecordingSid      string
-	RecordingDuration float64 `json:"recording_duration,string"`
+	RecordingDuration int `json:"recording_duration"`
 	common.StandardRequest
 	CallSid       string
 	CallStatus    string
@@ -26,7 +26,6 @@ type Callback struct {
 
 // Creates a Callback struct from a form
 func (cb *Callback) Parse(req *http.Request) error {
-	fmt.Println("req ", req)
 	var msgLocation *common.Location = nil
 	if req.PostFormValue("FromCity") != "" { // ignore location data if possible
 		msgLocation = &common.Location{
@@ -42,22 +41,22 @@ func (cb *Callback) Parse(req *http.Request) error {
 	}
 
 	callDurString := req.PostFormValue("CallDuration")
-	calldur, err := strconv.ParseFloat(callDurString, 64)
+	callDur, err := strconv.Atoi(callDurString)
 
-	if err != nil && callDurString != "" {
+	if callDurString != "" && err != nil {
 		return errors.New(fmt.Sprintf("Error parsing CallDuration => %s", err.Error()))
 	}
 
 	recDurString := req.PostFormValue("RecordingDuration")
-	recDur, err := strconv.ParseFloat(recDurString, 64)
+	recDur, err := strconv.Atoi(recDurString)
 
-	if err != nil && recDurString != "" {
+	if recDurString != "" && err != nil {
 		return errors.New(fmt.Sprintf("Error parsing RecordingDuration => %s", err.Error()))
 	}
 
 	// Construct callback
 	*cb = Callback{
-		CallDuration:      calldur,
+		CallDuration:      callDur,
 		RecordingUrl:      req.PostFormValue("RecordingUrl"),
 		RecordingSid:      req.PostFormValue("RecordingSid"),
 		RecordingDuration: recDur,
