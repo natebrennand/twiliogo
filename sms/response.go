@@ -35,3 +35,20 @@ func (r *Message) Build(resp *http.Response) error {
 	}
 	return nil
 }
+
+type MessageList struct {
+	common.ListResponseCore
+	Messages *[]Message `json:"messages"`
+}
+
+func (l *MessageList) Build(resp *http.Response) error {
+	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return errors.New(fmt.Sprintf("Error while reading json from buffer => %s", err.Error()))
+	}
+	err = json.Unmarshal(bodyBytes, l)
+	if err != nil {
+		return errors.New(fmt.Sprintf("Error while decoding json => %s, recieved msg => %s", err.Error(), string(bodyBytes)))
+	}
+	return nil
+}

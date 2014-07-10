@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 )
 
 type SmsAccount struct {
@@ -96,4 +97,43 @@ func (act SmsAccount) Get(sid string) (Message, error) {
 	var m Message
 	err := act.getSms(fmt.Sprintf(getUrl, act.AccountSid, string(sid)), &m)
 	return m, err
+}
+
+// Used to filter list SMS results
+type Filter struct {
+	To       string
+	From     string
+	DateSent *time.Time
+}
+
+func (f Filter) GetQueryString() string {
+	v := url.Values{}
+	if f.To != "" {
+		v.Set("To", f.To)
+	}
+	if f.From != "" {
+		v.Set("From", f.From)
+	}
+	if f.DateSent != nil {
+		v.Set("DateSent", f.DateSent.Format(common.GMTTimeLayout))
+	}
+	encoded := v.Encode()
+	if encoded != "" {
+		encoded = "?" + encoded
+	}
+	return encoded
+}
+
+func (f Filter) Validate() error {
+	return nil
+}
+
+func (act SmsAccount) getList(destUrl string, f Filter, resp *MessageList) error {
+	return common.SendGetRequest(destUrl+f.GetQueryString(), act, resp, 200)
+}
+
+func (act SmsAccount) List(f Filter) (MessageList, error) {
+	var ml MessageList
+	err := act.getList(fmt.Sprintf(listUrl, act.AccountSid), f, &ml)
+	return ml, err
 }
