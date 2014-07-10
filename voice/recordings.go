@@ -66,6 +66,5 @@ func (act VoiceAccount) Delete(recSid string) error {
 		return errors.New("Invalid sid")
 	}
 
-	err := act.deleteRecording(fmt.Sprintf(recordingUrl, act.AccountSid, string(recSid)))
-	return err
+	return act.deleteRecording(fmt.Sprintf(recordingUrl, act.AccountSid, string(recSid)))
 }

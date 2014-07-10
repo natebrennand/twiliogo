@@ -16,5 +16,7 @@ func main() {
 	err := act.Voice.Delete(sid[0:34])
 	if err != nil {
 		fmt.Println("Error getting recording: ", err.Error())
+	} else {
+		fmt.Println("Recording ", sid[0:34], " successfully deleted!")
 	}
 }

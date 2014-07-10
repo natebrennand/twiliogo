@@ -76,7 +76,5 @@ func SendDeleteRequest(url string, t TwilioAccount, expectedResponse int) error 
 	if httpResp.StatusCode != expectedResponse {
 		return NewTwilioError(*httpResp)
 	}
-
-	// build response
 	return nil
 }
