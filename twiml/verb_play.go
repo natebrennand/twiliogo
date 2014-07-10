@@ -13,6 +13,6 @@ type PlayOpts struct {
 
 func addPlay(t twimlResponse, opts *PlayOpts, urls []string) {
 	for _, url := range urls {
-		t.appendContents(&play{0, opts, url})
+		t.appendContents(&play{PlayOpts: opts, Url: url})
 	}
 }

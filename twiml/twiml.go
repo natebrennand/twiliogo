@@ -23,12 +23,11 @@ type TwimlInterface interface {
 	RenderReader() (io.Reader, error)
 	Say(SayOpts, ...string) TwimlInterface
 	Play(PlayOpts, ...string) TwimlInterface
-	// Dial(...string) TwimlInterface
+	Dial(DialOpts, DialBody) TwimlInterface
 	Record(RecordOpts, string) TwimlInterface
 	Gather(GatherOpts, GatherBody) TwimlInterface
-	// Sms(...string) TwimlInterface
+	Sms(SmsOpts, string) TwimlInterface
 	// Hangup(...string) TwimlInterface
-	// Queue(...string) TwimlInterface
 	// Redirect(...string) TwimlInterface
 	Pause(int) TwimlInterface
 	// Reject(...string) TwimlInterface

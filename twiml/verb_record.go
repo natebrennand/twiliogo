@@ -18,5 +18,5 @@ type RecordOpts struct {
 }
 
 func addRecord(t twimlResponse, opts *RecordOpts, action *string) {
-	t.appendContents(&record{0, opts, action})
+	t.appendContents(&record{RecordOpts: opts, Action: action})
 }

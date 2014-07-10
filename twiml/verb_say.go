@@ -14,6 +14,6 @@ type SayOpts struct {
 
 func addSay(t twimlResponse, opts *SayOpts, lines []string) {
 	for _, line := range lines {
-		t.appendContents(&say{0, opts, line})
+		t.appendContents(&say{SayOpts: opts, Sentence: line})
 	}
 }

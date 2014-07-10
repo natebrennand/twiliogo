@@ -5,7 +5,7 @@ import "encoding/xml"
 type gather struct {
 	XMLName int `xml:"Gather"`
 	*GatherOpts
-	Inner GatherBody
+	Body *GatherBody
 }
 
 type GatherOpts struct {
@@ -25,6 +25,10 @@ type GatherBody interface {
 
 type GatherTwiml struct {
 	baseTwiml
+}
+
+func addGather(t twimlResponse, opts *GatherOpts, body *GatherBody) {
+	t.appendContents(&gather{GatherOpts: opts, Body: body})
 }
 
 func (t *GatherTwiml) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
