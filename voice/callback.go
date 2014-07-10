@@ -41,17 +41,24 @@ func (cb *Callback) Parse(req *http.Request) error {
 	}
 
 	callDurString := req.PostFormValue("CallDuration")
-	callDur, err := strconv.Atoi(callDurString)
 
-	if callDurString != "" && err != nil {
-		return errors.New(fmt.Sprintf("Error parsing CallDuration => %s", err.Error()))
+	var err error
+	var callDur = 0
+	var recDur = 0
+
+	if callDurString != "" {
+		callDur, err = strconv.Atoi(callDurString)
+		if err != nil {
+			return errors.New(fmt.Sprintf("Error parsing CallDuration => %s", err.Error()))
+		}
 	}
 
 	recDurString := req.PostFormValue("RecordingDuration")
-	recDur, err := strconv.Atoi(recDurString)
-
-	if recDurString != "" && err != nil {
-		return errors.New(fmt.Sprintf("Error parsing RecordingDuration => %s", err.Error()))
+	if recDurString != "" {
+		recDur, err = strconv.Atoi(recDurString)
+		if err != nil {
+			return errors.New(fmt.Sprintf("Error parsing RecordingDuration => %s", err.Error()))
+		}
 	}
 
 	// Construct callback
