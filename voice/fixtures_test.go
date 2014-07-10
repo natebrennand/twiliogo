@@ -54,7 +54,7 @@ var testResponseFixtureString = `{
 	}
 }`
 
-var testResponseFixture = Response{
+var testResponseFixture = Call{
 	ResponseCore: common.ResponseCore{
 		AccountSid:   "ACd03387e99bf959daa1e4810cc945708d",
 		ApiVersion:   "2010-04-01",

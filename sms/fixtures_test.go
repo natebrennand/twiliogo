@@ -42,9 +42,8 @@ var (
 	}`
 	testSmsResponseFixture = Message{
 		ResponseCore: common.ResponseCore{
-			AccountSid: "AC5ef8732a3c49700934481addd5ce1659",
-			ApiVersion: "2010-04-01",
-
+			AccountSid:   "AC5ef8732a3c49700934481addd5ce1659",
+			ApiVersion:   "2010-04-01",
 			Direction:    "outbound-api",
 			ErrorCode:    "",
 			ErrorMessage: "",
