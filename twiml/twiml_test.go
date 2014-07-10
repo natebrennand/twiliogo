@@ -86,3 +86,24 @@ func TestGather(t *testing.T) {
 	// Make sure the gather struct doesn't render it's Body field to xml.
 	assert.NotContains(t, str, "Body")
 }
+
+func TestDial(t *testing.T) {
+	testTwiml = &Response{}
+	innerDial := new(DialTwiml)
+	innerDial.
+		Number(NumberOpts{}, "0123456789", "9876543210").
+		Sip(SipOpts{}, "sip:address").
+		Queue(QueueOpts{}, "myQueue").
+		Client(ClientOpts{}, "clientName").
+		Conference(ConferenceOpts{}, "myConference")
+
+	testTwiml.Dial(DialOpts{Timeout: 30}, innerDial)
+	output, err := testTwiml.Render()
+	assert.NoError(t, err)
+	str := string(output)
+	assert.Contains(t, str, "Dial")
+	assert.Contains(t, str, "Number")
+	assert.Contains(t, str, "Queue")
+	assert.Contains(t, str, "Client")
+	assert.Contains(t, str, "Conference")
+}
