@@ -90,10 +90,10 @@ func (act SmsAccount) getSms(destUrl string, resp *Message) error {
 }
 
 func (act SmsAccount) Get(sid string) (Message, error) {
-	if true != validateSmsSid(sid) {
-		return Message{}, errors.New("Invalid sid")
-	}
 	var m Message
+	if !validateSmsSid(sid) {
+		return m, errors.New("Invalid sid")
+	}
 	err := act.getSms(fmt.Sprintf(getUrl, act.AccountSid, string(sid)), &m)
 	return m, err
 }
