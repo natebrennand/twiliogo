@@ -3,7 +3,7 @@ package twiml
 type enqueue struct {
 	XMLName int `xml:"Enqueue"`
 	*EnqueueOpts
-	Url *string `xml:",chardata"`
+	Queue *string `xml:",chardata"`
 }
 
 type EnqueueOpts struct {
@@ -14,5 +14,5 @@ type EnqueueOpts struct {
 }
 
 func addEnqueue(t twimlResponse, opts *EnqueueOpts, queue *string) {
-	t.appendContents(&enqueue{0, opts, queue})
+	t.appendContents(&enqueue{EnqueueOpts: opts, Queue: queue})
 }
