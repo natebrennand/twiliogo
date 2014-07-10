@@ -9,7 +9,7 @@ import (
 
 func main() {
 	fmt.Println("Waiting for sid to send request")
-	sid, _ := bufio.NewReader(os.Stdin).ReadString('\n') // wait to let server catching callback start
+	sid, _ := bufio.NewReader(os.Stdin).ReadString('\n')
 	fmt.Printf("Sending a GET for {%s}\n", sid[0:34])
 
 	act := twiliogo.NewAccountFromEnv()

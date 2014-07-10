@@ -124,11 +124,11 @@ func (act VoiceAccount) getCall(destUrl string, resp *Response) error {
 }
 
 func (act VoiceAccount) Get(sid string) (Response, error) {
+	var m Response
 	if true != validateCallSid(sid) {
-		return Response{}, errors.New("Invalid sid")
+		return m, errors.New("Invalid sid")
 	}
 
-	var m Response
 	err := act.getCall(fmt.Sprintf(getUrl, act.AccountSid, string(sid)), &m)
 	return m, err
 }
