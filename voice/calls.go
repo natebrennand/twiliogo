@@ -167,10 +167,6 @@ func (f Filter) GetQueryString() string {
 	return encoded
 }
 
-func (f Filter) Validate() error {
-	return nil
-}
-
 func (act VoiceAccount) getList(destUrl string, f Filter, resp *CallList) error {
 	return common.SendGetRequest(destUrl+f.GetQueryString(), act, resp, 200)
 }
