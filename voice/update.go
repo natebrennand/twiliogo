@@ -2,6 +2,8 @@ package voice
 
 import (
 	"errors"
+	"fmt"
+	"github.com/natebrennand/twiliogo/common"
 	"io"
 	"net/url"
 	"strings"
@@ -49,4 +51,17 @@ func (p Update) Validate() error {
 		return errors.New("\"Url\" or \"Status\" or \"Method\" must all be set.")
 	}
 	return nil
+}
+
+// Internal function for sending the post request to twilio.
+func (act VoiceAccount) postUpdate(dest string, msg Update, resp *Call) error {
+	// send post request to twilio
+	return common.SendPostRequest(dest, msg, act, resp, 200)
+}
+
+// Sends a post request to Twilio to modify a call
+func (act VoiceAccount) Update(p Update, sid string) (Call, error) {
+	var r Call
+	err := act.postUpdate(fmt.Sprintf(updateUrl, act.AccountSid, string(sid)), p, &r)
+	return r, err
 }
