@@ -14,7 +14,8 @@ type Media struct {
 }
 
 // Represents the callback sent everytime the status of the message is updated.
-// Visit https://www.twilio.com/docs/api/rest/sending-messages#status-callback-parameter for more detaiils
+//
+// Visit https://www.twilio.com/docs/api/rest/sending-messages#status-callback-parameter for more details
 type Callback struct {
 	MessageSid    string
 	SmsSid        string

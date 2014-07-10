@@ -4,6 +4,26 @@ import (
 	"net/http"
 )
 
+type Location struct {
+	FromCity    string
+	FromState   string
+	FromZip     string
+	FromCountry string
+	ToCity      string
+	ToState     string
+	ToZip       string
+	ToCountry   string
+}
+
+// Standard request parameters for Twiml responses
+// https://www.twilio.com/docs/api/twiml/sms/twilio_request#request-parameters
+type StandardRequest struct {
+	AccountSid string
+	From       string
+	To         string
+	Location   *Location // Only sent when Twilio can look up the geographic data.
+}
+
 func ParseStandardRequest(req *http.Request) StandardRequest {
 	var msgLocation *Location = nil
 	if req.PostFormValue("FromCity") != "" { // ignore location data if possible
