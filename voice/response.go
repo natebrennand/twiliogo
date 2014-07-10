@@ -17,7 +17,7 @@ type Response struct {
 	PhoneNumberSid string
 	StartTime      common.JsonTime `json:"start_time"`
 	EndTime        common.JsonTime `json:"end_time"`
-	Duration       *int            `json:"duration,string"`
+	Duration       string          `json:"duration"`
 	AnsweredBy     string          `json:"answered_by"`
 	ForwardedFrom  string          `json:"fowarded_from"`
 	CallerName     string          `json:"caller_name"`
