@@ -125,10 +125,10 @@ func (f Filter) GetQueryString() string {
 		v.Set("MessageDate", f.OnMessageDate.Format(common.GMTTimeLayout))
 	} else {
 		if f.AfterMessageDate != nil {
-			v.Set("MessageDate>", f.BeforeMessageDate.Format(common.GMTTimeLayout))
+			v.Set("MessageDate>", f.AfterMessageDate.Format(common.GMTTimeLayout))
 		}
 		if f.BeforeMessageDate != nil {
-			v.Set("MessageDate<", f.AfterMessageDate.Format(common.GMTTimeLayout))
+			v.Set("MessageDate<", f.BeforeMessageDate.Format(common.GMTTimeLayout))
 		}
 	}
 	encoded := v.Encode()

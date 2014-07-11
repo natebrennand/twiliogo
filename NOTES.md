@@ -11,7 +11,7 @@
 - /AvailablePhoneNumbers
 - /Recordings
 - /Transcriptions
-- /Nofication
+- /Notification
 
 
 # Roadmap
