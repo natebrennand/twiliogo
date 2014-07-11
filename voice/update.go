@@ -54,13 +54,13 @@ func (p Update) Validate() error {
 }
 
 // Internal function for sending the post request to twilio.
-func (act VoiceAccount) postUpdate(dest string, msg Update, resp *Call) error {
+func (act Account) postUpdate(dest string, msg Update, resp *Call) error {
 	// send post request to twilio
 	return common.SendPostRequest(dest, msg, act, resp, 200)
 }
 
 // Sends a post request to Twilio to modify a call
-func (act VoiceAccount) Update(p Update, sid string) (Call, error) {
+func (act Account) Update(p Update, sid string) (Call, error) {
 	var r Call
 	err := act.postUpdate(fmt.Sprintf(updateURL, act.AccountSid, string(sid)), p, &r)
 	return r, err
