@@ -70,7 +70,7 @@ func startMockHTTPServer(requests *int) *httptest.Server {
 }
 
 func TestSendSuccess(t *testing.T) {
-	act := VoiceAccount{"act", "token", http.Client{}}
+	act := Account{"act", "token", http.Client{}}
 	// start a server to recieve post request
 	numRequests := 0
 	testPostServer := startMockHTTPServer(&numRequests)
@@ -90,7 +90,7 @@ func TestSendSuccess(t *testing.T) {
 }
 
 func TestSendFailure(t *testing.T) {
-	act := VoiceAccount{"act", "token", http.Client{}}
+	act := Account{"act", "token", http.Client{}}
 	// start a server to recieve post request
 	numRequests := 0
 	testPostServer := startMockHTTPServer(&numRequests)

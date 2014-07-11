@@ -24,9 +24,9 @@ type Account struct {
 	// redundancy for usability
 	Sms            sms.Account
 	ShortCode      shortcodes.Account
-	Voice          voice.VoiceAccount
-	Recordings     recording.RecordingAccount
-	Transcriptions transcription.TranscriptionAccount
+	Voice          voice.Account
+	Recordings     recording.Account
+	Transcriptions transcription.Account
 }
 
 func NewAccount(sid, token string) Account {
@@ -50,17 +50,17 @@ func NewAccount(sid, token string) Account {
 			Token:      token,
 			Client:     http.Client{},
 		},
-		Voice: voice.VoiceAccount{
+		Voice: voice.Account{
 			AccountSid: sid,
 			Token:      token,
 			Client:     http.Client{},
 		},
-		Recordings: recording.RecordingAccount{
+		Recordings: recording.Account{
 			AccountSid: sid,
 			Token:      token,
 			Client:     http.Client{},
 		},
-		Transcriptions: transcription.TranscriptionAccount{
+		Transcriptions: transcription.Account{
 			AccountSid: sid,
 			Token:      token,
 			Client:     http.Client{},

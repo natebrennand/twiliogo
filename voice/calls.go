@@ -13,19 +13,19 @@ import (
 	"time"
 )
 
-type VoiceAccount struct {
+type Account struct {
 	AccountSid string
 	Token      string
 	Client     http.Client
 }
 
-func (act VoiceAccount) GetSid() string {
+func (act Account) GetSid() string {
 	return act.AccountSid
 }
-func (act VoiceAccount) GetToken() string {
+func (act Account) GetToken() string {
 	return act.Token
 }
-func (act VoiceAccount) GetClient() http.Client {
+func (act Account) GetClient() http.Client {
 	return act.Client
 }
 
@@ -88,7 +88,7 @@ func (p Post) GetReader() io.Reader {
 	return strings.NewReader(vals.Encode())
 }
 
-// Validates the Voice Post to ensure validity.
+// Validates a Voice Post.
 func (p Post) Validate() error {
 	if p.From == "" || p.To == "" {
 		return errors.New("Both \"From\" and \"To\" must be set in Post.")
@@ -106,25 +106,25 @@ func (p Post) Validate() error {
 }
 
 // Internal function for sending the post request to twilio.
-func (act VoiceAccount) makeCall(dest string, msg Post, resp *Call) error {
+func (act Account) makeCall(dest string, msg Post, resp *Call) error {
 	// send post request to twilio
 	return common.SendPostRequest(dest, msg, act, resp, 201)
 }
 
-// Sends a post request to Twilio to send a voice request.
-func (act VoiceAccount) Call(p Post) (Call, error) {
+// Sends a post request to Twilio to create a call.
+func (act Account) Call(p Post) (Call, error) {
 	var r Call
 	err := act.makeCall(fmt.Sprintf(postURL, act.AccountSid), p, &r)
 	return r, err
 }
 
 // Internal function for sending the post request to twilio.
-func (act VoiceAccount) getCall(destURL string, resp *Call) error {
+func (act Account) getCall(destURL string, resp *Call) error {
 	// send get request to twilio
 	return common.SendGetRequest(destURL, act, resp, 200)
 }
 
-func (act VoiceAccount) Get(sid string) (Call, error) {
+func (act Account) Get(sid string) (Call, error) {
 	var m Call
 	if !validateCallSid(sid) {
 		return m, errors.New("Invalid sid")
@@ -141,6 +141,7 @@ type Filter struct {
 	Status        string
 	StartTime     *time.Time
 	ParentCallSid string
+	PageSize      int
 }
 
 func (f Filter) GetQueryString() string {
@@ -167,11 +168,11 @@ func (f Filter) GetQueryString() string {
 	return encoded
 }
 
-func (act VoiceAccount) getList(destURL string, f Filter, resp *CallList) error {
+func (act Account) getList(destURL string, f Filter, resp *CallList) error {
 	return common.SendGetRequest(destURL+f.GetQueryString(), act, resp, 200)
 }
 
-func (act VoiceAccount) List(f Filter) (CallList, error) {
+func (act Account) List(f Filter) (CallList, error) {
 	var callList CallList
 	err := act.getList(fmt.Sprintf(listURL, act.AccountSid), f, &callList)
 	return callList, err
