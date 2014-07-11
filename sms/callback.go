@@ -59,8 +59,8 @@ func (cb *Callback) Parse(req *http.Request) error {
 
 // CallbackHandler creates a http Handler that will parse a Twilio callback and send it into the provided channel.
 func CallbackHandler(callbackChan chan Callback) http.HandlerFunc {
-	var cb Callback
 	return http.HandlerFunc(func(resp http.ResponseWriter, req *http.Request) {
+		var cb Callback
 		err := cb.Parse(req)
 		if err != nil {
 			resp.WriteHeader(http.StatusBadRequest)

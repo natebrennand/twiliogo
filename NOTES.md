@@ -12,6 +12,7 @@
 - /Recordings
 - /Transcriptions
 - /Notification
+- /Usage/Triggers
 
 
 # Roadmap
@@ -38,7 +39,6 @@ Calls
 
 Account
 - /Usage/Records
-- /Usage/Triggers
 
 SIP
 - /SIP/CredentialLists
