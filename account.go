@@ -29,11 +29,8 @@ type Account struct {
 	Voice          voice.Account
 	Recordings     recording.Account
 	Transcriptions transcription.Account
-<<<<<<< HEAD
 	Conferences    conference.Account
-=======
 	Applications   applications.Account
->>>>>>> 80c81656da8226adf37d150dfa59a8e02187fdad
 }
 
 func NewAccount(sid, token string) Account {
