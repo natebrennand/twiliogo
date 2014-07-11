@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/xml"
 	"io"
+	"net/http"
 )
 
 var (
@@ -62,4 +63,15 @@ func (t *Response) RenderReader() (io.Reader, error) {
 	}
 
 	return bytes.NewReader(result), nil
+}
+
+// Returns an implements http.Handler so a Response object can be passed
+// directly to http.Handle
+func (t *Response) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
+	output, err := t.Render()
+	if err != nil {
+		http.Error(resp, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	resp.Write(output)
 }

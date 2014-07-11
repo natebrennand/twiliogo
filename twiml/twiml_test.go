@@ -3,6 +3,8 @@ package twiml
 import (
 	"encoding/xml"
 	"io/ioutil"
+	"net/http"
+	"net/http/httptest"
 	"strings"
 	"testing"
 
@@ -18,8 +20,12 @@ const endToEndStr = `<?xml version="1.0" encoding="UTF-8"?>
 
 var testTwiml *Response
 
-func TestTwimlSatisfiesXmlInterface(t *testing.T) {
+func TestResponseSatisfiesXmlInterface(t *testing.T) {
 	assert.Implements(t, (*xml.Marshaler)(nil), new(Response))
+}
+
+func TestResponseSatisfiesHttpHandlerInterface(t *testing.T) {
+	assert.Implements(t, (*http.Handler)(nil), new(Response))
 }
 
 func TestGatherTwimlSatisfiesGatherBody(t *testing.T) {
@@ -209,4 +215,16 @@ func TestMessage(t *testing.T) {
 	assert.Contains(t, str, "Message")
 	assert.Contains(t, str, `method="POST"`)
 	assert.Contains(t, str, "Body")
+}
+
+func TestHttpResponse(t *testing.T) {
+	twiml := new(Response)
+	twiml.Say(SayOpts{}, "Responding to http request.")
+	serv := httptest.NewServer(twiml)
+	defer serv.Close()
+	res, err := http.Get(serv.URL)
+	assert.NoError(t, err)
+	assert.Contains(t, res.Header.Get("Content-Type"), "xml")
+	_, err = ioutil.ReadAll(res.Body)
+	assert.NoError(t, err)
 }
