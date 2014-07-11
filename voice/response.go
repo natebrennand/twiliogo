@@ -34,6 +34,25 @@ type Recording struct {
 	Uri         string          `json:"uri"`
 }
 
+type Transcription struct {
+	Sid               string           `json:"sid"`
+	DateCreated       common.JsonTime  `json:"date_created"`
+	DateUpdated       common.JsonTime  `json:"date_updated"`
+	AccountSid        string           `json:"account_sid"`
+	Status            string           `json:"status"`
+	RecordingSid      string           `json:"recording_sid"`
+	Duration          string           `json:"duration"`
+	TranscriptionText string           `json:"transcription_text"`
+	Price             common.JsonPrice `json:"price"`
+	PriceUnit         string           `json:"price_unit"`
+	Uri               string           `json:"uri"`
+}
+
+type TranscriptionList struct {
+	common.ListResponseCore
+	Transcriptions *[]Transcription `json:"transcriptions"`
+}
+
 type RecordingList struct {
 	common.ListResponseCore
 	Recordings *[]Recording `json:"recordings"`
@@ -51,6 +70,11 @@ func validateCallSid(sid string) bool {
 
 func validateRecSid(sid string) bool {
 	match, _ := regexp.MatchString(`^RE[0-9a-z]{32}$`, string(sid))
+	return match
+}
+
+func validateTranscriptionSid(sid string) bool {
+	match, _ := regexp.MatchString(`^TR[0-9a-z]{32}$`, string(sid))
 	return match
 }
 
