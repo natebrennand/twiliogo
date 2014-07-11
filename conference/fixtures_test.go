@@ -1,5 +1,9 @@
 package conference
 
+import (
+	"github.com/natebrennand/twiliogo/common"
+)
+
 var testFixtureString = `{
 	"sid": "CFd03387e99bf959daa1e4810cc945708d",
 	"friendly_name": "Go Team GoHelper",
@@ -41,6 +45,37 @@ var testFixtureListString = ` {
         }
     ]
 }`
+
+var testFixtureList = ConferenceList{
+	ListResponseCore: common.ListResponseCore{
+		Start:           0,
+		Total:           261,
+		NumPages:        6,
+		Page:            0,
+		PageSize:        50,
+		End:             49,
+		URI:             "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/Calls.json",
+		FirstPageURI:    "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/Calls.json?Page=0&PageSize=50",
+		LastPageURI:     "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/Calls.json?Page=5&PageSize=50",
+		NextPageURI:     "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/Calls.json?Page=1&PageSize=50",
+		PreviousPageURI: "",
+	},
+	Conferences: &[]Conference{
+		Conference{
+			AccountSid:   "AC5116d5d4df9f61ceae2f0732e1ea9f1b",
+			APIVersion:   "2010-04-01",
+			DateCreated:  common.JSONTime{time.Date(2010, time.August, 16, 3, 45, 01, 0, &time.Location{})},
+			DateUpdated:  common.JSONTime{time.Date(2010, time.August, 16, 3, 45, 03, 0, &time.Location{})},
+			FriendlyName: "Party Line",
+			Sid:          "CFbbe46ff1274e283f7e3ac1df0072ab39",
+			Status:       "completed",
+			SubResourceURIs: {
+				Participants: "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/Conferences/CFbbe46ff1274e283f7e3ac1df0072ab39/Participants.json",
+			},
+			URI: "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/Conferences/CFbbe46ff1274e283f7e3ac1df0072ab39.json",
+		},
+	},
+}
 
 var testParticipantFixtureString = `{
     "account_sid": "AC5116d5d4df9f61ceae2f0732e1ea9f1b",

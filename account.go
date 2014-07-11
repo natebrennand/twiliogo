@@ -2,8 +2,8 @@ package twiliogo
 
 import (
 	"fmt"
-	"github.com/natebrennand/twiliogo/conference"
 	"github.com/natebrennand/twiliogo/applications"
+	"github.com/natebrennand/twiliogo/conference"
 	"github.com/natebrennand/twiliogo/recording"
 	"github.com/natebrennand/twiliogo/sms"
 	"github.com/natebrennand/twiliogo/sms/shortcodes"
@@ -70,6 +70,11 @@ func NewAccount(sid, token string) Account {
 			Client:     http.Client{},
 		},
 		Applications: applications.Account{
+			AccountSid: sid,
+			Token:      token,
+			Client:     http.Client{},
+		},
+		Conferences: conference.Account{
 			AccountSid: sid,
 			Token:      token,
 			Client:     http.Client{},

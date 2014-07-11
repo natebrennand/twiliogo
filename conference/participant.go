@@ -11,21 +11,19 @@ import (
 )
 
 type ParticipantAttr struct {
-	Muted bool
+	Muted *bool
 }
 
 func (p ParticipantAttr) GetReader() io.Reader {
 	vals := url.Values{}
-	muted := strconv.FormatBool(p.Muted)
-	if muted != "" {
-		vals.Set("Muted", muted)
+	if p.Muted != nil {
+		vals.Set("Muted", strconv.FormatBool(*p.Muted))
 	}
 	return strings.NewReader(vals.Encode())
 }
 
 func (p ParticipantAttr) Validate() error {
-	muted := strconv.FormatBool(p.Muted)
-	if muted == "" {
+	if p.Muted != nil {
 		return errors.New("Muted must be set, else nothing to modify")
 	}
 	return nil
@@ -33,10 +31,8 @@ func (p ParticipantAttr) Validate() error {
 
 func (f ParticipantAttr) GetParticipantQueryString() string {
 	v := url.Values{}
-	//TODO: check if it's there?
-	muted := strconv.FormatBool(f.Muted)
-	if muted != "" {
-		v.Set("Muted", muted)
+	if f.Muted != nil {
+		v.Set("Muted", strconv.FormatBool(*f.Muted))
 	}
 	encoded := v.Encode()
 	if encoded != "" {
@@ -46,7 +42,7 @@ func (f ParticipantAttr) GetParticipantQueryString() string {
 }
 
 func (act Account) getParticipant(destURL string, resp *Participant) error {
-	return common.SendGetRequest(destURL, act, resp, 200)
+	return common.SendGetRequest(destURL, act, resp)
 }
 
 // Get a participant with callSid from conference with confSid
@@ -64,7 +60,7 @@ func (act Account) Participant(confSid string, callSid string) (Participant, err
 }
 
 func (act Account) setParticipantMute(dest string, msg ParticipantAttr, resp *Participant) error {
-	return common.SendPostRequest(dest, msg, act, resp, 200)
+	return common.SendPostRequest(dest, msg, act, resp)
 }
 
 // Mute or unmute participant with callSid in conference with confSid
@@ -75,7 +71,7 @@ func (act Account) SetMute(confSid string, callSid string, a ParticipantAttr) (P
 }
 
 func (act Account) kickParticipant(destURL string) error {
-	return common.SendDeleteRequest(destURL, act, 204)
+	return common.SendDeleteRequest(destURL, act)
 }
 
 // Kicks participant with callSid from conference with confSid
@@ -90,7 +86,7 @@ func (act Account) Kick(confSid string, callSid string) error {
 }
 
 func (act Account) getParticipantList(destURL string, f ParticipantAttr, resp *ParticipantList) error {
-	return common.SendGetRequest(destURL+f.GetParticipantQueryString(), act, resp, 200)
+	return common.SendGetRequest(destURL+f.GetParticipantQueryString(), act, resp)
 }
 
 // Get list of participants in conference with confSid

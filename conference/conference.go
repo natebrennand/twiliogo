@@ -54,7 +54,7 @@ func (f ListFilter) GetQueryString() string {
 
 func (act Account) getConference(destURL string, resp *Conference) error {
 	// send get request to twilio
-	return common.SendGetRequest(destURL, act, resp, 200)
+	return common.SendGetRequest(destURL, act, resp)
 }
 
 // Get a info about a conference with confSid
@@ -69,12 +69,13 @@ func (act Account) Get(confSid string) (Conference, error) {
 }
 
 func (act Account) getConferenceList(destURL string, f ListFilter, resp *ConferenceList) error {
-	return common.SendGetRequest(destURL+f.GetQueryString(), act, resp, 200)
+	return common.SendGetRequest(destURL+f.GetQueryString(), act, resp)
 }
 
 // Get list of conferences for this account
 func (act Account) List(f ListFilter) (ConferenceList, error) {
 	var cl ConferenceList
+	fmt.Println("CONF URL: ", fmt.Sprintf(listURL, act.AccountSid))
 	err := act.getConferenceList(fmt.Sprintf(listURL, act.AccountSid), f, &cl)
 	return cl, err
 }
