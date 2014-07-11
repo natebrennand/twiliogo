@@ -73,7 +73,7 @@ type Resource struct {
 
 func (act Account) Get() (Resource, error) {
 	var r Resource
-	err := common.SendGetRequest(fmt.Sprintf(getURL, act.AccountSid), act, &r, 200)
+	err := common.SendGetRequest(fmt.Sprintf(getURL, act.AccountSid), act, &r)
 	return r, err
 }
 
@@ -108,7 +108,7 @@ func (m Modification) GetReader() io.Reader {
 
 func (act Account) Modify(m Modification) (Resource, error) {
 	var r Resource
-	err := common.SendPostRequest(fmt.Sprintf(updateURL, act.AccountSid), m, act, &r, 200)
+	err := common.SendPostRequest(fmt.Sprintf(updateURL, act.AccountSid), m, act, &r)
 	return r, err
 }
 
@@ -139,6 +139,6 @@ func (f ListFilter) GetQueryString() string {
 
 func (act Account) List(f ListFilter) (ResourceList, error) {
 	var rl ResourceList
-	err := common.SendGetRequest(listURL+f.GetQueryString(), act, &rl, 200)
+	err := common.SendGetRequest(listURL+f.GetQueryString(), act, &rl)
 	return rl, err
 }

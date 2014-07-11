@@ -25,7 +25,7 @@ func (act Account) GetClient() http.Client {
 
 func (act Account) getTranscription(destUrl string, resp *Transcription) error {
 	// send get request to twilio
-	return common.SendGetRequest(destUrl, act, resp, 200)
+	return common.SendGetRequest(destUrl, act, resp)
 }
 
 // Returns data about recording as json
@@ -41,7 +41,7 @@ func (act Account) Get(trSid string) (Transcription, error) {
 }
 
 func (act Account) getTranscriptionList(destUrl string, resp *TranscriptionList) error {
-	return common.SendGetRequest(destUrl, act, resp, 200)
+	return common.SendGetRequest(destUrl, act, resp)
 }
 
 func (act Account) List() (TranscriptionList, error) {
@@ -52,7 +52,7 @@ func (act Account) List() (TranscriptionList, error) {
 
 func (act Account) deleteTranscription(destUrl string) error {
 	// send get request to twilio
-	return common.SendDeleteRequest(destUrl, act, 204)
+	return common.SendDeleteRequest(destUrl, act)
 }
 
 // Returns data about recording as json

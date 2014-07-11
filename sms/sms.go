@@ -74,7 +74,7 @@ func (p Post) Validate() error {
 // Internal function for sending the post request to twilio.
 func (act Account) sendSms(destURL string, msg Post, resp *Message) error {
 	// send post request to twilio
-	return common.SendPostRequest(destURL, msg, act, resp, 201)
+	return common.SendPostRequest(destURL, msg, act, resp)
 }
 
 // Sends a post request to Twilio to send a sms request.
@@ -87,7 +87,7 @@ func (act Account) Send(p Post) (Message, error) {
 // Internal function for sending the post request to twilio.
 func (act Account) getSms(destURL string, resp *Message) error {
 	// send get request to twilio
-	return common.SendGetRequest(destURL, act, resp, 200)
+	return common.SendGetRequest(destURL, act, resp)
 }
 
 func (act Account) Get(sid string) (Message, error) {
@@ -125,7 +125,7 @@ func (f Filter) GetQueryString() string {
 }
 
 func (act Account) getList(destURL string, f Filter, resp *MessageList) error {
-	return common.SendGetRequest(destURL+f.GetQueryString(), act, resp, 200)
+	return common.SendGetRequest(destURL+f.GetQueryString(), act, resp)
 }
 
 func (act Account) List(f Filter) (MessageList, error) {

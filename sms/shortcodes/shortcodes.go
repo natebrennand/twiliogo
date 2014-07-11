@@ -58,7 +58,7 @@ func (act Account) Get(sid string) (Resource, error) {
 	if !validateShortcodeSid(sid) {
 		return r, errors.New("Invalid sid")
 	}
-	err := common.SendGetRequest(fmt.Sprintf(getURL, act.AccountSid, sid), act, &r, 200)
+	err := common.SendGetRequest(fmt.Sprintf(getURL, act.AccountSid, sid), act, &r)
 	return r, err
 }
 
@@ -89,6 +89,6 @@ type ResourceList struct {
 
 func (act Account) GetList(f ListFilter) (ResourceList, error) {
 	var r ResourceList
-	err := common.SendGetRequest(fmt.Sprintf(listURL+f.GetQueryString(), act.AccountSid), act, &r, 200)
+	err := common.SendGetRequest(fmt.Sprintf(listURL+f.GetQueryString(), act.AccountSid), act, &r)
 	return r, err
 }

@@ -56,7 +56,7 @@ func (p Update) Validate() error {
 // Internal function for sending the post request to twilio.
 func (act Account) postUpdate(dest string, msg Update, resp *Call) error {
 	// send post request to twilio
-	return common.SendPostRequest(dest, msg, act, resp, 200)
+	return common.SendPostRequest(dest, msg, act, resp)
 }
 
 // Sends a post request to Twilio to modify a call

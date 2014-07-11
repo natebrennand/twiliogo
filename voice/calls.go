@@ -108,7 +108,7 @@ func (p Post) Validate() error {
 // Internal function for sending the post request to twilio.
 func (act Account) makeCall(dest string, msg Post, resp *Call) error {
 	// send post request to twilio
-	return common.SendPostRequest(dest, msg, act, resp, 201)
+	return common.SendPostRequest(dest, msg, act, resp)
 }
 
 // Sends a post request to Twilio to create a call.
@@ -121,7 +121,7 @@ func (act Account) Call(p Post) (Call, error) {
 // Internal function for sending the post request to twilio.
 func (act Account) getCall(destURL string, resp *Call) error {
 	// send get request to twilio
-	return common.SendGetRequest(destURL, act, resp, 200)
+	return common.SendGetRequest(destURL, act, resp)
 }
 
 func (act Account) Get(sid string) (Call, error) {
@@ -169,7 +169,7 @@ func (f ListFilter) GetQueryString() string {
 }
 
 func (act Account) getList(destURL string, f ListFilter, resp *CallList) error {
-	return common.SendGetRequest(destURL+f.GetQueryString(), act, resp, 200)
+	return common.SendGetRequest(destURL+f.GetQueryString(), act, resp)
 }
 
 func (act Account) List(f ListFilter) (CallList, error) {

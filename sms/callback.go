@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-// MediaReference contains 
+// MediaReference contains the content type and URL for a MMS Media object
 type MediaReference struct {
 	ContentType string
 	URL         string

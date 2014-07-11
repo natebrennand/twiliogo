@@ -70,7 +70,7 @@ func (act Account) Get(sid string) (Resource, error) {
 	if !validateApplicationSid(sid) {
 		return r, errors.New("Invalid sid")
 	}
-	err := common.SendGetRequest(fmt.Sprintf(getURL, act.AccountSid, sid), act, &r, 200)
+	err := common.SendGetRequest(fmt.Sprintf(getURL, act.AccountSid, sid), act, &r)
 	return r, err
 }
 
@@ -150,7 +150,7 @@ func (act Account) Modify(sid string, m Modification) (Resource, error) {
 	if m.Validate() != nil {
 		return r, m.Validate()
 	}
-	err := common.SendPostRequest(fmt.Sprintf(updateURL, act.AccountSid), m, act, &r, 200)
+	err := common.SendPostRequest(fmt.Sprintf(updateURL, act.AccountSid), m, act, &r)
 	return r, err
 }
 
@@ -174,7 +174,7 @@ func (f ListFilter) GetQueryString() string {
 
 func (act Account) List(f ListFilter) (ResourceList, error) {
 	var rl ResourceList
-	err := common.SendGetRequest(fmt.Sprintf(listURL, act.AccountSid)+f.GetQueryString(), act, &rl, 200)
+	err := common.SendGetRequest(fmt.Sprintf(listURL, act.AccountSid)+f.GetQueryString(), act, &rl)
 	return rl, err
 }
 
@@ -250,6 +250,6 @@ func (act Account) Create(nr NewResource) (Resource, error) {
 	if nr.Validate() != nil {
 		return r, nr.Validate()
 	}
-	err := common.SendPostRequest(fmt.Sprintf(newURL, act.AccountSid), nr, act, &r, 201)
+	err := common.SendPostRequest(fmt.Sprintf(newURL, act.AccountSid), nr, act, &r)
 	return r, err
 }

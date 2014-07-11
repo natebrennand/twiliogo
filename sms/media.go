@@ -36,7 +36,7 @@ type Media struct {
 // Internal function for sending the post request to twilio.
 func (act Account) getMedia(destURL string, resp *Media) error {
 	// send get request to twilio
-	return common.SendGetRequest(destURL, act, resp, 200)
+	return common.SendGetRequest(destURL, act, resp)
 }
 
 func (act Account) GetMedia(mmsSid, mediaSid string) (Media, error) {
@@ -59,7 +59,7 @@ type MediaList struct {
 // Internal function for sending the post request to twilio.
 func (act Account) getMediaList(destURL string, resp *MediaList) error {
 	// send get request to twilio
-	return common.SendGetRequest(destURL, act, resp, 200)
+	return common.SendGetRequest(destURL, act, resp)
 }
 
 func (act Account) GetMediaList(mmsSid string) (MediaList, error) {
