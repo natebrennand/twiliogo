@@ -12,6 +12,7 @@
 - /Recordings
 - /Transcriptions
 - /Notification
+- /Usage/Triggers
 - /Conferences
 - /Conferences/Participants
 
@@ -35,7 +36,6 @@ Calls
 
 Account
 - /Usage/Records
-- /Usage/Triggers
 
 SIP
 - /SIP/CredentialLists
