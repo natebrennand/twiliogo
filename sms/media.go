@@ -11,8 +11,8 @@ import (
 )
 
 const (
-	mediaGetUrl  = "https://api.twilio.com/2010-04-01/Accounts/%s/Messages/%s/Media/%s.json" // takes an AccountSid, MessageSid & MediaSid
-	mediaListUrl = "https://api.twilio.com/2010-04-01/Accounts/%s/Messages/%s/Media.json"    // takes an AccountSid & MessageSid
+	mediaGetURL  = "https://api.twilio.com/2010-04-01/Accounts/%s/Messages/%s/Media/%s.json" // takes an AccountSid, MessageSid & MediaSid
+	mediaListURL = "https://api.twilio.com/2010-04-01/Accounts/%s/Messages/%s/Media.json"    // takes an AccountSid & MessageSid
 
 )
 
@@ -30,28 +30,28 @@ type Media struct {
 	AccountSid  string          `json:"account_sid"`
 	ParentSid   string          `json:"parent_sid,omitempty"`
 	Sid         string          `json:"sid"`
-	Uri         string          `json:"uri"`
-	DateCreated common.JsonTime `json:"date_created"`
-	DateUpdated common.JsonTime `json:"date_updated"`
+	URI         string          `json:"uri"`
+	DateCreated common.JSONTime `json:"date_created"`
+	DateUpdated common.JSONTime `json:"date_updated"`
 	ContentType string          `json:"content-type"`
 }
 
 func (m *Media) Build(resp *http.Response) error {
 	bodyBytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return errors.New(fmt.Sprintf("Error while reading json from buffer => %s", err.Error()))
+		return fmt.Errorf("Error while reading json from buffer => %s", err.Error())
 	}
 	err = json.Unmarshal(bodyBytes, m)
 	if err != nil {
-		return errors.New(fmt.Sprintf("Error while decoding json => %s, recieved msg => %s", err.Error(), string(bodyBytes)))
+		return fmt.Errorf("Error while decoding json => %s, recieved msg => %s", err.Error(), string(bodyBytes))
 	}
 	return nil
 }
 
 // Internal function for sending the post request to twilio.
-func (act SmsAccount) getMedia(destUrl string, resp *Media) error {
+func (act SmsAccount) getMedia(destURL string, resp *Media) error {
 	// send get request to twilio
-	return common.SendGetRequest(destUrl, act, resp, 200)
+	return common.SendGetRequest(destURL, act, resp, 200)
 }
 
 func (act SmsAccount) GetMedia(mmsSid, mediaSid string) (Media, error) {
@@ -62,7 +62,7 @@ func (act SmsAccount) GetMedia(mmsSid, mediaSid string) (Media, error) {
 		return m, errors.New("Invalid media sid")
 	}
 
-	err := act.getMedia(fmt.Sprintf(mediaGetUrl, act.AccountSid, mmsSid, mediaSid), &m)
+	err := act.getMedia(fmt.Sprintf(mediaGetURL, act.AccountSid, mmsSid, mediaSid), &m)
 	return m, err
 }
 
@@ -74,19 +74,19 @@ type MediaList struct {
 func (m *MediaList) Build(resp *http.Response) error {
 	bodyBytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return errors.New(fmt.Sprintf("Error while reading json from buffer => %s", err.Error()))
+		return fmt.Errorf("Error while reading json from buffer => %s", err.Error())
 	}
 	err = json.Unmarshal(bodyBytes, m)
 	if err != nil {
-		return errors.New(fmt.Sprintf("Error while decoding json => %s, recieved msg => %s", err.Error(), string(bodyBytes)))
+		return fmt.Errorf("Error while decoding json => %s, recieved msg => %s", err.Error(), string(bodyBytes))
 	}
 	return nil
 }
 
 // Internal function for sending the post request to twilio.
-func (act SmsAccount) getMediaList(destUrl string, resp *MediaList) error {
+func (act SmsAccount) getMediaList(destURL string, resp *MediaList) error {
 	// send get request to twilio
-	return common.SendGetRequest(destUrl, act, resp, 200)
+	return common.SendGetRequest(destURL, act, resp, 200)
 }
 
 func (act SmsAccount) GetMediaList(mmsSid string) (MediaList, error) {
@@ -94,6 +94,6 @@ func (act SmsAccount) GetMediaList(mmsSid string) (MediaList, error) {
 	if !validateMediaSid(mmsSid) {
 		return m, errors.New("Invalid mms message sid")
 	}
-	err := act.getMediaList(fmt.Sprintf(mediaListUrl, act.AccountSid, mmsSid), &m)
+	err := act.getMediaList(fmt.Sprintf(mediaListURL, act.AccountSid, mmsSid), &m)
 	return m, err
 }

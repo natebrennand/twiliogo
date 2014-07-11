@@ -25,7 +25,7 @@ type StandardRequest struct {
 }
 
 func ParseStandardRequest(req *http.Request) StandardRequest {
-	var msgLocation *Location = nil
+	var msgLocation *Location
 	if req.PostFormValue("FromCity") != "" { // ignore location data if possible
 		msgLocation = &Location{
 			FromCity:    req.PostFormValue("FromCity"),

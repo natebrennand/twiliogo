@@ -9,7 +9,7 @@ import (
 
 type RecordingListFilter struct {
 	CallSid     string
-	DateCreated *common.JsonTime
+	DateCreated *common.JSONTime
 }
 
 func (f RecordingListFilter) GetQueryString() string {
@@ -27,9 +27,9 @@ func (f RecordingListFilter) GetQueryString() string {
 	return encoded
 }
 
-func (act VoiceAccount) getRecording(destUrl string, resp *Recording) error {
+func (act VoiceAccount) getRecording(destURL string, resp *Recording) error {
 	// send get request to twilio
-	return common.SendGetRequest(destUrl, act, resp, 200)
+	return common.SendGetRequest(destURL, act, resp, 200)
 }
 
 // Returns data about recording as json
@@ -40,23 +40,23 @@ func (act VoiceAccount) Recording(recSid string) (Recording, error) {
 		return r, errors.New("Invalid sid")
 	}
 
-	err := act.getRecording(fmt.Sprintf(recordingUrl, act.AccountSid, string(recSid)), &r)
+	err := act.getRecording(fmt.Sprintf(recordingURL, act.AccountSid, string(recSid)), &r)
 	return r, err
 }
 
-func (act VoiceAccount) getRecordingList(destUrl string, f RecordingListFilter, resp *RecordingList) error {
-	return common.SendGetRequest(destUrl+f.GetQueryString(), act, resp, 200)
+func (act VoiceAccount) getRecordingList(destURL string, f RecordingListFilter, resp *RecordingList) error {
+	return common.SendGetRequest(destURL+f.GetQueryString(), act, resp, 200)
 }
 
 func (act VoiceAccount) RecordingList(f RecordingListFilter) (RecordingList, error) {
 	var rl RecordingList
-	err := act.getRecordingList(fmt.Sprintf(recordingListUrl, act.AccountSid), f, &rl)
+	err := act.getRecordingList(fmt.Sprintf(recordingListURL, act.AccountSid), f, &rl)
 	return rl, err
 }
 
-func (act VoiceAccount) deleteRecording(destUrl string) error {
+func (act VoiceAccount) deleteRecording(destURL string) error {
 	// send get request to twilio
-	return common.SendDeleteRequest(destUrl, act, 204)
+	return common.SendDeleteRequest(destURL, act, 204)
 }
 
 // Returns data about recording as json
@@ -66,5 +66,5 @@ func (act VoiceAccount) Delete(recSid string) error {
 		return errors.New("Invalid sid")
 	}
 
-	return act.deleteRecording(fmt.Sprintf(recordingUrl, act.AccountSid, string(recSid)))
+	return act.deleteRecording(fmt.Sprintf(recordingURL, act.AccountSid, string(recSid)))
 }

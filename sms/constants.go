@@ -1,13 +1,13 @@
 package sms
 
 const (
-	postUrl = "https://api.twilio.com/2010-04-01/Accounts/%s/Messages.json"    // takes an AccountSid
-	getUrl  = "https://api.twilio.com/2010-04-01/Accounts/%s/Messages/%s.json" // takes an AccountSid & MessageSdi
-	listUrl = "https://api.twilio.com/2010-04-01/Accounts/%s/Messages.json"    // takes an AccountSid
+	postURL = "https://api.twilio.com/2010-04-01/Accounts/%s/Messages.json"    // takes an AccountSid
+	getURL  = "https://api.twilio.com/2010-04-01/Accounts/%s/Messages/%s.json" // takes an AccountSid & MessageSdi
+	listURL = "https://api.twilio.com/2010-04-01/Accounts/%s/Messages.json"    // takes an AccountSid
 
 )
 
-var errorCode map[int]string = map[int]string{
+var errorCode = map[int]string{
 	30001: "Queue Overflow",
 	30002: "Account Suspended",
 	30003: "Unreachable destination handset",

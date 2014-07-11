@@ -10,35 +10,35 @@ const (
 	GMTTimeLayout    = "2006-01-02" // YYYY-MM-DD
 )
 
-type JsonPrice float64
+type JSONPrice float64
 
-func (j *JsonPrice) UnmarshalJSON(b []byte) error {
+func (j *JSONPrice) UnmarshalJSON(b []byte) error {
 	t, err := strconv.ParseFloat(string(b), 64)
 	if err != nil {
 		return nil
 	}
-	*j = JsonPrice(t)
+	*j = JSONPrice(t)
 	return err
 }
 
-type JsonTime struct {
+type JSONTime struct {
 	time.Time
 }
 
-func (j *JsonTime) UnmarshalJSON(b []byte) error {
+func (j *JSONTime) UnmarshalJSON(b []byte) error {
 	s := string(b)
 	if s == "null" {
-		*j = JsonTime{time.Time{}}
+		*j = JSONTime{time.Time{}}
 		return nil
 	}
 	t, err := time.Parse(TwilioTimeFormat, s[1:len(s)-1])
-	*j = JsonTime{t}
+	*j = JSONTime{t}
 	return err
 }
 
 type ResponseCore struct {
 	AccountSid   string   `json:"account_sid"`
-	ApiVersion   string   `json:"api_version"`
+	APIVersion   string   `json:"api_version"`
 	Direction    string   `json:"direction"`
 	ErrorCode    string   `json:"error_code"`
 	ErrorMessage string   `json:"error_message"`
@@ -46,9 +46,9 @@ type ResponseCore struct {
 	Sid          string   `json:"sid"`
 	Status       string   `json:"status"`
 	To           string   `json:"to"`
-	Uri          string   `json:"uri"`
-	DateCreated  JsonTime `json:"date_created"`
-	DateUpdated  JsonTime `json:"date_updated"`
+	URI          string   `json:"uri"`
+	DateCreated  JSONTime `json:"date_created"`
+	DateUpdated  JSONTime `json:"date_updated"`
 }
 
 type ListResponseCore struct {
@@ -58,9 +58,9 @@ type ListResponseCore struct {
 	Page            int    `json:"page"`
 	PageSize        int    `json:"page_size"`
 	End             int    `json:"end"`
-	Uri             string `json:"uri"`
-	FirstPageUri    string `json:"first_page_uri"`
-	LastPageUri     string `json:"last_page_uri"`
-	NextPageUri     string `json:"next_page_uri"`
-	PreviousPageUri string `json:"previous_page_uri"`
+	URI             string `json:"uri"`
+	FirstPageURI    string `json:"first_page_uri"`
+	LastPageURI     string `json:"last_page_uri"`
+	NextPageURI     string `json:"next_page_uri"`
+	PreviousPageURI string `json:"previous_page_uri"`
 }

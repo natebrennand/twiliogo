@@ -14,7 +14,7 @@ func main() {
 		From:     "+1{ Your Twilio MMS enabled number }",
 		To:       "+1{ Destinatino number }",
 		Body:     "Yo",
-		MediaUrl: "http://i.imgur.com/XcMxly3.jpg", // Cute otter
+		MediaURL: "http://i.imgur.com/XcMxly3.jpg", // Cute otter
 	})
 	if err != nil {
 		fmt.Println("Error sending mms: ", err.Error())

@@ -1,7 +1,6 @@
 package voice
 
 import (
-	"errors"
 	"fmt"
 	"github.com/natebrennand/twiliogo/common"
 	"net/http"
@@ -12,13 +11,13 @@ import (
 // https://www.twilio.com/docs/api/rest/making-calls#status-callback-parameter
 type Callback struct {
 	CallDuration      int `json:"call_duration"`
-	RecordingUrl      string
+	RecordingURL      string
 	RecordingSid      string
 	RecordingDuration int `json:"recording_duration"`
 	common.StandardRequest
 	CallSid       string
 	CallStatus    string
-	ApiVersion    string
+	APIVersion    string
 	Direction     string
 	ForwardedFrom string
 	CallerName    string
@@ -35,7 +34,7 @@ func (cb *Callback) Parse(req *http.Request) error {
 	if callDurString != "" {
 		callDur, err = strconv.Atoi(callDurString)
 		if err != nil {
-			return errors.New(fmt.Sprintf("Error parsing CallDuration => %s", err.Error()))
+			return fmt.Errorf("Error parsing CallDuration => %s", err.Error())
 		}
 	}
 
@@ -43,19 +42,19 @@ func (cb *Callback) Parse(req *http.Request) error {
 	if recDurString != "" {
 		recDur, err = strconv.Atoi(recDurString)
 		if err != nil {
-			return errors.New(fmt.Sprintf("Error parsing RecordingDuration => %s", err.Error()))
+			return fmt.Errorf("Error parsing RecordingDuration => %s", err.Error())
 		}
 	}
 
 	// Construct callback
 	*cb = Callback{
 		CallDuration:      callDur,
-		RecordingUrl:      req.PostFormValue("RecordingUrl"),
+		RecordingURL:      req.PostFormValue("RecordingURL"),
 		RecordingSid:      req.PostFormValue("RecordingSid"),
 		RecordingDuration: recDur,
 		CallSid:           req.PostFormValue("CallSid"),
 		CallStatus:        req.PostFormValue("CallStatus"),
-		ApiVersion:        req.PostFormValue("ApiVersion"),
+		APIVersion:        req.PostFormValue("APIVersion"),
 		Direction:         req.PostFormValue("Direction"),
 		ForwardedFrom:     req.PostFormValue("ForwardedFrom"),
 		CallerName:        req.PostFormValue("CallerName"),
