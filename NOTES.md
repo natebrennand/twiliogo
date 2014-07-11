@@ -12,7 +12,8 @@
 - /Recordings
 - /Transcriptions
 - /Notification
-
+- /Conferences
+- /Conferences/Participants
 
 # Roadmap
 
@@ -21,10 +22,6 @@
 
 
 ### Chelsea
-
-Calls
-- /Conferences
-- /Conferences/Participants
 
 Account
 - /IncomingPhoneNumbers
