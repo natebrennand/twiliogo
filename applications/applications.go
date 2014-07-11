@@ -102,21 +102,18 @@ func (m Modification) GetReader() io.Reader {
 	if m.FriendlyName != "" {
 		v.Add("FriendlyName", m.FriendlyName)
 	}
-
-	if m.FriendlyName != "" {
-		v.Add("FriendlyName", m.FriendlyName)
-	}
 	if m.APIVersion != "" {
-		v.Add("APIVersion", m.APIVersion)
+		//TODO: validate it to the available options
+		v.Add("ApiVersion", m.APIVersion)
 	}
 	if m.VoiceURL != "" {
-		v.Add("VoiceURL", m.VoiceURL)
+		v.Add("VoiceUrl", m.VoiceURL)
 	}
 	if m.VoiceMethod != "" {
 		v.Add("VoiceMethod", m.VoiceMethod)
 	}
 	if m.VoiceFallbackURL != "" {
-		v.Add("VoiceFallbackURL", m.VoiceFallbackURL)
+		v.Add("VoiceFallbackUrl", m.VoiceFallbackURL)
 	}
 	if m.VoiceFallbackMethod != "" {
 		v.Add("VoiceFallbackMethod", m.VoiceFallbackMethod)
@@ -125,7 +122,7 @@ func (m Modification) GetReader() io.Reader {
 		v.Add("VoiceCallerIdLookup", strconv.FormatBool(*m.VoiceCallerIdLookup))
 	}
 	if m.SmsURL != "" {
-		v.Add("SmsURL", m.SmsURL)
+		v.Add("SmsUrl", m.SmsURL)
 	}
 	if m.SmsMethod != "" {
 		v.Add("SmsMethod", m.SmsMethod)
@@ -145,8 +142,11 @@ func (m Modification) GetReader() io.Reader {
 	return strings.NewReader(v.Encode())
 }
 
-func (act Account) Modify(m Modification) (Resource, error) {
+func (act Account) Modify(sid string, m Modification) (Resource, error) {
 	var r Resource
+	if !validateApplicationSid(sid) {
+		return r, errors.New("Invalid application sid")
+	}
 	if m.Validate() != nil {
 		return r, m.Validate()
 	}
@@ -200,33 +200,29 @@ func (r NewResource) GetReader() io.Reader {
 	if r.FriendlyName != "" {
 		v.Add("FriendlyName", r.FriendlyName)
 	}
-
-	if r.FriendlyName != "" {
-		v.Add("FriendlyName", r.FriendlyName)
-	}
 	if r.APIVersion != "" {
-		v.Add("APIVersion", r.APIVersion)
+		v.Add("ApiVersion", r.APIVersion)
 	}
 	if r.VoiceURL != "" {
-		v.Add("VoiceURL", r.VoiceURL)
+		v.Add("VoiceUrl", r.VoiceURL)
 	}
 	if r.VoiceMethod != "" {
 		v.Add("VoiceMethod", r.VoiceMethod)
 	}
 	if r.VoiceFallbackURL != "" {
-		v.Add("VoiceFallbackURL", r.VoiceFallbackURL)
+		v.Add("VoiceFallbackUrl", r.VoiceFallbackURL)
 	}
 	if r.VoiceFallbackMethod != "" {
 		v.Add("VoiceFallbackMethod", r.VoiceFallbackMethod)
 	}
 	if r.SmsURL != "" {
-		v.Add("SmsURL", r.SmsURL)
+		v.Add("SmsUrl", r.SmsURL)
 	}
 	if r.SmsMethod != "" {
 		v.Add("SmsMethod", r.SmsMethod)
 	}
 	if r.SmsFallbackURL != "" {
-		v.Add("SmsFallbackURL", r.SmsFallbackURL)
+		v.Add("SmsFallbackUrl", r.SmsFallbackURL)
 	}
 	if r.SmsFallbackMethod != "" {
 		v.Add("SmsFallbackMethod", r.SmsFallbackMethod)

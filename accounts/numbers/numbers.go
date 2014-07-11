@@ -15,7 +15,6 @@ const (
 	tollfreeURL = "https://api.twilio.com/2010-04-01/Accounts/%s/AvailablePhoneNumbers/%s/tollfree.json" // takes an AccountSid & IsoCountryCode
 	mobileURL   = "https://api.twilio.com/2010-04-01/Accounts/%s/AvailablePhoneNumbers/%s/mobile.json"   // takes an AccountSid & IsoCountryCode
 	allURL      = "https://api.twilio.com/2010-04-01/Accounts/%s/AvailablePhoneNumbers.json"             // takes an AccountSid
-
 )
 
 type Account struct {
@@ -126,7 +125,7 @@ func (act Account) GetLocalNumbers(l localSearchFilter, iso string) (NumberList,
 	if !validateIsoCountry(iso) {
 		return nl, errors.New("Invalid country ISO")
 	}
-	err := common.SendGetRequest(fmt.Sprintf(localURL, act.AccountSid)+l.getQueryString(), act, &nl, 200)
+	err := common.SendGetRequest(fmt.Sprintf(localURL, act.AccountSid, iso)+l.getQueryString(), act, &nl, 200)
 	return nl, err
 }
 
@@ -151,7 +150,7 @@ func (act Account) GetTollfreeNumbers(l tollfreeSearchFilter, iso string) (Numbe
 	if !validateIsoCountry(iso) {
 		return nl, errors.New("Invalid country ISO")
 	}
-	err := common.SendGetRequest(fmt.Sprintf(localURL, act.AccountSid)+l.getQueryString(), act, &nl, 200)
+	err := common.SendGetRequest(fmt.Sprintf(tollfreeURL, act.AccountSid, iso)+l.getQueryString(), act, &nl, 200)
 	return nl, err
 }
 
@@ -184,7 +183,7 @@ func (act Account) GetMobileNumbers(l mobileSearchFilter, iso string) (NumberLis
 	if !validateIsoCountry(iso) {
 		return nl, errors.New("Invalid country ISO")
 	}
-	err := common.SendGetRequest(fmt.Sprintf(mobileURL, act.AccountSid)+l.getQueryString(), act, &nl, 200)
+	err := common.SendGetRequest(fmt.Sprintf(mobileURL, act.AccountSid, iso)+l.getQueryString(), act, &nl, 200)
 	return nl, err
 }
 
