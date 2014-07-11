@@ -150,7 +150,7 @@ func (act Account) Modify(m Modification) (Resource, error) {
 
 type ResourceList struct {
 	common.ListResponseCore
-	Accounts *[]Resource `json:"accounts"`
+	Applications *[]Resource `json:"applications"`
 }
 
 type ListFilter struct {
@@ -168,7 +168,7 @@ func (f ListFilter) GetQueryString() string {
 
 func (act Account) List(f ListFilter) (ResourceList, error) {
 	var rl ResourceList
-	err := common.SendGetRequest(listURL+f.GetQueryString(), act, &rl, 200)
+	err := common.SendGetRequest(fmt.Sprintf(listURL, act.AccountSid)+f.GetQueryString(), act, &rl, 200)
 	return rl, err
 }
 
@@ -213,7 +213,6 @@ func (r NewResource) GetReader() io.Reader {
 	if r.VoiceFallbackMethod != "" {
 		v.Add("VoiceFallbackMethod", r.VoiceFallbackMethod)
 	}
-	v.Add("VoiceCallerIdLookup", strconv.FormatBool(r.VoiceCallerIdLookup))
 	if r.SmsURL != "" {
 		v.Add("SmsURL", r.SmsURL)
 	}
@@ -232,6 +231,7 @@ func (r NewResource) GetReader() io.Reader {
 	if r.MessageStatusCallback != "" {
 		v.Add("MessageStatusCallback", r.MessageStatusCallback)
 	}
+	v.Add("VoiceCallerIdLookup", strconv.FormatBool(r.VoiceCallerIdLookup))
 	return strings.NewReader(v.Encode())
 }
 
@@ -245,6 +245,6 @@ func (r NewResource) Validate() error {
 
 func (act Account) Create(nr NewResource) (Resource, error) {
 	var r Resource
-	err := common.SendPostRequest(newURL, nr, act, &r, 201)
+	err := common.SendPostRequest(fmt.Sprintf(newURL, act.AccountSid), nr, act, &r, 201)
 	return r, err
 }
