@@ -13,7 +13,8 @@
 - /Transcriptions
 - /Notification
 - /Usage/Triggers
-
+- /Conferences
+- /Conferences/Participants
 
 # Roadmap
 
@@ -22,10 +23,6 @@
 
 
 ### Chelsea
-
-Calls
-- /Conferences
-- /Conferences/Participants
 
 Account
 - /IncomingPhoneNumbers
