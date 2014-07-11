@@ -23,7 +23,7 @@ func (p ParticipantAttr) GetReader() io.Reader {
 }
 
 func (p ParticipantAttr) Validate() error {
-	if p.Muted != nil {
+	if p.Muted == nil {
 		return errors.New("Muted must be set, else nothing to modify")
 	}
 	return nil

@@ -75,7 +75,6 @@ func (act Account) getConferenceList(destURL string, f ListFilter, resp *Confere
 // Get list of conferences for this account
 func (act Account) List(f ListFilter) (ConferenceList, error) {
 	var cl ConferenceList
-	fmt.Println("CONF URL: ", fmt.Sprintf(listURL, act.AccountSid))
 	err := act.getConferenceList(fmt.Sprintf(listURL, act.AccountSid), f, &cl)
 	return cl, err
 }
