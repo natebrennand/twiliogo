@@ -2,6 +2,7 @@ package twiliogo
 
 import (
 	"fmt"
+	"github.com/natebrennand/twiliogo/conference"
 	"github.com/natebrennand/twiliogo/recording"
 	"github.com/natebrennand/twiliogo/sms"
 	"github.com/natebrennand/twiliogo/sms/shortcodes"
@@ -27,6 +28,7 @@ type Account struct {
 	Voice          voice.Account
 	Recordings     recording.Account
 	Transcriptions transcription.Account
+	Conferences    conference.Account
 }
 
 func NewAccount(sid, token string) Account {
