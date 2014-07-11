@@ -10,14 +10,14 @@ const (
 	GMTTimeLayout    = "2006-01-02" // YYYY-MM-DD
 )
 
-type JSONPrice float64
+type JSONFloat float64
 
-func (j *JSONPrice) UnmarshalJSON(b []byte) error {
+func (j *JSONFloat) UnmarshalJSON(b []byte) error {
 	t, err := strconv.ParseFloat(string(b), 64)
 	if err != nil {
 		return nil
 	}
-	*j = JSONPrice(t)
+	*j = JSONFloat(t)
 	return err
 }
 

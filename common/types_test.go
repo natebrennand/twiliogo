@@ -106,7 +106,7 @@ type testMessageWithDate struct {
 	ResponseCore
 	NumSegments int       `json:"num_segments,string"`
 	NumMedia    int       `json:"num_media,string"`
-	Price       JSONPrice `json:"price"`
+	Price       JSONFloat `json:"price"`
 	DateCreated JSONTime  `json:"date_created"`
 	DateSent    JSONTime  `json:"date_sent"`
 	DateUpdated JSONTime  `json:"date_updated"`

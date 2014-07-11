@@ -7,11 +7,11 @@ import (
 )
 
 type testPriceStruct struct {
-	Price *JSONPrice `json:"price"`
+	Price *JSONFloat `json:"price"`
 }
 
 func TestPriceDecode(t *testing.T) {
-	var p JSONPrice = 0.01
+	var p JSONFloat = 0.01
 	var priceHolder testPriceStruct
 	err := json.Unmarshal([]byte(`{"price":null}`), &priceHolder)
 	if err != nil || priceHolder.Price != nil {

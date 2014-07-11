@@ -16,7 +16,7 @@ type Message struct {
 	DateSent    common.JSONTime  `json:"date_sent"`
 	NumSegments int              `json:"num_segments,string"`
 	NumMedia    int              `json:"num_media,string"`
-	Price       common.JSONPrice `json:"price"`
+	Price       common.JSONFloat `json:"price"`
 }
 
 type MessageList struct {
