@@ -1,5 +1,14 @@
 package transcription
 
+import (
+	"encoding/json"
+	"fmt"
+	"github.com/natebrennand/twiliogo/common"
+	"io/ioutil"
+	"net/http"
+	"regexp"
+)
+
 type Transcription struct {
 	Sid               string           `json:"sid"`
 	DateCreated       common.JSONTime  `json:"date_created"`

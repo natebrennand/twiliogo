@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/natebrennand/twiliogo/recording"
 	"github.com/natebrennand/twiliogo/sms"
+	"github.com/natebrennand/twiliogo/transcription"
 	"github.com/natebrennand/twiliogo/voice"
 
 	"net/http"
@@ -18,11 +19,12 @@ const (
 )
 
 type Account struct {
-	AccountSid string
-	Token      string
-	Sms        sms.SmsAccount // redundancy for usability
-	Voice      voice.VoiceAccount
-	Recordings recording.RecordingAccount
+	AccountSid     string
+	Token          string
+	Sms            sms.SmsAccount // redundancy for usability
+	Voice          voice.VoiceAccount
+	Recordings     recording.RecordingAccount
+	Transcriptions transcription.TranscriptionAccount
 }
 
 func NewAccount(sid, token string) Account {
@@ -34,11 +36,12 @@ func NewAccount(sid, token string) Account {
 		panic("Invalid Account Sid")
 	}
 	return Account{
-		AccountSid: sid,
-		Token:      token,
-		Sms:        sms.SmsAccount{sid, token, http.Client{}},
-		Voice:      voice.VoiceAccount{sid, token, http.Client{}},
-		Recordings: recording.RecordingAccount{sid, token, http.Client{}},
+		AccountSid:     sid,
+		Token:          token,
+		Sms:            sms.SmsAccount{sid, token, http.Client{}},
+		Voice:          voice.VoiceAccount{sid, token, http.Client{}},
+		Recordings:     recording.RecordingAccount{sid, token, http.Client{}},
+		Transcriptions: transcription.TranscriptionAccount{sid, token, http.Client{}},
 	}
 }
 
