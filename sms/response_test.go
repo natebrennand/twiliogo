@@ -1,9 +1,7 @@
 package sms
 
 import (
-	"io/ioutil"
-	"net/http"
-	"strings"
+	"encoding/json"
 	"testing"
 )
 
@@ -19,8 +17,7 @@ func TestValidateMessageSid(t *testing.T) {
 
 func TestBuildMessageSuccess(t *testing.T) {
 	var msg Message
-	resp := http.Response{Body: ioutil.NopCloser(strings.NewReader(testSmsResponseFixtureString))}
-	err := msg.Build(&resp)
+	err := json.Unmarshal([]byte(testSmsResponseFixtureString), &msg)
 	if err != nil {
 		t.Errorf("Building Message from json string failed with error => %s", err.Error())
 	}
@@ -31,8 +28,7 @@ func TestBuildMessageSuccess(t *testing.T) {
 
 func TestBuildMessageFailure(t *testing.T) {
 	var msg Message
-	resp := http.Response{Body: ioutil.NopCloser(strings.NewReader(testSmsResponseFixtureString[0:35]))}
-	err := msg.Build(&resp)
+	err := json.Unmarshal([]byte(testSmsResponseFixtureString[0:35]), &msg)
 	if err == nil {
 		t.Error("Building Message from json string should've failed")
 	}
@@ -40,8 +36,7 @@ func TestBuildMessageFailure(t *testing.T) {
 
 func TestBuildMessageListSuccess(t *testing.T) {
 	var ml MessageList
-	resp := http.Response{Body: ioutil.NopCloser(strings.NewReader(testSmsListFixtureString))}
-	err := ml.Build(&resp)
+	err := json.Unmarshal([]byte(testSmsListFixtureString), &ml)
 	if err != nil {
 		t.Errorf("Building Message List from json string failed with error => %s", err.Error())
 	}
@@ -52,8 +47,7 @@ func TestBuildMessageListSuccess(t *testing.T) {
 
 func TestBuildMessageListFailure(t *testing.T) {
 	var ml MessageList
-	resp := http.Response{Body: ioutil.NopCloser(strings.NewReader(testSmsListFixtureString[0:35]))}
-	err := ml.Build(&resp)
+	err := json.Unmarshal([]byte(testSmsListFixtureString[0:35]), &ml)
 	if err == nil {
 		t.Error("Building Message from json string should've failed")
 	}

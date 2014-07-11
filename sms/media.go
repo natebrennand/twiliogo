@@ -1,12 +1,9 @@
 package sms
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/natebrennand/twiliogo/common"
-	"io/ioutil"
-	"net/http"
 	"regexp"
 )
 
@@ -36,18 +33,6 @@ type Media struct {
 	ContentType string          `json:"content-type"`
 }
 
-func (m *Media) Build(resp *http.Response) error {
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return fmt.Errorf("Error while reading json from buffer => %s", err.Error())
-	}
-	err = json.Unmarshal(bodyBytes, m)
-	if err != nil {
-		return fmt.Errorf("Error while decoding json => %s, recieved msg => %s", err.Error(), string(bodyBytes))
-	}
-	return nil
-}
-
 // Internal function for sending the post request to twilio.
 func (act SmsAccount) getMedia(destURL string, resp *Media) error {
 	// send get request to twilio
@@ -69,18 +54,6 @@ func (act SmsAccount) GetMedia(mmsSid, mediaSid string) (Media, error) {
 type MediaList struct {
 	common.ListResponseCore
 	MediaList *[]Media `json:"media_list"`
-}
-
-func (m *MediaList) Build(resp *http.Response) error {
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return fmt.Errorf("Error while reading json from buffer => %s", err.Error())
-	}
-	err = json.Unmarshal(bodyBytes, m)
-	if err != nil {
-		return fmt.Errorf("Error while decoding json => %s, recieved msg => %s", err.Error(), string(bodyBytes))
-	}
-	return nil
 }
 
 // Internal function for sending the post request to twilio.

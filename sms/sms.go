@@ -124,10 +124,6 @@ func (f Filter) GetQueryString() string {
 	return encoded
 }
 
-func (f Filter) Validate() error {
-	return nil
-}
-
 func (act SmsAccount) getList(destURL string, f Filter, resp *MessageList) error {
 	return common.SendGetRequest(destURL+f.GetQueryString(), act, resp, 200)
 }

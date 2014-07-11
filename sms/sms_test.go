@@ -113,13 +113,6 @@ func TestSendSmsFailure(t *testing.T) {
 	}
 }
 
-func TestValidateListFilter(t *testing.T) {
-	f := Filter{}
-	if nil != f.Validate() {
-		t.Error("Constants stopped workign..")
-	}
-}
-
 func TestListFilterReader(t *testing.T) {
 	// empty filter
 	f := Filter{}
