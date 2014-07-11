@@ -8,7 +8,7 @@ import (
 
 func main() {
 	act := twiliogo.NewAccountFromEnv()
-	resp, err := act.Voice.CallList(voice.Filter{
+	resp, err := act.Voice.List(voice.ListFilter{
 		From: "+16162882901",
 	})
 	if err != nil {

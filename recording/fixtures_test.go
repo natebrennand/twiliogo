@@ -14,8 +14,7 @@ var testResponseFixtureString = `{
 	"uri": "/2010-04-01/Accounts/AC381707b751dbe4c74b15c5697ba67afd/Calls/CAd88cd5b804dbcfb0ae6e0ccbbca67b83.json",
 	"sid": "REc8009ae243230394bc84437e1a9f4650",
 	"call_sid": "CAd88cd5b804dbcfb0ae6e0ccbbca67b83",
-	"duration": "45",
-}
+	"duration": "45"
 }`
 
 var testResponseFixture = Recording{
@@ -79,7 +78,7 @@ var testListFixtureString = `{
 			"uri": "/2010-04-01/Accounts/AC381707b751dbe4c74b15c5697ba67afd/Calls/CAd88cd5b804dbcfb0ae6e0ccbbca67b83.json",
 			"sid": "REc8009ae243230394bc84437e1a9f4650",
 			"call_sid": "CAd88cd5b804dbcfb0ae6e0ccbbca67b83",
-			"duration": "45",
+			"duration": "45"
 		}
 	]
 }`
