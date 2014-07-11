@@ -18,7 +18,7 @@ var testPostFixtureString = `{
 	}`
 
 var testPostFixture = Post{
-	Url:  "http://twimlbin.com/558a498f",
+	URL:  "http://twimlbin.com/558a498f",
 	To:   "+15558675309",
 	From: "+14158141829",
 }
@@ -57,15 +57,15 @@ var testResponseFixtureString = `{
 var testResponseFixture = Call{
 	ResponseCore: common.ResponseCore{
 		AccountSid:   "ACd03387e99bf959daa1e4810cc945708d",
-		ApiVersion:   "2010-04-01",
+		APIVersion:   "2010-04-01",
 		Direction:    "outbound-api",
 		ErrorCode:    "",
 		ErrorMessage: "",
 		From:         "+13139202596",
 		To:           "+16164601267",
-		Uri:          "/2010-04-01/Accounts/ACd03387e99bf959daa1e4810cc945708d/Calls/CA7383500ec70ce66bd3a7ac5d2fbbd6a9.json",
-		DateCreated:  common.JsonTime{time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
-		DateUpdated:  common.JsonTime{time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
+		URI:          "/2010-04-01/Accounts/ACd03387e99bf959daa1e4810cc945708d/Calls/CA7383500ec70ce66bd3a7ac5d2fbbd6a9.json",
+		DateCreated:  common.JSONTime{time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
+		DateUpdated:  common.JSONTime{time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
 	},
 
 	Price: 0.0,
@@ -73,12 +73,12 @@ var testResponseFixture = Call{
 
 var testCallbackFixture = Callback{
 	CallDuration:      4,
-	RecordingUrl:      "",
+	RecordingURL:      "",
 	RecordingSid:      "recordingsid",
 	RecordingDuration: 60,
 	CallSid:           "callsid",
 	CallStatus:        "completed",
-	ApiVersion:        "2010-04-01",
+	APIVersion:        "2010-04-01",
 	Direction:         "outbound-api",
 	ForwardedFrom:     "NianCat",
 	CallerName:        "OwlMonkey",
@@ -90,8 +90,8 @@ var testCallbackFixture = Callback{
 	},
 }
 
-var testCallbackFixtureFormString = `CallDuration=4&RecordingSid=recordingsid&RecordingDuration=60&CallSid=callsid&CallStatus=completed&ApiVersion=2010-04-01&Direction=outbound-api&ForwardedFrom=NianCat&CallerName=OwlMonkey&AccountSid=ACd03387e99bf959daa1e4810cc945708d&From=+13139202596&To=+16164601267`
-var testCallbackFixtureFormFailureString = `CallDuration=4&RecordingUrl=4&RecordingSid=recordingsid&RecordingDuration=60&CallSid=callsid&CallStatus=completed&ApiVersion=2010-04-01&Direction=outbound-api&ForwardedFrom=NianCat&CallerName=OwlMonkey&AccountSid=ACd03387e99bf959daa1e4810cc945708d&From=+13139202596&To=+16164601267`
+var testCallbackFixtureFormString = `CallDuration=4&RecordingSid=recordingsid&RecordingDuration=60&CallSid=callsid&CallStatus=completed&APIVersion=2010-04-01&Direction=outbound-api&ForwardedFrom=NianCat&CallerName=OwlMonkey&AccountSid=ACd03387e99bf959daa1e4810cc945708d&From=+13139202596&To=+16164601267`
+var testCallbackFixtureFormFailureString = `CallDuration=4&RecordingURL=4&RecordingSid=recordingsid&RecordingDuration=60&CallSid=callsid&CallStatus=completed&APIVersion=2010-04-01&Direction=outbound-api&ForwardedFrom=NianCat&CallerName=OwlMonkey&AccountSid=ACd03387e99bf959daa1e4810cc945708d&From=+13139202596&To=+16164601267`
 
 var testListFixture = CallList{
 	ListResponseCore: common.ListResponseCore{
@@ -101,19 +101,19 @@ var testListFixture = CallList{
 		Page:            0,
 		PageSize:        50,
 		End:             49,
-		Uri:             "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/Calls.json",
-		FirstPageUri:    "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/Calls.json?Page=0&PageSize=50",
-		LastPageUri:     "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/Calls.json?Page=5&PageSize=50",
-		NextPageUri:     "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/Calls.json?Page=1&PageSize=50",
-		PreviousPageUri: "",
+		URI:             "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/Calls.json",
+		FirstPageURI:    "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/Calls.json?Page=0&PageSize=50",
+		LastPageURI:     "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/Calls.json?Page=5&PageSize=50",
+		NextPageURI:     "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/Calls.json?Page=1&PageSize=50",
+		PreviousPageURI: "",
 	},
 	Calls: &[]Call{
 		Call{
 			ResponseCore: common.ResponseCore{
 				AccountSid:   "AC5116d5d4df9f61ceae2f0732e1ea9f1b",
-				ApiVersion:   "2010-04-01",
-				DateCreated:  common.JsonTime{time.Date(2010, time.August, 16, 3, 45, 01, 0, &time.Location{})},
-				DateUpdated:  common.JsonTime{time.Date(2010, time.August, 16, 3, 45, 03, 0, &time.Location{})},
+				APIVersion:   "2010-04-01",
+				DateCreated:  common.JSONTime{time.Date(2010, time.August, 16, 3, 45, 01, 0, &time.Location{})},
+				DateUpdated:  common.JSONTime{time.Date(2010, time.August, 16, 3, 45, 03, 0, &time.Location{})},
 				Direction:    "outbound-api",
 				ErrorCode:    "",
 				ErrorMessage: "",
@@ -121,7 +121,7 @@ var testListFixture = CallList{
 				Sid:          "CAd88cd5b804dbcfb0ae6e0ccbbca67b83",
 				Status:       "sent",
 				To:           "+13139202596",
-				Uri:          "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/Calls/CAd88cd5b804dbcfb0ae6e0ccbbca67b83.json",
+				URI:          "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/Calls/CAd88cd5b804dbcfb0ae6e0ccbbca67b83.json",
 			},
 			Price: 0.0,
 		},

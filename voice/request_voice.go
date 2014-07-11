@@ -6,7 +6,7 @@ type standardRequest struct {
 	From          string
 	To            string
 	CallStatus    string
-	ApiVersion    string
+	APIVersion    string
 	Direction     string
 	ForwardedFrom string
 	CallerName    string

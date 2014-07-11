@@ -9,14 +9,14 @@ import (
 )
 
 func TestNewTwilioErrorSuccess(t *testing.T) {
-	resp := http.Response{Body: ioutil.NopCloser(strings.NewReader(testErrorFixtureString))}
+	resp := http.Response{Body: ioutil.NopCloser(strings.NewReader(testErrorfixtureString))}
 	err := NewTwilioError(resp)
 	if err == nil {
 		t.Error("NewTwilioError failed to create a twilio error")
 	}
 }
 
-func TestNewTwilioErrorFailure(t *testing.T) {
+func TestNewTwilioErrorfailure(t *testing.T) {
 	// test invalid json
 	resp := http.Response{Body: ioutil.NopCloser(strings.NewReader("{"))}
 	err := NewTwilioError(resp)
@@ -26,7 +26,7 @@ func TestNewTwilioErrorFailure(t *testing.T) {
 }
 
 func TestCommonError(t *testing.T) {
-	if testErrorFixture.Error() != "Twilio Error 400 => Bad req, more info @ https://www.twilio.com/docs/errors/reference" {
+	if testErrorfixtureError.Error() != "Twilio Error 400 => Bad req, more info @ https://www.twilio.com/docs/errors/reference" {
 		t.Error("Common.Error failed to properly create an error message")
 	}
 }
@@ -39,13 +39,13 @@ func TestDecodeError(t *testing.T) {
 	}
 }
 
-var testErrorFixture Error = Error{
+var testErrorfixtureError = Error{
 	Code:     400,
 	Message:  "Bad req",
 	MoreInfo: "https://www.twilio.com/docs/errors/reference",
 	Status:   404,
 }
-var testErrorFixtureString = `{
+var testErrorfixtureString = `{
 	"code": 400,
 	"message": "Bad req",
 	"more_info": "https://www.twilio.com/docs/errors/reference",

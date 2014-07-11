@@ -11,7 +11,7 @@ const (
 	transcriptionListUrl = "https://api.twilio.com/2010-04-01/Accounts/%s/Transcriptions.json"
 )
 
-var errorCode map[int]string = map[int]string{
+var errorCode = map[int]string{
 	30001: "Queue Overflow",
 	30002: "Account Suspended",
 	30003: "Unreachable destination handset",

@@ -7,11 +7,11 @@ import (
 )
 
 type testPriceStruct struct {
-	Price *JsonPrice `json:"price"`
+	Price *JSONPrice `json:"price"`
 }
 
 func TestPriceDecode(t *testing.T) {
-	var p JsonPrice = 0.01
+	var p JSONPrice = 0.01
 	var priceHolder testPriceStruct
 	err := json.Unmarshal([]byte(`{"price":null}`), &priceHolder)
 	if err != nil || priceHolder.Price != nil {
@@ -28,14 +28,14 @@ func TestPriceDecode(t *testing.T) {
 	}
 }
 
-func TestJsonDecode(t *testing.T) {
+func TestJSONDecode(t *testing.T) {
 	var msg testMessageWithDate
 	err := json.Unmarshal([]byte(testSmsResponseFixtureString), &msg)
 	if err != nil {
-		t.Errorf("Json failed to marshal with error => %s\n", err.Error())
+		t.Errorf("JSON failed to marshal with error => %s\n", err.Error())
 	}
 
-	if msg.DateSent != (JsonTime{time.Time{}}) {
+	if msg.DateSent != (JSONTime{time.Time{}}) {
 		t.Errorf("Unmarshal tried to assign a time to DateSent")
 	}
 

@@ -19,30 +19,30 @@ type VoiceAccount struct {
 	Client     http.Client
 }
 
-func (v VoiceAccount) GetSid() string {
-	return v.AccountSid
+func (act VoiceAccount) GetSid() string {
+	return act.AccountSid
 }
-func (v VoiceAccount) GetToken() string {
-	return v.Token
+func (act VoiceAccount) GetToken() string {
+	return act.Token
 }
-func (v VoiceAccount) GetClient() http.Client {
-	return v.Client
+func (act VoiceAccount) GetClient() http.Client {
+	return act.Client
 }
 
 // Represents the data used in creating an outbound voice message.
 // "From" & "To" are required attributes.
-// Either a ApplicationSid or a Url must also be provided.
+// Either a ApplicationSid or a URL must also be provided.
 // Visit https://www.twilio.com/docs/api/rest/making-calls#post-parameters for more details and
 // explanation of other optional parameters.
 type Post struct {
 	From                 string
 	To                   string
 	Body                 string
-	Url                  string
+	URL                  string
 	ApplicationSid       string
 	StatusCallback       string
 	Method               string
-	FallbackUrl          string
+	FallbackURL          string
 	StatusCallbackMethod string
 	SendDigits           string
 	IfMachine            string
@@ -54,8 +54,8 @@ func (p Post) GetReader() io.Reader {
 	vals := url.Values{}
 	vals.Set("To", p.To)
 	vals.Set("From", p.From)
-	if p.Url != "" {
-		vals.Set("Url", p.Url)
+	if p.URL != "" {
+		vals.Set("URL", p.URL)
 	}
 	if p.ApplicationSid != "" {
 		vals.Set("ApplicationSid", p.ApplicationSid)
@@ -66,8 +66,8 @@ func (p Post) GetReader() io.Reader {
 	if p.Method != "" {
 		vals.Set("Method", p.Method)
 	}
-	if p.FallbackUrl != "" {
-		vals.Set("FallbackUrl", p.FallbackUrl)
+	if p.FallbackURL != "" {
+		vals.Set("FallbackURL", p.FallbackURL)
 	}
 	if p.StatusCallbackMethod != "" {
 		vals.Set("StatusCallbackMethod", p.StatusCallbackMethod)
@@ -93,8 +93,8 @@ func (p Post) Validate() error {
 	if p.From == "" || p.To == "" {
 		return errors.New("Both \"From\" and \"To\" must be set in Post.")
 	}
-	if p.ApplicationSid == "" && p.Url == "" {
-		return errors.New("Either \"ApplicationSid\" or \"Url\" must be set.")
+	if p.ApplicationSid == "" && p.URL == "" {
+		return errors.New("Either \"ApplicationSid\" or \"URL\" must be set.")
 	}
 	if p.SendDigits != "" {
 		match, err := regexp.MatchString(`^[0-9#\*w]+$`, p.SendDigits)
@@ -114,14 +114,14 @@ func (act VoiceAccount) makeCall(dest string, msg Post, resp *Call) error {
 // Sends a post request to Twilio to send a voice request.
 func (act VoiceAccount) Call(p Post) (Call, error) {
 	var r Call
-	err := act.makeCall(fmt.Sprintf(postUrl, act.AccountSid), p, &r)
+	err := act.makeCall(fmt.Sprintf(postURL, act.AccountSid), p, &r)
 	return r, err
 }
 
 // Internal function for sending the post request to twilio.
-func (act VoiceAccount) getCall(destUrl string, resp *Call) error {
+func (act VoiceAccount) getCall(destURL string, resp *Call) error {
 	// send get request to twilio
-	return common.SendGetRequest(destUrl, act, resp, 200)
+	return common.SendGetRequest(destURL, act, resp, 200)
 }
 
 func (act VoiceAccount) Get(sid string) (Call, error) {
@@ -130,7 +130,7 @@ func (act VoiceAccount) Get(sid string) (Call, error) {
 		return m, errors.New("Invalid sid")
 	}
 
-	err := act.getCall(fmt.Sprintf(getUrl, act.AccountSid, string(sid)), &m)
+	err := act.getCall(fmt.Sprintf(getURL, act.AccountSid, string(sid)), &m)
 	return m, err
 }
 
@@ -167,12 +167,12 @@ func (f Filter) GetQueryString() string {
 	return encoded
 }
 
-func (act VoiceAccount) getList(destUrl string, f Filter, resp *CallList) error {
-	return common.SendGetRequest(destUrl+f.GetQueryString(), act, resp, 200)
+func (act VoiceAccount) getList(destURL string, f Filter, resp *CallList) error {
+	return common.SendGetRequest(destURL+f.GetQueryString(), act, resp, 200)
 }
 
 func (act VoiceAccount) List(f Filter) (CallList, error) {
 	var callList CallList
-	err := act.getList(fmt.Sprintf(listUrl, act.AccountSid), f, &callList)
+	err := act.getList(fmt.Sprintf(listURL, act.AccountSid), f, &callList)
 	return callList, err
 }
