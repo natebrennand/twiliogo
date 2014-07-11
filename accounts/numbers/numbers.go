@@ -125,7 +125,7 @@ func (act Account) GetLocalNumbers(l localSearchFilter, iso string) (NumberList,
 	if !validateIsoCountry(iso) {
 		return nl, errors.New("Invalid country ISO")
 	}
-	err := common.SendGetRequest(fmt.Sprintf(localURL, act.AccountSid, iso)+l.getQueryString(), act, &nl, 200)
+	err := common.SendGetRequest(fmt.Sprintf(localURL, act.AccountSid, iso)+l.getQueryString(), act, &nl)
 	return nl, err
 }
 
@@ -150,7 +150,7 @@ func (act Account) GetTollfreeNumbers(l tollfreeSearchFilter, iso string) (Numbe
 	if !validateIsoCountry(iso) {
 		return nl, errors.New("Invalid country ISO")
 	}
-	err := common.SendGetRequest(fmt.Sprintf(tollfreeURL, act.AccountSid, iso)+l.getQueryString(), act, &nl, 200)
+	err := common.SendGetRequest(fmt.Sprintf(tollfreeURL, act.AccountSid, iso)+l.getQueryString(), act, &nl)
 	return nl, err
 }
 
@@ -183,7 +183,7 @@ func (act Account) GetMobileNumbers(l mobileSearchFilter, iso string) (NumberLis
 	if !validateIsoCountry(iso) {
 		return nl, errors.New("Invalid country ISO")
 	}
-	err := common.SendGetRequest(fmt.Sprintf(mobileURL, act.AccountSid, iso)+l.getQueryString(), act, &nl, 200)
+	err := common.SendGetRequest(fmt.Sprintf(mobileURL, act.AccountSid, iso)+l.getQueryString(), act, &nl)
 	return nl, err
 }
 
@@ -203,6 +203,6 @@ type CountryList struct {
 
 func (act Account) GetAllNumbers() (CountryList, error) {
 	var cl CountryList
-	err := common.SendGetRequest(fmt.Sprintf(allURL, act.AccountSid), act, &cl, 200)
+	err := common.SendGetRequest(fmt.Sprintf(allURL, act.AccountSid), act, &cl)
 	return cl, err
 }

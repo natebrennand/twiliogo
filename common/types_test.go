@@ -27,12 +27,12 @@ func (act testAccount) GetClient() http.Client {
 
 func (act testAccount) sendSms(destURL string, msg testPost, resp *testMessage) error {
 	// send post request to twilio
-	return SendPostRequest(destURL, msg, act, resp, 201)
+	return SendPostRequest(destURL, msg, act, resp)
 }
 
 func (act testAccount) getSms(destURL string, resp *testMessage) error {
 	// send post request to twilio
-	return SendGetRequest(destURL, act, resp, 200)
+	return SendGetRequest(destURL, act, resp)
 }
 
 type testPost struct {

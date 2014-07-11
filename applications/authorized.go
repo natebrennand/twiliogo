@@ -36,7 +36,7 @@ func (act Account) GetConnectApp(sid string) (ConnectApp, error) {
 	if !validateConnectAppSid(sid) {
 		return c, errors.New("Invalid sid")
 	}
-	err := common.SendGetRequest(fmt.Sprintf(getURL, act.AccountSid, sid), act, &c, 200)
+	err := common.SendGetRequest(fmt.Sprintf(getURL, act.AccountSid, sid), act, &c)
 	return c, err
 }
 
@@ -47,6 +47,6 @@ type ConnectAppList struct {
 
 func (act Account) ListConnectApp() (ConnectAppList, error) {
 	var cnl ConnectAppList
-	err := common.SendGetRequest(fmt.Sprintf(listURL, act.AccountSid), act, &cnl, 200)
+	err := common.SendGetRequest(fmt.Sprintf(listURL, act.AccountSid), act, &cnl)
 	return cnl, err
 }

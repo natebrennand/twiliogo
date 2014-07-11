@@ -33,7 +33,14 @@ func buildResp(resp *TwilioResponse, httpResp *http.Response) error {
 	return nil
 }
 
-func SendPostRequest(url string, msg TwilioPost, t TwilioAccount, resp TwilioResponse, expectedResponse int) error {
+func successfulResponse(statusCode int) bool {
+	if statusCode >= 200 && statusCode < 300 {
+		return true
+	}
+	return false
+}
+
+func SendPostRequest(url string, msg TwilioPost, t TwilioAccount, resp TwilioResponse) error {
 	if nil != msg.Validate() {
 		return fmt.Errorf("Error validating sms post => %s.\n", msg.Validate().Error())
 	}
@@ -48,14 +55,14 @@ func SendPostRequest(url string, msg TwilioPost, t TwilioAccount, resp TwilioRes
 	if err != nil {
 		return fmt.Errorf("Error sending req => %s", err.Error())
 	}
-	if httpResp.StatusCode != expectedResponse {
+	if !successfulResponse(httpResp.StatusCode) {
 		return NewTwilioError(*httpResp)
 	}
 
 	return buildResp(&resp, httpResp)
 }
 
-func SendGetRequest(url string, t TwilioAccount, resp TwilioResponse, expectedResponse int) error {
+func SendGetRequest(url string, t TwilioAccount, resp TwilioResponse) error {
 	req, err := http.NewRequest("GET", url, nil)
 	req.SetBasicAuth(t.GetSid(), t.GetToken())
 	req.Header.Add("Accept", "application/json")
@@ -65,14 +72,14 @@ func SendGetRequest(url string, t TwilioAccount, resp TwilioResponse, expectedRe
 	if err != nil {
 		return fmt.Errorf("Error sending req => %s", err.Error())
 	}
-	if httpResp.StatusCode != expectedResponse {
+	if !successfulResponse(httpResp.StatusCode) {
 		return NewTwilioError(*httpResp)
 	}
 
 	return buildResp(&resp, httpResp)
 }
 
-func SendDeleteRequest(url string, t TwilioAccount, expectedResponse int) error {
+func SendDeleteRequest(url string, t TwilioAccount) error {
 	req, err := http.NewRequest("DELETE", url, nil)
 	req.SetBasicAuth(t.GetSid(), t.GetToken())
 	req.Header.Add("Accept", "application/json")
@@ -82,7 +89,7 @@ func SendDeleteRequest(url string, t TwilioAccount, expectedResponse int) error 
 	if err != nil {
 		return fmt.Errorf("Error sending req => %s", err.Error())
 	}
-	if httpResp.StatusCode != expectedResponse {
+	if !successfulResponse(httpResp.StatusCode) {
 		return NewTwilioError(*httpResp)
 	}
 	return nil
