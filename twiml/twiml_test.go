@@ -59,6 +59,19 @@ func TestEndToEnd(t *testing.T) {
 	assert.Exactly(t, expected, actual)
 }
 
+func TestResponseCache(t *testing.T) {
+	testTwiml := new(Response)
+	assert.False(t, testTwiml.cache.valid)
+	testTwiml.Say(SayOpts{}, "One")
+	output, _ := testTwiml.Render()
+	assert.True(t, testTwiml.cache.valid)
+	assert.Exactly(t, output, testTwiml.cache.xml)
+	testTwiml.Say(SayOpts{}, "Two")
+	assert.False(t, testTwiml.cache.valid)
+	output, _ = testTwiml.Render()
+	assert.Contains(t, string(output), "Two")
+}
+
 func TestEndToEndReader(t *testing.T) {
 	testTwiml = new(Response)
 	reader, err := testTwiml.Say(SayOpts{Voice: "alice"}, "My hands are typing words", "Haaaaaaaaaaaaands").RenderReader()
