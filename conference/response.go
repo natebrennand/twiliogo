@@ -5,6 +5,11 @@ import (
 	"regexp"
 )
 
+// kept private
+type participants struct {
+	Participants string `json:"participants"`
+}
+
 type Conference struct {
 	APIVersion      string          `json:"api_version"`
 	Sid             string          `json:"sid"`
@@ -13,10 +18,8 @@ type Conference struct {
 	DateCreated     common.JSONTime `json:"date_created"`
 	DateUpdated     common.JSONTime `json:"date_updated"`
 	AccountSid      string          `json:"account_sid"`
-	SubResourceURIs struct {
-		Participants string `json:"participants"`
-	} `json:"subresource_uris"`
-	URI string `json:"uri"`
+	SubResourceURIs participants    `json:"subresource_uris"`
+	URI             string          `json:"uri"`
 }
 
 type ConferenceList struct {

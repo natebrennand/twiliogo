@@ -2,6 +2,7 @@ package conference
 
 import (
 	"github.com/natebrennand/twiliogo/common"
+	"time"
 )
 
 var testFixtureString = `{
@@ -69,7 +70,7 @@ var testFixtureList = ConferenceList{
 			FriendlyName: "Party Line",
 			Sid:          "CFbbe46ff1274e283f7e3ac1df0072ab39",
 			Status:       "completed",
-			SubResourceURIs: {
+			SubResourceURIs: participants{
 				Participants: "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/Conferences/CFbbe46ff1274e283f7e3ac1df0072ab39/Participants.json",
 			},
 			URI: "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/Conferences/CFbbe46ff1274e283f7e3ac1df0072ab39.json",
