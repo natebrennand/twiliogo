@@ -11,19 +11,19 @@ import (
 	"time"
 )
 
-type SmsAccount struct {
+type Account struct {
 	AccountSid string
 	Token      string
 	Client     http.Client
 }
 
-func (act SmsAccount) GetSid() string {
+func (act Account) GetSid() string {
 	return act.AccountSid
 }
-func (act SmsAccount) GetToken() string {
+func (act Account) GetToken() string {
 	return act.Token
 }
-func (act SmsAccount) GetClient() http.Client {
+func (act Account) GetClient() http.Client {
 	return act.Client
 }
 
@@ -72,25 +72,25 @@ func (p Post) Validate() error {
 }
 
 // Internal function for sending the post request to twilio.
-func (act SmsAccount) sendSms(destURL string, msg Post, resp *Message) error {
+func (act Account) sendSms(destURL string, msg Post, resp *Message) error {
 	// send post request to twilio
 	return common.SendPostRequest(destURL, msg, act, resp, 201)
 }
 
 // Sends a post request to Twilio to send a sms request.
-func (act SmsAccount) Send(p Post) (Message, error) {
+func (act Account) Send(p Post) (Message, error) {
 	var m Message
 	err := act.sendSms(fmt.Sprintf(postURL, act.AccountSid), p, &m)
 	return m, err
 }
 
 // Internal function for sending the post request to twilio.
-func (act SmsAccount) getSms(destURL string, resp *Message) error {
+func (act Account) getSms(destURL string, resp *Message) error {
 	// send get request to twilio
 	return common.SendGetRequest(destURL, act, resp, 200)
 }
 
-func (act SmsAccount) Get(sid string) (Message, error) {
+func (act Account) Get(sid string) (Message, error) {
 	var m Message
 	if !validateSmsSid(sid) {
 		return m, errors.New("Invalid sid")
@@ -124,11 +124,11 @@ func (f Filter) GetQueryString() string {
 	return encoded
 }
 
-func (act SmsAccount) getList(destURL string, f Filter, resp *MessageList) error {
+func (act Account) getList(destURL string, f Filter, resp *MessageList) error {
 	return common.SendGetRequest(destURL+f.GetQueryString(), act, resp, 200)
 }
 
-func (act SmsAccount) List(f Filter) (MessageList, error) {
+func (act Account) List(f Filter) (MessageList, error) {
 	var ml MessageList
 	err := act.getList(fmt.Sprintf(listURL, act.AccountSid), f, &ml)
 	return ml, err

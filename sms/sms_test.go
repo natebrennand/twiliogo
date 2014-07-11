@@ -67,7 +67,7 @@ func startMockHTTPServer(requests *int) *httptest.Server {
 }
 
 func TestSendSmsSuccess(t *testing.T) {
-	act := SmsAccount{"act", "token", http.Client{}}
+	act := Account{"act", "token", http.Client{}}
 
 	// start a server to recieve post request
 	numRequests := 0
@@ -88,7 +88,7 @@ func TestSendSmsSuccess(t *testing.T) {
 }
 
 func TestSendSmsFailure(t *testing.T) {
-	act := SmsAccount{"act", "token", http.Client{}}
+	act := Account{"act", "token", http.Client{}}
 
 	// start a server to recieve post request
 	numRequests := 0
@@ -142,7 +142,7 @@ func TestListFilterReader(t *testing.T) {
 }
 
 func TestGetSmsListSuccess(t *testing.T) {
-	act := SmsAccount{"act", "token", http.Client{}}
+	act := Account{"act", "token", http.Client{}}
 
 	// start a server to recieve post request
 	numRequests := 0
@@ -163,7 +163,7 @@ func TestGetSmsListSuccess(t *testing.T) {
 }
 
 func TestSendSmsFailure2(t *testing.T) {
-	act := SmsAccount{"act", "token", http.Client{}}
+	act := Account{"act", "token", http.Client{}}
 
 	// start a server to recieve post request
 	numRequests := 0
