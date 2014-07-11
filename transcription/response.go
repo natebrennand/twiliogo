@@ -16,7 +16,7 @@ type Transcription struct {
 	TranscriptionText string           `json:"transcription_text"`
 	Price             common.JSONPrice `json:"price"`
 	PriceUnit         string           `json:"price_unit"`
-	Uri               string           `json:"uri"`
+	URI               string           `json:"uri"`
 }
 
 type TranscriptionList struct {
