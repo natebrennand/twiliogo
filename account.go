@@ -21,7 +21,7 @@ const (
 type Account struct {
 	AccountSid     string
 	Token          string
-	Sms            sms.SmsAccount // redundancy for usability
+	Sms            sms.Account // redundancy for usability
 	Voice          voice.VoiceAccount
 	Recordings     recording.RecordingAccount
 	Transcriptions transcription.TranscriptionAccount
@@ -38,7 +38,7 @@ func NewAccount(sid, token string) Account {
 	return Account{
 		AccountSid:     sid,
 		Token:          token,
-		Sms:            sms.SmsAccount{sid, token, http.Client{}},
+		Sms:            sms.Account{sid, token, http.Client{}},
 		Voice:          voice.VoiceAccount{sid, token, http.Client{}},
 		Recordings:     recording.RecordingAccount{sid, token, http.Client{}},
 		Transcriptions: transcription.TranscriptionAccount{sid, token, http.Client{}},

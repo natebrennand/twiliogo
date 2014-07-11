@@ -34,12 +34,12 @@ type Media struct {
 }
 
 // Internal function for sending the post request to twilio.
-func (act SmsAccount) getMedia(destURL string, resp *Media) error {
+func (act Account) getMedia(destURL string, resp *Media) error {
 	// send get request to twilio
 	return common.SendGetRequest(destURL, act, resp, 200)
 }
 
-func (act SmsAccount) GetMedia(mmsSid, mediaSid string) (Media, error) {
+func (act Account) GetMedia(mmsSid, mediaSid string) (Media, error) {
 	var m Media
 	if !validateMediaSid(mmsSid) {
 		return m, errors.New("Invalid mms message sid")
@@ -57,12 +57,12 @@ type MediaList struct {
 }
 
 // Internal function for sending the post request to twilio.
-func (act SmsAccount) getMediaList(destURL string, resp *MediaList) error {
+func (act Account) getMediaList(destURL string, resp *MediaList) error {
 	// send get request to twilio
 	return common.SendGetRequest(destURL, act, resp, 200)
 }
 
-func (act SmsAccount) GetMediaList(mmsSid string) (MediaList, error) {
+func (act Account) GetMediaList(mmsSid string) (MediaList, error) {
 	var m MediaList
 	if !validateMediaSid(mmsSid) {
 		return m, errors.New("Invalid mms message sid")
