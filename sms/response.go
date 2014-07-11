@@ -1,11 +1,7 @@
 package sms
 
 import (
-	"encoding/json"
-	"fmt"
 	"github.com/natebrennand/twiliogo/common"
-	"io/ioutil"
-	"net/http"
 	"regexp"
 )
 
@@ -23,31 +19,7 @@ type Message struct {
 	Price       common.JSONPrice `json:"price"`
 }
 
-func (r *Message) Build(resp *http.Response) error {
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return fmt.Errorf("Error while reading json from buffer => %s", err.Error())
-	}
-	err = json.Unmarshal(bodyBytes, r)
-	if err != nil {
-		return fmt.Errorf("Error while decoding json => %s, recieved msg => %s", err.Error(), string(bodyBytes))
-	}
-	return nil
-}
-
 type MessageList struct {
 	common.ListResponseCore
 	Messages *[]Message `json:"messages"`
-}
-
-func (l *MessageList) Build(resp *http.Response) error {
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return fmt.Errorf("Error while reading json from buffer => %s", err.Error())
-	}
-	err = json.Unmarshal(bodyBytes, l)
-	if err != nil {
-		return fmt.Errorf("Error while decoding json => %s, recieved msg => %s", err.Error(), string(bodyBytes))
-	}
-	return nil
 }

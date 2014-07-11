@@ -1,8 +1,10 @@
 package common
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 )
 
@@ -12,13 +14,23 @@ type TwilioAccount interface {
 	GetClient() http.Client
 }
 
-type TwilioResponse interface {
-	Build(*http.Response) error
-}
+type TwilioResponse interface{} // Empty interface
 
 type TwilioPost interface {
 	GetReader() io.Reader
 	Validate() error
+}
+
+func buildResp(resp *TwilioResponse, httpResp *http.Response) error {
+	bodyBytes, err := ioutil.ReadAll(httpResp.Body)
+	if err != nil {
+		return fmt.Errorf("Error while reading json from buffer => %s", err.Error())
+	}
+	err = json.Unmarshal(bodyBytes, &resp)
+	if err != nil {
+		return fmt.Errorf("Error while decoding json => %s, recieved msg => %s", err.Error(), string(bodyBytes))
+	}
+	return nil
 }
 
 func SendPostRequest(url string, msg TwilioPost, t TwilioAccount, resp TwilioResponse, expectedResponse int) error {
@@ -40,8 +52,7 @@ func SendPostRequest(url string, msg TwilioPost, t TwilioAccount, resp TwilioRes
 		return NewTwilioError(*httpResp)
 	}
 
-	// build response
-	return resp.Build(httpResp)
+	return buildResp(&resp, httpResp)
 }
 
 func SendGetRequest(url string, t TwilioAccount, resp TwilioResponse, expectedResponse int) error {
@@ -58,8 +69,7 @@ func SendGetRequest(url string, t TwilioAccount, resp TwilioResponse, expectedRe
 		return NewTwilioError(*httpResp)
 	}
 
-	// build response
-	return resp.Build(httpResp)
+	return buildResp(&resp, httpResp)
 }
 
 func SendDeleteRequest(url string, t TwilioAccount, expectedResponse int) error {

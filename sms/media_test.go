@@ -1,9 +1,7 @@
 package sms
 
 import (
-	"io/ioutil"
-	"net/http"
-	"strings"
+	"encoding/json"
 	"testing"
 )
 
@@ -27,8 +25,7 @@ func TestValidateMmsSid(t *testing.T) {
 
 func TestMediaBuild(t *testing.T) {
 	var m Media
-	resp := http.Response{Body: ioutil.NopCloser(strings.NewReader(testMediaFixtureString))}
-	err := m.Build(&resp)
+	err := json.Unmarshal([]byte(testMediaFixtureString), &m)
 	if err != nil {
 		t.Errorf("Building Media from json string failed with error => %s", err.Error())
 	}
@@ -43,8 +40,7 @@ func TestMediaBuild(t *testing.T) {
 
 func TestMediaListBuild(t *testing.T) {
 	var m MediaList
-	resp := http.Response{Body: ioutil.NopCloser(strings.NewReader(testMediaListFixtureString))}
-	err := m.Build(&resp)
+	err := json.Unmarshal([]byte(testMediaListFixtureString), &m)
 	if err != nil {
 		t.Errorf("Building Media from json string failed with error => %s", err.Error())
 	}

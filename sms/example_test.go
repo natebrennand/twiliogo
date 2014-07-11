@@ -8,8 +8,9 @@ import (
 func ExampleSend() {
 	act := twiliogo.NewAccount("AC1234567890abcdefghik1234567890ab", "token")
 	act.Sms.Send(sms.Post{
-		From: "+{Your twilio number}",
-		To:   "+{Destination number}",
+		From: "+{ Your twilio number }",
+		To:   "+{ Destination number }",
 		Body: "Yo",
 	})
+	// Example:
 }
