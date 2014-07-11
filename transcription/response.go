@@ -1,11 +1,7 @@
 package transcription
 
 import (
-	"encoding/json"
-	"fmt"
 	"github.com/natebrennand/twiliogo/common"
-	"io/ioutil"
-	"net/http"
 	"regexp"
 )
 
@@ -31,30 +27,4 @@ type TranscriptionList struct {
 func validateTranscriptionSid(sid string) bool {
 	match, _ := regexp.MatchString(`^TR[0-9a-z]{32}$`, string(sid))
 	return match
-}
-
-func (r *Transcription) Build(resp *http.Response) error {
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return fmt.Errorf("Error while reading json from buffer => %s", err.Error())
-	}
-
-	err = json.Unmarshal(bodyBytes, r)
-	if err != nil {
-		return fmt.Errorf("Error while decoding json => %s, recieved msg => %s", err.Error(), string(bodyBytes))
-	}
-	return nil
-}
-
-func (r *TranscriptionList) Build(resp *http.Response) error {
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return fmt.Errorf("Error while reading json from buffer => %s", err.Error())
-	}
-
-	err = json.Unmarshal(bodyBytes, r)
-	if err != nil {
-		return fmt.Errorf("Error while decoding json => %s, recieved msg => %s", err.Error(), string(bodyBytes))
-	}
-	return nil
 }
