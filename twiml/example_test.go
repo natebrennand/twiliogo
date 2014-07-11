@@ -29,3 +29,24 @@ func ExampleResponse() {
 	http.Handle("/callback/voice/", response)
 	http.ListenAndServe(":8080", nil)
 }
+
+// To do dynamic responses, you can generate a twiml.Response inside a func
+// and use it as an http.HandlerFunc.
+func ExampleResponse_HandlerFunc() {
+	handleCall := func(res http.ResponseWriter, req *http.Request) {
+		twimlResp := new(twiml.Response)
+
+		number := req.PostFormValue("From")
+		twimlResp.Say(twiml.SayOpts{}, "Hello, you are calling from", number)
+
+		output, err := twimlResp.Render()
+		if err != nil {
+			http.Error(res, err.Error(), http.StatusInternalServerError)
+		}
+
+		res.Write(output)
+	}
+
+	http.Handle("/callback/voice/", http.HandlerFunc(handleCall))
+	http.ListenAndServe(":8080", nil)
+}
