@@ -3,12 +3,12 @@ package main
 import (
 	"fmt"
 	"github.com/natebrennand/twiliogo"
-	"github.com/natebrennand/twiliogo/voice"
+	"github.com/natebrennand/twiliogo/recording"
 )
 
 func main() {
 	act := twiliogo.NewAccountFromEnv()
-	resp, err := act.Voice.RecordingList(voice.RecordingListFilter{
+	resp, err := act.Recordings.List(recording.RecordingListFilter{
 		CallSid: "CAa612188279206d89f1d75e3690536011",
 	})
 	if err != nil {
