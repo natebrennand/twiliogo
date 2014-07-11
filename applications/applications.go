@@ -65,9 +65,12 @@ type Resource struct {
 	URI                   string          `json:"uri"`
 }
 
-func (act Account) Get() (Resource, error) {
+func (act Account) Get(sid string) (Resource, error) {
 	var r Resource
-	err := common.SendGetRequest(fmt.Sprintf(getURL, act.AccountSid), act, &r, 200)
+	if !validateApplicationSid(sid) {
+		return r, errors.New("Invalid sid")
+	}
+	err := common.SendGetRequest(fmt.Sprintf(getURL, act.AccountSid, sid), act, &r, 200)
 	return r, err
 }
 
@@ -89,7 +92,7 @@ type Modification struct {
 
 func (m Modification) Validate() error {
 	if len(m.FriendlyName) > 64 {
-		return errors.New("Invalid FriendlyName, must be <= 64 characters")
+		return errors.New("Modification: Invalid FriendlyName, must be <= 64 characters")
 	}
 	return nil
 }
@@ -144,6 +147,9 @@ func (m Modification) GetReader() io.Reader {
 
 func (act Account) Modify(m Modification) (Resource, error) {
 	var r Resource
+	if m.Validate() != nil {
+		return r, m.Validate()
+	}
 	err := common.SendPostRequest(fmt.Sprintf(updateURL, act.AccountSid), m, act, &r, 200)
 	return r, err
 }
@@ -237,7 +243,7 @@ func (r NewResource) GetReader() io.Reader {
 
 func (r NewResource) Validate() error {
 	if r.FriendlyName == "" {
-		return errors.New("FriendlyName must be set when creating a new Application")
+		return errors.New("NewResource: FriendlyName must be set when creating a new Application")
 	}
 	// TODO: validate all optional fields, https://www.twilio.com/docs/api/rest/applications#list-post-optional-parameters
 	return nil
@@ -245,6 +251,9 @@ func (r NewResource) Validate() error {
 
 func (act Account) Create(nr NewResource) (Resource, error) {
 	var r Resource
+	if nr.Validate() != nil {
+		return r, nr.Validate()
+	}
 	err := common.SendPostRequest(fmt.Sprintf(newURL, act.AccountSid), nr, act, &r, 201)
 	return r, err
 }

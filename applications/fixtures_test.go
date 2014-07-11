@@ -58,4 +58,38 @@ var (
 		}
 	]
 }`
+	testConnectApp = `{
+	"connect_app_sid": "CN47260e643654388faabe8aaa18ea6756",
+	"account_sid": "AC381707b751dbe4c74b15c5697ba67afd",
+	"permissions": ["get-all", "post-all"],
+	"connect_app_friendly_name": "My Connect App",
+	"connect_app_description": null,
+	"connect_app_company_name": "My Company",
+	"connect_app_homepage_url": "http://www.mycompany.com"
+}`
+
+	testConnectAppList = `{
+	"authorized_connect_apps": [
+		{
+			"connect_app_sid": "CNb989fdd207b04d16aee578018ef5fd93",
+			"account_sid": "AC381707b751dbe4c74b15c5697ba67afd",
+			"permissions": ["get-all", "post-all"],
+			"connect_app_friendly_name": "Jenny Tracker",
+			"connect_app_description": null,
+			"connect_app_company_name": "Tommy PI",
+			"connect_app_homepage_url": "http://www.tommypi.com"
+		}
+	],
+	"page": 0,
+	"num_pages": 1,
+	"page_size": 50,
+	"total": 3,
+	"start": 0,
+	"end": 2,
+	"uri": "\/2010-04-01\/Accounts\/AC381707b751dbe4c74b15c5697ba67afd\/AuthorizedConnectApps\/.json",
+	"first_page_uri": "\/2010-04-01\/Accounts\/AC381707b751dbe4c74b15c5697ba67afd\/AuthorizedConnectApps\/.json?Page=0&PageSize=50",
+	"previous_page_uri": null,
+	"next_page_uri": null,
+	"last_page_uri": "\/2010-04-01\/Accounts\/AC381707b751dbe4c74b15c5697ba67afd\/AuthorizedConnectApps\/.json?Page=0&PageSize=50"
+}`
 )
