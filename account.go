@@ -2,8 +2,10 @@ package twiliogo
 
 import (
 	"fmt"
+	"github.com/natebrennand/twiliogo/recording"
 	"github.com/natebrennand/twiliogo/sms"
 	"github.com/natebrennand/twiliogo/voice"
+
 	"net/http"
 	"os"
 	"regexp"
@@ -20,6 +22,7 @@ type Account struct {
 	Token      string
 	Sms        sms.SmsAccount // redundancy for usability
 	Voice      voice.VoiceAccount
+	Recordings recording.RecordingAccount
 }
 
 func NewAccount(sid, token string) Account {
@@ -35,6 +38,7 @@ func NewAccount(sid, token string) Account {
 		Token:      token,
 		Sms:        sms.SmsAccount{sid, token, http.Client{}},
 		Voice:      voice.VoiceAccount{sid, token, http.Client{}},
+		Recordings: recording.RecordingAccount{sid, token, http.Client{}},
 	}
 }
 

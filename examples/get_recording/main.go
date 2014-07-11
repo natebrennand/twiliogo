@@ -13,7 +13,7 @@ func main() {
 	fmt.Printf("Sending a GET for {%s}\n", sid[0:34])
 
 	act := twiliogo.NewAccountFromEnv()
-	resp, err := act.Voice.Recording(sid[0:34])
+	resp, err := act.Recordings.Get(sid[0:34])
 	if err != nil {
 		fmt.Println("Error getting recording: ", err.Error())
 	}
