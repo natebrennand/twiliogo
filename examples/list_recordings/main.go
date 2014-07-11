@@ -8,7 +8,7 @@ import (
 
 func main() {
 	act := twiliogo.NewAccountFromEnv()
-	resp, err := act.Recordings.List(recording.RecordingListFilter{
+	resp, err := act.Recordings.List(recording.ListFilter{
 		CallSid: "CAa612188279206d89f1d75e3690536011",
 	})
 	if err != nil {
