@@ -1,12 +1,10 @@
 package voice
 
 const (
-	postURL              = "https://api.twilio.com/2010-04-01/Accounts/%s/Calls.json"
-	updateURL            = "https://api.twilio.com/2010-04-01/Accounts/%s/Calls/%s.json"
-	getURL               = "https://api.twilio.com/2010-04-01/Accounts/%s/Calls/%s.json"
-	listURL              = "https://api.twilio.com/2010-04-01/Accounts/%s/Calls.json"
-	transcriptionURL     = "https://api.twilio.com/2010-04-01/Accounts/%s/Transcriptions/%s.json"
-	transcriptionListURL = "https://api.twilio.com/2010-04-01/Accounts/%s/Transcriptions.json"
+	postURL   = "https://api.twilio.com/2010-04-01/Accounts/%s/Calls.json"
+	updateURL = "https://api.twilio.com/2010-04-01/Accounts/%s/Calls/%s.json"
+	getURL    = "https://api.twilio.com/2010-04-01/Accounts/%s/Calls/%s.json"
+	listURL   = "https://api.twilio.com/2010-04-01/Accounts/%s/Calls.json"
 )
 
 var errorCode = map[int]string{
