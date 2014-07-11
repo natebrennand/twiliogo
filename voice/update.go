@@ -48,7 +48,7 @@ func (p Update) GetReader() io.Reader {
 
 func (p Update) Validate() error {
 	if p.URL == "" && p.Method == "" && p.Status == "" {
-		return errors.New("URL or Status or Method must all be set.")
+		return errors.New("URL or Status or Method must all be set")
 	}
 	return nil
 }

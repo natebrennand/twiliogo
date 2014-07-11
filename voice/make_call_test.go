@@ -56,7 +56,7 @@ func TestValidatePostFailure(t *testing.T) {
 func startMockHTTPServer(requests *int) *httptest.Server {
 	// start a server to recieve post request
 	testServer := httptest.NewServer(http.HandlerFunc(func(resp http.ResponseWriter, r *http.Request) {
-		*requests += 1
+		*requests++
 		if strings.Contains(r.URL.Path, validEndpoint) {
 			resp.WriteHeader(201)
 			fmt.Fprint(resp, testResponseFixtureString)

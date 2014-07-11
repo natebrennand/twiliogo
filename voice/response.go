@@ -29,8 +29,8 @@ type Recording struct {
 	AccountSid  string          `json:"account_sid"`
 	CallSid     string          `json:"call_sid"`
 	Duration    string          `json:"duration"`
-	ApiVersion  string          `json:"api_version"`
-	Uri         string          `json:"uri"`
+	APIVersion  string          `json:"api_version"`
+	URI         string          `json:"uri"`
 }
 
 type RecordingList struct {

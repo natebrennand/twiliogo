@@ -48,7 +48,7 @@ func TestValidateSmsPostFailure(t *testing.T) {
 func startMockHTTPServer(requests *int) *httptest.Server {
 	// start a server to recieve post request
 	testServer := httptest.NewServer(http.HandlerFunc(func(resp http.ResponseWriter, r *http.Request) {
-		*requests += 1
+		*requests++
 		if strings.Contains(r.URL.Path, validEndpoint) {
 			if strings.Contains(r.URL.Path, listEndpoint) {
 				resp.WriteHeader(http.StatusOK)
