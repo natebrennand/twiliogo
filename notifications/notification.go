@@ -1,4 +1,4 @@
-package notification
+package notifications
 
 import (
 	"errors"
@@ -34,7 +34,7 @@ func (act Account) GetClient() http.Client {
 }
 
 func validateNotificationSid(sid string) bool {
-	match, _ := regexp.MatchString(`^NA[0-9a-z]{32}$`, string(sid))
+	match, _ := regexp.MatchString(`^NO[0-9a-z]{32}$`, string(sid))
 	return match
 }
 
@@ -83,7 +83,7 @@ type ReducedResource struct {
 	DateUpdated   common.JSONTime `json:"date_updated"`
 	CallSid       string          `json:"call_sid"`
 	APIVersion    string          `json:"api_version"`
-	Log           int             `json:"log"`
+	Log           int             `json:"log,string"`
 	ErrorCode     string          `json:"error_code"`
 	MoreInfo      string          `json:"more_info"`
 	MessageText   string          `json:"message_text"`
@@ -144,6 +144,6 @@ func (act Account) List(f Filter) (ResourceList, error) {
 	if err != nil {
 		return rl, err
 	}
-	err = common.SendGetRequest(fmt.Sprintf(listURL, act.AccountSid, f.GetQueryString()), act, &rl)
+	err = common.SendGetRequest(fmt.Sprintf(listURL, act.AccountSid)+f.GetQueryString(), act, &rl)
 	return rl, err
 }
