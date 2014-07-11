@@ -27,10 +27,14 @@ type TwimlInterface interface {
 	Record(RecordOpts, string) TwimlInterface
 	Gather(GatherOpts, GatherBody) TwimlInterface
 	Sms(SmsOpts, string) TwimlInterface
-	// Hangup(...string) TwimlInterface
-	// Redirect(...string) TwimlInterface
+	Enqueue(EnqueueOpts, string) TwimlInterface
+	Leave() TwimlInterface
+	Hangup() TwimlInterface
+	Redirect(RedirectOpts, string) TwimlInterface
 	Pause(int) TwimlInterface
-	// Reject(...string) TwimlInterface
+	Reject(string) TwimlInterface
+	Message(MessageOpts, ...string) TwimlInterface
+	MessageMedia(MessageOpts, MessageBody) TwimlInterface
 }
 
 type Response struct {
