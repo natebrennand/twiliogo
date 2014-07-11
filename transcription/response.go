@@ -14,7 +14,7 @@ type Transcription struct {
 	RecordingSid      string           `json:"recording_sid"`
 	Duration          string           `json:"duration"`
 	TranscriptionText string           `json:"transcription_text"`
-	Price             common.JSONPrice `json:"price"`
+	Price             common.JSONFloat `json:"price"`
 	PriceUnit         string           `json:"price_unit"`
 	URI               string           `json:"uri"`
 }

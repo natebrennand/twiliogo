@@ -5,6 +5,12 @@
 - /Messages/Media
 - /Calls
 - /SMS/ShortCodes
+- /Accounts
+- /Applications
+- /AuthorizedConnectApps
+- /AvailablePhoneNumbers
+- /Recordings
+- /Transcriptions
 
 
 # Roadmap
@@ -12,18 +18,12 @@
 ### Nate
 
 Account
-- /Accounts
-- /Applications
-- /AuthorizedConnectApps
-- /AvailablePhoneNumbers
 - /Nofication AKA Firehose
 
 
 ### Chelsea
 
 Calls
-- /Recordings
-- /Transcriptions
 - /Conferences
 - /Conferences/Participants
 

@@ -7,7 +7,7 @@ import (
 
 type Call struct {
 	common.ResponseCore
-	Price          common.JSONPrice `json:"price"`
+	Price          common.JSONFloat `json:"price"`
 	ParentCallSid  string
 	PhoneNumberSid string
 	StartTime      common.JSONTime `json:"start_time"`
