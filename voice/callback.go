@@ -8,19 +8,20 @@ import (
 )
 
 // Represents the callback sent everytime the status of the call is updated.
+//
 // https://www.twilio.com/docs/api/rest/making-calls#status-callback-parameter
 type Callback struct {
-	CallDuration      int `json:"call_duration"`
+	common.StandardRequest
+	CallDuration      int
 	RecordingURL      string
 	RecordingSid      string
-	RecordingDuration int `json:"recording_duration"`
-	common.StandardRequest
-	CallSid       string
-	CallStatus    string
-	APIVersion    string
-	Direction     string
-	ForwardedFrom string
-	CallerName    string
+	RecordingDuration int
+	CallSid           string
+	CallStatus        string
+	APIVersion        string
+	Direction         string
+	ForwardedFrom     string
+	CallerName        string
 }
 
 // Creates a Callback struct from a form
@@ -60,7 +61,6 @@ func (cb *Callback) Parse(req *http.Request) error {
 		CallerName:        req.PostFormValue("CallerName"),
 		StandardRequest:   common.ParseStandardRequest(req),
 	}
-
 	return nil
 }
 

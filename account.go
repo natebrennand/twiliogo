@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"github.com/natebrennand/twiliogo/recording"
 	"github.com/natebrennand/twiliogo/sms"
+	"github.com/natebrennand/twiliogo/sms/shortcodes"
 	"github.com/natebrennand/twiliogo/transcription"
 	"github.com/natebrennand/twiliogo/voice"
 
 	"net/http"
 	"os"
 	"regexp"
-	"strings"
 )
 
 const (
@@ -19,9 +19,11 @@ const (
 )
 
 type Account struct {
-	AccountSid     string
-	Token          string
-	Sms            sms.SmsAccount // redundancy for usability
+	AccountSid string
+	Token      string
+	// redundancy for usability
+	Sms            sms.Account
+	ShortCode      shortcodes.Account
 	Voice          voice.VoiceAccount
 	Recordings     recording.RecordingAccount
 	Transcriptions transcription.TranscriptionAccount
@@ -36,27 +38,39 @@ func NewAccount(sid, token string) Account {
 		panic("Invalid Account Sid")
 	}
 	return Account{
-		AccountSid:     sid,
-		Token:          token,
-		Sms:            sms.SmsAccount{sid, token, http.Client{}},
-		Voice:          voice.VoiceAccount{sid, token, http.Client{}},
-		Recordings:     recording.RecordingAccount{sid, token, http.Client{}},
-		Transcriptions: transcription.TranscriptionAccount{sid, token, http.Client{}},
+		AccountSid: sid,
+		Token:      token,
+		Sms: sms.Account{
+			AccountSid: sid,
+			Token:      token,
+			Client:     http.Client{},
+		},
+		ShortCode: shortcodes.Account{
+			AccountSid: sid,
+			Token:      token,
+			Client:     http.Client{},
+		},
+		Voice: voice.VoiceAccount{
+			AccountSid: sid,
+			Token:      token,
+			Client:     http.Client{},
+		},
+		Recordings: recording.RecordingAccount{
+			AccountSid: sid,
+			Token:      token,
+			Client:     http.Client{},
+		},
+		Transcriptions: transcription.TranscriptionAccount{
+			AccountSid: sid,
+			Token:      token,
+			Client:     http.Client{},
+		},
 	}
 }
 
 func NewAccountFromEnv() Account {
-	var sid, token string
-	envVars := os.Environ()
-	for _, x := range envVars {
-		splits := strings.Split(x, "=")
-		key, value := splits[0], splits[1]
-		if key == twilioAccount {
-			sid = value
-		} else if key == twilioToken {
-			token = value
-		}
-	}
+	sid := os.Getenv(twilioAccount)
+	token := os.Getenv(twilioToken)
 	if sid == "" {
 		panic(fmt.Sprintf("You must set the environment variable %s.", twilioAccount))
 	}

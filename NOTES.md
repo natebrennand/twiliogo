@@ -1,20 +1,16 @@
-
 # Done
 
 - Twiml
-
 - /Messages
 - /Messages/Media
 - /Calls
+- /SMS/ShortCodes
 
 
 # Roadmap
 
 ### Nate
 
-Sms
-- /SMS/ShortCodes
-- /SMS/Messages
 Account
 - /Accounts
 - /Applications
@@ -30,17 +26,21 @@ Calls
 - /Transcriptions
 - /Conferences
 - /Conferences/Participants
+
 Account
 - /IncomingPhoneNumbers
 
 
 ### Josh
+
 Calls
 - /Queues
 - /Queues/Members
+
 Account
 - /Usage/Records
 - /Usage/Triggers
+
 SIP
 - /SIP/CredentialLists
 - /SIP/CredentialLists/Credentials
@@ -52,6 +52,12 @@ SIP
 
 
 
-// not implemented by public API
-X /SMS/Feedback
-X /Calls/Feedback
+## not implemented
+
+#### not in by public API
+
+- /SMS/Feedback
+- /Calls/Feedback
+
+#### deprecated so ignoring
+- /SMS/Messages
