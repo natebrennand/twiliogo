@@ -55,7 +55,7 @@ func (p Post) GetReader() io.Reader {
 	vals.Set("To", p.To)
 	vals.Set("From", p.From)
 	if p.URL != "" {
-		vals.Set("URL", p.URL)
+		vals.Set("Url", p.URL)
 	}
 	if p.ApplicationSid != "" {
 		vals.Set("ApplicationSid", p.ApplicationSid)
