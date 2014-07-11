@@ -52,11 +52,6 @@ func (f ListFilter) GetQueryString() string {
 	return encoded
 }
 
-func (act Account) getConference(destURL string, resp *Conference) error {
-	// send get request to twilio
-	return common.SendGetRequest(destURL, act, resp)
-}
-
 // Get a info about a conference with confSid
 func (act Account) Get(confSid string) (Conference, error) {
 	var c Conference
@@ -64,17 +59,15 @@ func (act Account) Get(confSid string) (Conference, error) {
 		return c, errors.New("Invalid sid")
 	}
 
-	err := act.getConference(fmt.Sprintf(getURL, act.AccountSid, string(confSid)), &c)
+	// err := act.getConference(fmt.Sprintf(getURL, act.AccountSid, confSid)), &c)
+	err := common.SendGetRequest(fmt.Sprintf(getURL, act.AccountSid, confSid), act, &c)
 	return c, err
-}
-
-func (act Account) getConferenceList(destURL string, f ListFilter, resp *ConferenceList) error {
-	return common.SendGetRequest(destURL+f.GetQueryString(), act, resp)
 }
 
 // Get list of conferences for this account
 func (act Account) List(f ListFilter) (ConferenceList, error) {
 	var cl ConferenceList
-	err := act.getConferenceList(fmt.Sprintf(listURL, act.AccountSid), f, &cl)
+	// err := act.getConferenceList(fmt.Sprintf(listURL, act.AccountSid), f, &cl)
+	err := common.SendGetRequest(fmt.Sprintf(listURL, act.AccountSid)+f.GetQueryString(), act, &cl)
 	return cl, err
 }

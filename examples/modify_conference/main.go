@@ -15,7 +15,6 @@ func makeCall(to string, act twiliogo.Account) string {
 	fmt.Println("Create conference?")
 	bufio.NewReader(os.Stdin).ReadString('\n')
 	fmt.Println("Here we gooo")
-	// act := twiliogo.NewAccountFromEnv()
 	resp, err := act.Voice.Call(voice.Post{
 		From: "+16162882901",
 		To:   to,

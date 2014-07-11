@@ -41,57 +41,47 @@ func (f ParticipantAttr) GetParticipantQueryString() string {
 	return encoded
 }
 
-func (act Account) getParticipant(destURL string, resp *Participant) error {
-	return common.SendGetRequest(destURL, act, resp)
-}
-
 // Get a participant with callSid from conference with confSid
 func (act Account) Participant(confSid string, callSid string) (Participant, error) {
 	var p Participant
 	if !validateConferenceSid(confSid) {
 		return p, errors.New("Invalid conference sid")
-	}
-	if !validateCallSid(callSid) {
+	} else if !validateCallSid(callSid) {
 		return p, errors.New("Invalid call sid")
 	}
 
-	err := act.getParticipant(fmt.Sprintf(getURL, act.AccountSid, string(confSid), string(callSid)), &p)
+	err := common.SendGetRequest(fmt.Sprintf(getURL, act.AccountSid, confSid, callSid), act, &p)
 	return p, err
-}
-
-func (act Account) setParticipantMute(dest string, msg ParticipantAttr, resp *Participant) error {
-	return common.SendPostRequest(dest, msg, act, resp)
 }
 
 // Mute or unmute participant with callSid in conference with confSid
 func (act Account) SetMute(confSid string, callSid string, a ParticipantAttr) (Participant, error) {
 	var p Participant
-	err := act.setParticipantMute(fmt.Sprintf(modifyURL, act.AccountSid, string(confSid), string(callSid)), a, &p)
+	if !validateConferenceSid(confSid) {
+		return p, errors.New("Invalid conference sid")
+	} else if !validateCallSid(callSid) {
+		return p, errors.New("Invalid call sid")
+	}
+	err := common.SendPostRequest(fmt.Sprintf(modifyURL, act.AccountSid, confSid, callSid), a, act, &p)
 	return p, err
-}
-
-func (act Account) kickParticipant(destURL string) error {
-	return common.SendDeleteRequest(destURL, act)
 }
 
 // Kicks participant with callSid from conference with confSid
 func (act Account) Kick(confSid string, callSid string) error {
 	if !validateConferenceSid(confSid) {
 		return errors.New("Invalid conference sid")
-	}
-	if !validateCallSid(callSid) {
+	} else if !validateCallSid(callSid) {
 		return errors.New("Invalid call sid for participant")
 	}
-	return act.kickParticipant(fmt.Sprintf(modifyURL, act.AccountSid, string(confSid), string(callSid)))
-}
-
-func (act Account) getParticipantList(destURL string, f ParticipantAttr, resp *ParticipantList) error {
-	return common.SendGetRequest(destURL+f.GetParticipantQueryString(), act, resp)
+	return common.SendDeleteRequest(fmt.Sprintf(modifyURL, act.AccountSid, confSid, callSid), act)
 }
 
 // Get list of participants in conference with confSid
 func (act Account) Participants(f ParticipantAttr, confSid string) (ParticipantList, error) {
 	var pl ParticipantList
-	err := act.getParticipantList(fmt.Sprintf(participantsURL, act.AccountSid, string(confSid)), f, &pl)
+	if !validateConferenceSid(confSid) {
+		return pl, errors.New("Invalid conference sid")
+	}
+	err := common.SendGetRequest(fmt.Sprintf(participantsURL, act.AccountSid, confSid)+f.GetParticipantQueryString(), act, &pl)
 	return pl, err
 }
