@@ -24,12 +24,12 @@ func (act Account) GetClient() http.Client {
 	return act.Client
 }
 
-type RecordingListFilter struct {
+type ListFilter struct {
 	CallSid     string
 	DateCreated *common.JSONTime
 }
 
-func (f RecordingListFilter) GetQueryString() string {
+func (f ListFilter) GetQueryString() string {
 	v := url.Values{}
 	if f.CallSid != "" {
 		v.Set("CallSid", f.CallSid)
@@ -61,11 +61,11 @@ func (act Account) Get(recSid string) (Recording, error) {
 	return r, err
 }
 
-func (act Account) getRecordingList(destURL string, f RecordingListFilter, resp *RecordingList) error {
+func (act Account) getRecordingList(destURL string, f ListFilter, resp *RecordingList) error {
 	return common.SendGetRequest(destURL+f.GetQueryString(), act, resp, 200)
 }
 
-func (act Account) List(f RecordingListFilter) (RecordingList, error) {
+func (act Account) List(f ListFilter) (RecordingList, error) {
 	var rl RecordingList
 	err := act.getRecordingList(fmt.Sprintf(listURL, act.AccountSid), f, &rl)
 	return rl, err

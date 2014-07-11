@@ -135,7 +135,7 @@ func (act Account) Get(sid string) (Call, error) {
 }
 
 // Used to filter call logs results
-type Filter struct {
+type ListFilter struct {
 	To            string
 	From          string
 	Status        string
@@ -144,7 +144,7 @@ type Filter struct {
 	PageSize      int
 }
 
-func (f Filter) GetQueryString() string {
+func (f ListFilter) GetQueryString() string {
 	v := url.Values{}
 	if f.To != "" {
 		v.Set("To", f.To)
@@ -168,11 +168,11 @@ func (f Filter) GetQueryString() string {
 	return encoded
 }
 
-func (act Account) getList(destURL string, f Filter, resp *CallList) error {
+func (act Account) getList(destURL string, f ListFilter, resp *CallList) error {
 	return common.SendGetRequest(destURL+f.GetQueryString(), act, resp, 200)
 }
 
-func (act Account) List(f Filter) (CallList, error) {
+func (act Account) List(f ListFilter) (CallList, error) {
 	var callList CallList
 	err := act.getList(fmt.Sprintf(listURL, act.AccountSid), f, &callList)
 	return callList, err
