@@ -27,12 +27,12 @@ func (act testAccount) GetClient() http.Client {
 
 func (act testAccount) sendSms(destURL string, msg testPost, resp *testMessage) error {
 	// send post request to twilio
-	return SendPostRequest(destURL, msg, act, resp, 201)
+	return SendPostRequest(destURL, msg, act, resp)
 }
 
 func (act testAccount) getSms(destURL string, resp *testMessage) error {
 	// send post request to twilio
-	return SendGetRequest(destURL, act, resp, 200)
+	return SendGetRequest(destURL, act, resp)
 }
 
 type testPost struct {
@@ -106,7 +106,7 @@ type testMessageWithDate struct {
 	ResponseCore
 	NumSegments int       `json:"num_segments,string"`
 	NumMedia    int       `json:"num_media,string"`
-	Price       JSONPrice `json:"price"`
+	Price       JSONFloat `json:"price"`
 	DateCreated JSONTime  `json:"date_created"`
 	DateSent    JSONTime  `json:"date_sent"`
 	DateUpdated JSONTime  `json:"date_updated"`

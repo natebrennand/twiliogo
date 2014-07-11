@@ -1,7 +1,7 @@
 package account
 
 var (
-	testAccount = `{
+	testAccountString = `{
 	"sid": "AC381707b751dbe4c74b15c5697ba67afd",
 	"friendly_name": "Do you like my friendly name?",
 	"type": "Full",
@@ -23,7 +23,7 @@ var (
 		"transcriptions": "\/2010-04-01\/Accounts\/AC381707b751dbe4c74b15c5697ba67afd\/Transcriptions.json"
 	}
 }`
-	testListAccount = `{
+	testListAccountString = `{
 	"page": 0,
 	"num_pages": 1,
 	"page_size": 50,
@@ -55,6 +55,43 @@ var (
 			"sandbox": "\/2010-04-01\/Accounts\/AC381707b751dbe4c74b15c5697ba67afd\/Sandbox.json",
 			"sms_messages": "\/2010-04-01\/Accounts\/AC381707b751dbe4c74b15c5697ba67afd\/SMS\/Messages.json",
 			"transcriptions": "\/2010-04-01\/Accounts\/AC381707b751dbe4c74b15c5697ba67afd\/Transcriptions.json"}
+		}
+	]
+}`
+	testListNumbersString = `{
+	"uri": "\/2010-04-01\/Accounts\/AC381707b751dbe4c74b15c5697ba67afd\/AvailablePhoneNumbers\/US\/Local.json?AreaCode=510",
+	"available_phone_numbers": [
+		{
+			"friendly_name": "(510) 564-7903",
+			"phone_number": "+15105647903",
+			"lata": "722",
+			"rate_center": "OKLD TRNID",
+			"latitude": "37.780000",
+			"longitude": "-122.380000",
+			"region": "CA",
+			"postal_code": "94703",
+			"iso_country": "US",
+			"capabilities":{
+				"voice":"true",
+				"SMS":"true",
+				"MMS":"false"
+			}
+		},
+		{
+			"friendly_name": "(510) 488-4379",
+			"phone_number": "+15104884379",
+			"lata": "722",
+			"rate_center": "OKLD FRTVL",
+			"latitude": "37.780000",
+			"longitude": "-122.380000",
+			"region": "CA",
+			"postal_code": "94602",
+			"iso_country": "US",
+			"capabilities":{
+				"voice":"true",
+				"SMS":"true",
+				"MMS":"false"
+			}
 		}
 	]
 }`
