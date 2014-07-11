@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/natebrennand/twiliogo/applications"
 	"github.com/natebrennand/twiliogo/conference"
+	"github.com/natebrennand/twiliogo/notifications"
 	"github.com/natebrennand/twiliogo/recording"
 	"github.com/natebrennand/twiliogo/sms"
 	"github.com/natebrennand/twiliogo/sms/shortcodes"
@@ -31,6 +32,7 @@ type Account struct {
 	Transcriptions transcription.Account
 	Conferences    conference.Account
 	Applications   applications.Account
+	Notifications  notifications.Account
 }
 
 func NewAccount(sid, token string) Account {
@@ -75,6 +77,11 @@ func NewAccount(sid, token string) Account {
 			Client:     http.Client{},
 		},
 		Conferences: conference.Account{
+			AccountSid: sid,
+			Token:      token,
+			Client:     http.Client{},
+		},
+		Notifications: notifications.Account{
 			AccountSid: sid,
 			Token:      token,
 			Client:     http.Client{},

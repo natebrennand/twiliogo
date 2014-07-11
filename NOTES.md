@@ -11,14 +11,13 @@
 - /AvailablePhoneNumbers
 - /Recordings
 - /Transcriptions
+- /Notification
 
 
 # Roadmap
 
 ### Nate
 
-Account
-- /Nofication AKA Firehose
 
 
 ### Chelsea
