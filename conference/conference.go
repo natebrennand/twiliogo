@@ -59,7 +59,6 @@ func (act Account) Get(confSid string) (Conference, error) {
 		return c, errors.New("Invalid sid")
 	}
 
-	// err := act.getConference(fmt.Sprintf(getURL, act.AccountSid, confSid)), &c)
 	err := common.SendGetRequest(fmt.Sprintf(getURL, act.AccountSid, confSid), act, &c)
 	return c, err
 }
@@ -67,7 +66,6 @@ func (act Account) Get(confSid string) (Conference, error) {
 // Get list of conferences for this account
 func (act Account) List(f ListFilter) (ConferenceList, error) {
 	var cl ConferenceList
-	// err := act.getConferenceList(fmt.Sprintf(listURL, act.AccountSid), f, &cl)
 	err := common.SendGetRequest(fmt.Sprintf(listURL, act.AccountSid)+f.GetQueryString(), act, &cl)
 	return cl, err
 }
