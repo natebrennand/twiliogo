@@ -40,7 +40,7 @@ var testFixtureListString = ` {
             "sid": "CFbbe46ff1274e283f7e3ac1df0072ab39",
             "status": "completed",
             "subresource_uris": {
-                "participants": "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/Conferences/CFbbe46ff1274e283f7e3ac1df0072ab39/Participants.json",
+                "participants": "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/Conferences/CFbbe46ff1274e283f7e3ac1df0072ab39/Participants.json"
             },
             "uri": "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/Conferences/CFbbe46ff1274e283f7e3ac1df0072ab39.json"
         }

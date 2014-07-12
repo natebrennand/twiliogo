@@ -12,9 +12,8 @@ import (
 )
 
 func makeCall(to string, act twiliogo.Account) string {
-	fmt.Println("Create conference?")
+	fmt.Println("Add participant?")
 	bufio.NewReader(os.Stdin).ReadString('\n')
-	fmt.Println("Here we gooo")
 	resp, err := act.Voice.Call(voice.Post{
 		From: "+16162882901",
 		To:   to,
@@ -23,8 +22,10 @@ func makeCall(to string, act twiliogo.Account) string {
 
 	if err != nil {
 		fmt.Println("Error making call: ", err.Error())
+	} else {
+		fmt.Println("Participant added")
 	}
-	fmt.Printf("%#v\n", resp)
+	// fmt.Printf("%#v\n", resp)
 
 	return resp.Sid
 }
@@ -38,6 +39,8 @@ func muteParticipant(confSid string, callSid string, act twiliogo.Account) {
 	})
 	if err != nil {
 		fmt.Println("Error muting participant: ", err.Error())
+	} else {
+		fmt.Println("Participant muting")
 	}
 }
 
@@ -45,6 +48,8 @@ func kickParticipant(confSid string, callSid string, act twiliogo.Account) {
 	err := act.Conferences.Kick(confSid, callSid)
 	if err != nil {
 		fmt.Println("Error kicking participant: ", err.Error())
+	} else {
+		fmt.Println("Participant kicked")
 	}
 }
 
