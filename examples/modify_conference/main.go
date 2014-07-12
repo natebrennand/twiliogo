@@ -25,7 +25,6 @@ func makeCall(to string, act twiliogo.Account) string {
 	} else {
 		fmt.Println("Participant added")
 	}
-	// fmt.Printf("%#v\n", resp)
 
 	return resp.Sid
 }
@@ -61,7 +60,7 @@ func main() {
 	bufio.NewReader(os.Stdin).ReadString('\n')
 	resp, err := act.Conferences.List(conference.ListFilter{
 		Status:      "in-progress",
-		DateCreated: &(common.JSONTime{time.Date(2014, time.July, 11, 3, 45, 01, 0, &time.Location{})}),
+		DateCreated: &(common.JSONTime{time.Date(2014, time.July, 12, 3, 45, 01, 0, &time.Location{})}), //Set to today's date
 	})
 	if err != nil {
 		fmt.Println("Error getting conferences: ", err.Error())
@@ -71,6 +70,15 @@ func main() {
 
 	for _, c := range *resp.Conferences {
 		confSid = c.Sid
+	}
+
+	part_resp, err := act.Conferences.Participant(confSid, sid2)
+
+	if err != nil {
+		fmt.Println("Error getting participant: ", err.Error())
+	} else {
+		fmt.Printf("%#v\n", part_resp)
+
 	}
 
 	muteParticipant(confSid, sid2, act)
