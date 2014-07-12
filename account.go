@@ -5,12 +5,12 @@ import (
 	"github.com/natebrennand/twiliogo/applications"
 	"github.com/natebrennand/twiliogo/conference"
 	"github.com/natebrennand/twiliogo/notifications"
+	"github.com/natebrennand/twiliogo/numbers"
 	"github.com/natebrennand/twiliogo/recording"
 	"github.com/natebrennand/twiliogo/sms"
 	"github.com/natebrennand/twiliogo/sms/shortcodes"
 	"github.com/natebrennand/twiliogo/transcription"
 	"github.com/natebrennand/twiliogo/voice"
-
 	"net/http"
 	"os"
 	"regexp"
@@ -33,6 +33,7 @@ type Account struct {
 	Conferences    conference.Account
 	Applications   applications.Account
 	Notifications  notifications.Account
+	Numbers        numbers.Account
 }
 
 func NewAccount(sid, token string) Account {
@@ -82,6 +83,11 @@ func NewAccount(sid, token string) Account {
 			Client:     http.Client{},
 		},
 		Notifications: notifications.Account{
+			AccountSid: sid,
+			Token:      token,
+			Client:     http.Client{},
+		},
+		Numbers: numbers.Account{
 			AccountSid: sid,
 			Token:      token,
 			Client:     http.Client{},
