@@ -1,34 +1,25 @@
 package shortcodes
 
 import (
+	"github.com/natebrennand/twiliogo/act"
+	"github.com/natebrennand/twiliogo/common"
+
 	"errors"
 	"fmt"
-	"github.com/natebrennand/twiliogo/common"
-	"net/http"
 	"net/url"
 	"regexp"
 )
 
-const (
-	getURL  = "https://api.twilio.com/2010-04-01/Accounts/%s/SMS/ShortCodes/%s.json" // takes an AccountSid & ShortcodeSid
-	listURL = "https://api.twilio.com/2010-04-01/Accounts/%s/SMS/ShortCodes.json"    // takes an AccountSid
+var short = struct {
+	Get, List string
+}{
+	Get:  "https://api.twilio.com/2010-04-01/Accounts/%s/SMS/ShortCodes/%s.json", // takes an AccountSid & ShortcodeSid
+	List: "https://api.twilio.com/2010-04-01/Accounts/%s/SMS/ShortCodes.json",    // takes an AccountSid
+}
 
-)
-
+// Account wraps the act Account struct to embed the AccountSid & Token.
 type Account struct {
-	AccountSid string
-	Token      string
-	Client     http.Client
-}
-
-func (act Account) GetSid() string {
-	return act.AccountSid
-}
-func (act Account) GetToken() string {
-	return act.Token
-}
-func (act Account) GetClient() http.Client {
-	return act.Client
+	act.Account
 }
 
 var validateShortcodeSid = regexp.MustCompile(`^SC[0-9a-z]{32}$`).MatchString
@@ -50,21 +41,24 @@ type Resource struct {
 	URI            string          `json:"uri"`
 }
 
+// Get returns a shortcode message resource given a sid.
 func (act Account) Get(sid string) (Resource, error) {
 	var r Resource
 	if !validateShortcodeSid(sid) {
 		return r, errors.New("Invalid sid")
 	}
-	err := common.SendGetRequest(fmt.Sprintf(getURL, act.AccountSid, sid), act, &r)
+	err := common.SendGetRequest(fmt.Sprintf(short.Get, act.AccountSid, sid), act, &r)
 	return r, err
 }
 
+// ListFilter provides a way to filter the results returned by List()
 type ListFilter struct {
 	ShortCode    string
 	FriendlyName string
 }
 
-func (f ListFilter) GetQueryString() string {
+// renders the query string of the filter
+func (f ListFilter) getQueryString() string {
 	v := url.Values{}
 	if f.ShortCode != "" {
 		v.Set("ShortCode", f.ShortCode)
@@ -79,13 +73,15 @@ func (f ListFilter) GetQueryString() string {
 	return encoded
 }
 
+// ResourceList contains a list of all shortcode messages that matched the given filtered query.
 type ResourceList struct {
 	common.ListResponseCore
 	ShortCodes *[]Resource
 }
 
-func (act Account) GetList(f ListFilter) (ResourceList, error) {
+// List returns a list of all shortcode messages that matched the given filter
+func (act Account) List(f ListFilter) (ResourceList, error) {
 	var r ResourceList
-	err := common.SendGetRequest(fmt.Sprintf(listURL+f.GetQueryString(), act.AccountSid), act, &r)
+	err := common.SendGetRequest(fmt.Sprintf(short.List+f.getQueryString(), act.AccountSid), act, &r)
 	return r, err
 }

@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"net/url"
+	"regexp"
 	"strings"
 	"time"
 )
@@ -15,6 +16,46 @@ import (
 // Account wraps the act Account struct to embed the AccountSid & Token.
 type Account struct {
 	act.Account
+}
+
+// holds url values used in queries
+var sms = struct {
+	Post, Get, List string
+}{
+	// takes an AccountSid
+	Post: "https://api.twilio.com/2010-04-01/Accounts/%s/Messages.json",
+	// takes an AccountSid & MessageSdi
+	Get: "https://api.twilio.com/2010-04-01/Accounts/%s/Messages/%s.json",
+	// takes an AccountSid
+	List: "https://api.twilio.com/2010-04-01/Accounts/%s/Messages.json",
+}
+
+var validateSmsSid = regexp.MustCompile(`^(SM|MM)[0-9a-z]{32}$`).MatchString
+
+// Message represents an instance of a SMS resource
+type Message struct {
+	common.ResponseCore
+	Body        string           `json:"body"`
+	DateSent    common.JSONTime  `json:"date_sent"`
+	NumSegments int              `json:"num_segments,string"`
+	NumMedia    int              `json:"num_media,string"`
+	Price       common.JSONFloat `json:"price"`
+}
+
+// MessageList represents an list of a SMS resources
+type MessageList struct {
+	common.ListResponseCore
+	Messages *[]Message `json:"messages"`
+}
+
+// Get a message given that message's sid.
+func (act Account) Get(sid string) (Message, error) {
+	var m Message
+	if !validateSmsSid(sid) {
+		return m, errors.New("Invalid sid")
+	}
+	err := common.SendGetRequest(fmt.Sprintf(sms.Get, act.AccountSid, sid), act, &m)
+	return m, err
 }
 
 // Post represents the data used in creating an outbound sms message.
@@ -69,17 +110,7 @@ func (act Account) Send(p Post) (Message, error) {
 	if nil != p.Validate() {
 		return m, p.Validate()
 	}
-	err := common.SendPostRequest(fmt.Sprintf(postURL, act.AccountSid), p, act, &m)
-	return m, err
-}
-
-// Get a message given that message's sid.
-func (act Account) Get(sid string) (Message, error) {
-	var m Message
-	if !validateSmsSid(sid) {
-		return m, errors.New("Invalid sid")
-	}
-	err := common.SendGetRequest(fmt.Sprintf(getURL, act.AccountSid, sid), act, &m)
+	err := common.SendPostRequest(fmt.Sprintf(sms.Post, act.AccountSid), p, act, &m)
 	return m, err
 }
 
@@ -111,6 +142,6 @@ func (f Filter) getQueryString() string {
 // List returns a list of message records given a filter.
 func (act Account) List(f Filter) (MessageList, error) {
 	var ml MessageList
-	err := common.SendGetRequest(fmt.Sprintf(listURL, act.AccountSid)+f.getQueryString(), act, &ml)
+	err := common.SendGetRequest(fmt.Sprintf(sms.List, act.AccountSid)+f.getQueryString(), act, &ml)
 	return ml, err
 }
