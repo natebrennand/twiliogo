@@ -5,10 +5,7 @@ import (
 	"regexp"
 )
 
-func validateSmsSid(sid string) bool {
-	match, _ := regexp.MatchString(`^(SM|MM)[0-9a-z]{32}$`, string(sid))
-	return match
-}
+var validateSmsSid = regexp.MustCompile(`^(SM|MM)[0-9a-z]{32}$`).MatchString
 
 type Message struct {
 	common.ResponseCore
