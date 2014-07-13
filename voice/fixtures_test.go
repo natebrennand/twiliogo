@@ -64,8 +64,8 @@ var testResponseFixture = Call{
 		From:         "+13139202596",
 		To:           "+16164601267",
 		URI:          "/2010-04-01/Accounts/ACd03387e99bf959daa1e4810cc945708d/Calls/CA7383500ec70ce66bd3a7ac5d2fbbd6a9.json",
-		DateCreated:  common.JSONTime{time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
-		DateUpdated:  common.JSONTime{time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
+		DateCreated:  common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
+		DateUpdated:  common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
 	},
 
 	Price: 0.0,
@@ -112,8 +112,8 @@ var testListFixture = CallList{
 			ResponseCore: common.ResponseCore{
 				AccountSid:   "AC5116d5d4df9f61ceae2f0732e1ea9f1b",
 				APIVersion:   "2010-04-01",
-				DateCreated:  common.JSONTime{time.Date(2010, time.August, 16, 3, 45, 01, 0, &time.Location{})},
-				DateUpdated:  common.JSONTime{time.Date(2010, time.August, 16, 3, 45, 03, 0, &time.Location{})},
+				DateCreated:  common.JSONTime{Time: time.Date(2010, time.August, 16, 3, 45, 01, 0, &time.Location{})},
+				DateUpdated:  common.JSONTime{Time: time.Date(2010, time.August, 16, 3, 45, 03, 0, &time.Location{})},
 				Direction:    "outbound-api",
 				ErrorCode:    "",
 				ErrorMessage: "",

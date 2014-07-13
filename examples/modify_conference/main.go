@@ -56,7 +56,7 @@ func main() {
 	bufio.NewReader(os.Stdin).ReadString('\n')
 	resp, err := act.Conferences.List(conference.ListFilter{
 		Status:      "in-progress",
-		DateCreated: &(common.JSONTime{time.Date(2014, time.July, 11, 3, 45, 01, 0, &time.Location{})}),
+		DateCreated: &(common.JSONTime{Time: time.Date(2014, time.July, 11, 3, 45, 01, 0, &time.Location{})}),
 	})
 	if err != nil {
 		fmt.Println("Error getting conferences: ", err.Error())

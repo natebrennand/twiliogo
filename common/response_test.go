@@ -35,7 +35,7 @@ func TestJSONDecode(t *testing.T) {
 		t.Errorf("JSON failed to marshal with error => %s\n", err.Error())
 	}
 
-	if msg.DateSent != (JSONTime{time.Time{}}) {
+	if msg.DateSent != (JSONTime{Time: time.Time{}}) {
 		t.Errorf("Unmarshal tried to assign a time to DateSent")
 	}
 

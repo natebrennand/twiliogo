@@ -28,11 +28,11 @@ type JSONTime struct {
 func (j *JSONTime) UnmarshalJSON(b []byte) error {
 	s := string(b)
 	if s == "null" {
-		*j = JSONTime{time.Time{}}
+		*j = JSONTime{Time: time.Time{}}
 		return nil
 	}
 	t, err := time.Parse(TwilioTimeFormat, s[1:len(s)-1])
-	*j = JSONTime{t}
+	*j = JSONTime{Time: t}
 	return err
 }
 

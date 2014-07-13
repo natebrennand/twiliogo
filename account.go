@@ -1,7 +1,7 @@
 package twiliogo
 
 import (
-	"fmt"
+	"github.com/natebrennand/twiliogo/act"
 	"github.com/natebrennand/twiliogo/applications"
 	"github.com/natebrennand/twiliogo/conference"
 	"github.com/natebrennand/twiliogo/notifications"
@@ -11,6 +11,7 @@ import (
 	"github.com/natebrennand/twiliogo/transcription"
 	"github.com/natebrennand/twiliogo/voice"
 
+	"fmt"
 	"net/http"
 	"os"
 	"regexp"
@@ -41,19 +42,18 @@ func NewAccount(sid, token string) Account {
 	if !validateAccountSid(sid) {
 		panic("Invalid Account Sid")
 	}
+
+	a := act.Account{
+		AccountSid: sid,
+		Token:      token,
+		Client:     http.Client{},
+	}
+
 	return Account{
 		AccountSid: sid,
 		Token:      token,
-		Sms: sms.Account{
-			AccountSid: sid,
-			Token:      token,
-			Client:     http.Client{},
-		},
-		ShortCode: shortcodes.Account{
-			AccountSid: sid,
-			Token:      token,
-			Client:     http.Client{},
-		},
+		Sms:        sms.Account{Account: a},
+		ShortCode:  shortcodes.Account{Account: a},
 		Voice: voice.Account{
 			AccountSid: sid,
 			Token:      token,
