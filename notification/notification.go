@@ -68,7 +68,7 @@ func (act Account) Delete(sid string) error {
 	if !validateNotificationSid(sid) {
 		return errors.New("Invalid sid")
 	}
-	return common.SendDeleteRequest(fmt.Sprintf(getURL, act.AccountSid, sid), act)
+	return common.SendDeleteRequest(fmt.Sprintf(deleteURL, act.AccountSid, sid), act)
 }
 
 // Is similar to a full resource but lacks
