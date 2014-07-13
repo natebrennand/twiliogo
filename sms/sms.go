@@ -22,12 +22,9 @@ type Account struct {
 var sms = struct {
 	Post, Get, List string
 }{
-	// takes an AccountSid
-	Post: "https://api.twilio.com/2010-04-01/Accounts/%s/Messages.json",
-	// takes an AccountSid & MessageSdi
-	Get: "https://api.twilio.com/2010-04-01/Accounts/%s/Messages/%s.json",
-	// takes an AccountSid
-	List: "https://api.twilio.com/2010-04-01/Accounts/%s/Messages.json",
+	Post: "https://api.twilio.com/2010-04-01/Accounts/%s/Messages.json",    // takes an AccountSid
+	Get:  "https://api.twilio.com/2010-04-01/Accounts/%s/Messages/%s.json", // takes an AccountSid & MessageSdi
+	List: "https://api.twilio.com/2010-04-01/Accounts/%s/Messages.json",    // takes an AccountSid
 }
 
 var validateSmsSid = regexp.MustCompile(`^(SM|MM)[0-9a-z]{32}$`).MatchString
