@@ -31,10 +31,7 @@ func (act Account) GetClient() http.Client {
 	return act.Client
 }
 
-func validateShortcodeSid(sid string) bool {
-	match, _ := regexp.MatchString(`^SC[0-9a-z]{32}$`, string(sid))
-	return match
-}
+var validateShortcodeSid = regexp.MustCompile(`^SC[0-9a-z]{32}$`).MatchString
 
 // Resource represents a short code message resource.
 //

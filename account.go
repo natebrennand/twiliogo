@@ -20,6 +20,8 @@ const (
 	twilioToken   = "TWILIO_TOKEN"
 )
 
+var validateAccountSid = regexp.MustCompile("AC[a-z0-9]{32}").MatchString
+
 type Account struct {
 	AccountSid string
 	Token      string
@@ -34,11 +36,7 @@ type Account struct {
 }
 
 func NewAccount(sid, token string) Account {
-	match, err := regexp.MatchString("AC[a-z0-9]{32}", sid)
-	if err != nil {
-		panic("Error while checking AccountSid validity")
-	}
-	if match != true {
+	if !validateAccountSid(sid) {
 		panic("Invalid Account Sid")
 	}
 	return Account{

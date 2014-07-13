@@ -17,5 +17,5 @@ func main() {
 	if err != nil {
 		fmt.Println("Error sending sms: ", err.Error())
 	}
-	fmt.Printf("%#v\n", resp)
+	fmt.Printf("Sent %s to %s\n", resp.Body, resp.To)
 }

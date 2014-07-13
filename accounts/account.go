@@ -7,7 +7,6 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"regexp"
 	"strings"
 )
 
@@ -37,11 +36,6 @@ func (act Account) GetToken() string {
 }
 func (act Account) GetClient() http.Client {
 	return act.Client
-}
-
-func validateAccountSid(sid string) bool {
-	match, _ := regexp.MatchString(`^AC[0-9a-z]{32}$`, string(sid))
-	return match
 }
 
 // Resource represents an Account resource

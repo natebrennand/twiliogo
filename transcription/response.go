@@ -24,7 +24,4 @@ type TranscriptionList struct {
 	Transcriptions *[]Transcription `json:"transcriptions"`
 }
 
-func validateTranscriptionSid(sid string) bool {
-	match, _ := regexp.MatchString(`^TR[0-9a-z]{32}$`, string(sid))
-	return match
-}
+var validateTranscriptionSid = regexp.MustCompile(`^TR[0-9a-z]{32}$`).MatchString

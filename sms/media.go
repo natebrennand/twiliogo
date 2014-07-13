@@ -13,15 +13,10 @@ const (
 
 )
 
-func validateMediaSid(sid string) bool {
-	match, _ := regexp.MatchString(`^ME[0-9a-z]{32}$`, string(sid))
-	return match
-}
-
-func validateMmsSid(sid string) bool {
-	match, _ := regexp.MatchString(`^MM[0-9a-z]{32}$`, string(sid))
-	return match
-}
+var (
+	validateMediaSid = regexp.MustCompile(`^ME[0-9a-z]{32}$`).MatchString
+	validateMmsSid   = regexp.MustCompile(`^MM[0-9a-z]{32}$`).MatchString
+)
 
 type Media struct {
 	AccountSid  string          `json:"account_sid"`
@@ -41,7 +36,7 @@ func (act Account) getMedia(destURL string, resp *Media) error {
 
 func (act Account) GetMedia(mmsSid, mediaSid string) (Media, error) {
 	var m Media
-	if !validateMediaSid(mmsSid) {
+	if !validateMmsSid(mmsSid) {
 		return m, errors.New("Invalid mms message sid")
 	} else if !validateMediaSid(mediaSid) {
 		return m, errors.New("Invalid media sid")

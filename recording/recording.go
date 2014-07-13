@@ -6,7 +6,10 @@ import (
 	"github.com/natebrennand/twiliogo/common"
 	"net/http"
 	"net/url"
+	"regexp"
 )
+
+var validateRecordingSid = regexp.MustCompile(`^RE[0-9a-z]{32}$`).MatchString
 
 type Account struct {
 	AccountSid string
@@ -53,7 +56,7 @@ func (act Account) getRecording(destURL string, resp *Recording) error {
 // Can get .mp3 or .wav of recording from the uri provided in Recording
 func (act Account) Get(recSid string) (Recording, error) {
 	var r Recording
-	if !validateRecSid(recSid) {
+	if !validateRecordingSid(recSid) {
 		return r, errors.New("Invalid sid")
 	}
 
@@ -79,7 +82,7 @@ func (act Account) deleteRecording(destURL string) error {
 // Returns data about recording as json
 // Can get .mp3 or .wav of recording from the uri provided in Recording
 func (act Account) Delete(recSid string) error {
-	if !validateRecSid(recSid) {
+	if !validateRecordingSid(recSid) {
 		return errors.New("Invalid sid")
 	}
 

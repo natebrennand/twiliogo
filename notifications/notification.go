@@ -33,10 +33,7 @@ func (act Account) GetClient() http.Client {
 	return act.Client
 }
 
-func validateNotificationSid(sid string) bool {
-	match, _ := regexp.MatchString(`^NO[0-9a-z]{32}$`, string(sid))
-	return match
-}
+var validateNotificationSid = regexp.MustCompile(`^NO[0-9a-z]{32}$`).MatchString
 
 // https://www.twilio.com/docs/api/rest/notification#instance-properties
 type Resource struct {
