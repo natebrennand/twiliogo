@@ -1,33 +1,23 @@
 package sms
 
 import (
+	"github.com/natebrennand/twiliogo/act"
+	"github.com/natebrennand/twiliogo/common"
+
 	"errors"
 	"fmt"
-	"github.com/natebrennand/twiliogo/common"
 	"io"
-	"net/http"
 	"net/url"
 	"strings"
 	"time"
 )
 
+// Account wraps the act Account struct to embed the AccountSid & Token.
 type Account struct {
-	AccountSid string
-	Token      string
-	Client     http.Client
+	act.Account
 }
 
-func (act Account) GetSid() string {
-	return act.AccountSid
-}
-func (act Account) GetToken() string {
-	return act.Token
-}
-func (act Account) GetClient() http.Client {
-	return act.Client
-}
-
-// Represents the data used in creating an outbound sms message.
+// Post represents the data used in creating an outbound sms message.
 // "From" & "To" are required attributes.
 // Either a Body or a MediaURL must also be provided.
 // "StatusCallback" and "ApplicationSid" are both optional.
@@ -41,6 +31,8 @@ type Post struct {
 	ApplicationSid string
 }
 
+// GetReader encodes the Post into an io.Reader for consumption while building a HTTP request to
+// Twilio.
 func (p Post) GetReader() io.Reader {
 	v := url.Values{}
 	v.Set("To", p.To)
@@ -60,7 +52,7 @@ func (p Post) GetReader() io.Reader {
 	return strings.NewReader(v.Encode())
 }
 
-// Validates the Voice Post to ensure validity.
+// Validate the Voice Post to ensure validity.
 func (p Post) Validate() error {
 	if p.From == "" || p.To == "" {
 		return errors.New(`Both "From" and "To" must be set in Post.`)
@@ -71,42 +63,34 @@ func (p Post) Validate() error {
 	return nil
 }
 
-// Internal function for sending the post request to twilio.
-func (act Account) sendSms(destURL string, msg Post, resp *Message) error {
-	// send post request to twilio
-	return common.SendPostRequest(destURL, msg, act, resp)
-}
-
-// Sends a post request to Twilio to send a sms request.
+// Send a post request to Twilio to send a sms request.
 func (act Account) Send(p Post) (Message, error) {
 	var m Message
-	err := act.sendSms(fmt.Sprintf(postURL, act.AccountSid), p, &m)
+	if nil != p.Validate() {
+		return m, p.Validate()
+	}
+	err := common.SendPostRequest(fmt.Sprintf(postURL, act.AccountSid), p, act, &m)
 	return m, err
 }
 
-// Internal function for sending the post request to twilio.
-func (act Account) getSms(destURL string, resp *Message) error {
-	// send get request to twilio
-	return common.SendGetRequest(destURL, act, resp)
-}
-
+// Get a message given that message's sid.
 func (act Account) Get(sid string) (Message, error) {
 	var m Message
 	if !validateSmsSid(sid) {
 		return m, errors.New("Invalid sid")
 	}
-	err := act.getSms(fmt.Sprintf(getURL, act.AccountSid, string(sid)), &m)
+	err := common.SendGetRequest(fmt.Sprintf(getURL, act.AccountSid, sid), act, &m)
 	return m, err
 }
 
-// Used to filter list SMS results
+// Filter is used to filter list SMS results
 type Filter struct {
 	To       string
 	From     string
 	DateSent *time.Time
 }
 
-func (f Filter) GetQueryString() string {
+func (f Filter) getQueryString() string {
 	v := url.Values{}
 	if f.To != "" {
 		v.Set("To", f.To)
@@ -124,12 +108,9 @@ func (f Filter) GetQueryString() string {
 	return encoded
 }
 
-func (act Account) getList(destURL string, f Filter, resp *MessageList) error {
-	return common.SendGetRequest(destURL+f.GetQueryString(), act, resp)
-}
-
+// List returns a list of message records given a filter.
 func (act Account) List(f Filter) (MessageList, error) {
 	var ml MessageList
-	err := act.getList(fmt.Sprintf(listURL, act.AccountSid), f, &ml)
+	err := common.SendGetRequest(fmt.Sprintf(listURL, act.AccountSid)+f.getQueryString(), act, &ml)
 	return ml, err
 }
