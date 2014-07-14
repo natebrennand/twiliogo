@@ -21,7 +21,7 @@ const (
 	twilioToken   = "TWILIO_TOKEN"
 )
 
-var validateAccountSid = regexp.MustCompile("AC[a-z0-9]{32}").MatchString
+var validateAccountSid = regexp.MustCompile("^AC[a-z0-9]{32}$").MatchString
 
 type Account struct {
 	AccountSid string
