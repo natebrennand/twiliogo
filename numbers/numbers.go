@@ -76,7 +76,7 @@ func setCoreValues(p Core) url.Values {
 		vals.Set("VoiceMethod", p.VoiceMethod)
 	}
 	if p.VoiceFallbackURL != "" {
-		vals.Set("VoiceFallbackURL", p.VoiceFallbackURL)
+		vals.Set("VoiceFallbackUrl", p.VoiceFallbackURL)
 	}
 	if p.VoiceFallbackMethod != "" {
 		vals.Set("VoiceFallbackMethod", p.VoiceFallbackMethod)
@@ -100,7 +100,7 @@ func setCoreValues(p Core) url.Values {
 		vals.Set("SmsMethod", p.SmsMethod)
 	}
 	if p.SmsFallbackURL != "" {
-		vals.Set("SmsFallbackURL", p.SmsFallbackURL)
+		vals.Set("SmsFallbackUrl", p.SmsFallbackURL)
 	}
 	if p.SmsFallbackMethod != "" {
 		vals.Set("SmsFallbackMethod", p.SmsFallbackMethod)
@@ -182,7 +182,7 @@ func (act Account) Post(numberSid string, update Post) (Number, error) {
 	return p, err
 }
 
-func (act Account) PostNumber(n NumberSelector) (Number, error) {
+func (act Account) PurchaseNumber(n NumberSelector) (Number, error) {
 	var p Number
 	err := common.SendPostRequest(fmt.Sprintf(listURL, act.AccountSid), n, act, &p)
 	return p, err
@@ -211,7 +211,7 @@ type ListFilter struct {
 	FriendlyName string
 }
 
-func (f ListFilter) GetQueryString() string {
+func (f ListFilter) getQueryString() string {
 	v := url.Values{}
 	if f.PhoneNumber != "" {
 		v.Set("PhoneNumber", f.PhoneNumber)
@@ -229,7 +229,7 @@ func (f ListFilter) GetQueryString() string {
 // Grabs a list of phone numbers for a given account with optional filters
 func (act Account) List(f ListFilter) (NumberList, error) {
 	var nl NumberList
-	err := common.SendGetRequest(fmt.Sprintf(listURL, act.AccountSid)+f.GetQueryString(), act, &nl)
+	err := common.SendGetRequest(fmt.Sprintf(listURL, act.AccountSid)+f.getQueryString(), act, &nl)
 	return nl, err
 }
 
@@ -237,12 +237,12 @@ func (act Account) List(f ListFilter) (NumberList, error) {
 // Not sure if can filter
 func (act Account) ListLocal(f ListFilter) (NumberList, error) {
 	var nl NumberList
-	err := common.SendGetRequest(fmt.Sprintf(localURL, act.AccountSid)+f.GetQueryString(), act, &nl)
+	err := common.SendGetRequest(fmt.Sprintf(localURL, act.AccountSid)+f.getQueryString(), act, &nl)
 	return nl, err
 }
 
 // Posts to list of local numbers if an appropriate number is found
-func (act Account) PostLocal(n Selector) (Number, error) {
+func (act Account) PurchaseLocal(n Selector) (Number, error) {
 	var p Number
 	err := common.SendPostRequest(fmt.Sprintf(localURL, act.AccountSid), n, act, &p)
 	return p, err
@@ -252,12 +252,12 @@ func (act Account) PostLocal(n Selector) (Number, error) {
 // Not sure if can filter
 func (act Account) ListTollFree(f ListFilter) (NumberList, error) {
 	var nl NumberList
-	err := common.SendGetRequest(fmt.Sprintf(tollFreeURL, act.AccountSid)+f.GetQueryString(), act, &nl)
+	err := common.SendGetRequest(fmt.Sprintf(tollFreeURL, act.AccountSid)+f.getQueryString(), act, &nl)
 	return nl, err
 }
 
 // Posts to list of toll free numbers if an appropriate number is found
-func (act Account) PostTollFree(n Selector) (Number, error) {
+func (act Account) PurchaseTollFree(n Selector) (Number, error) {
 	var p Number
 	err := common.SendPostRequest(fmt.Sprintf(tollFreeURL, act.AccountSid), n, act, &p)
 	return p, err
@@ -267,12 +267,12 @@ func (act Account) PostTollFree(n Selector) (Number, error) {
 // Not sure if can filter
 func (act Account) ListMobile(f ListFilter) (NumberList, error) {
 	var nl NumberList
-	err := common.SendGetRequest(fmt.Sprintf(mobileURL, act.AccountSid)+f.GetQueryString(), act, &nl)
+	err := common.SendGetRequest(fmt.Sprintf(mobileURL, act.AccountSid)+f.getQueryString(), act, &nl)
 	return nl, err
 }
 
 // Posts to list of mobile numbers if an appropriate number is found
-func (act Account) PostMobile(n Selector) (Number, error) {
+func (act Account) PurchaseMobile(n Selector) (Number, error) {
 	var p Number
 	err := common.SendPostRequest(fmt.Sprintf(mobileURL, act.AccountSid), n, act, &p)
 	return p, err
