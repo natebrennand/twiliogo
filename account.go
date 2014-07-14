@@ -3,6 +3,7 @@ package twiliogo
 import (
 	"fmt"
 	"github.com/natebrennand/twiliogo/applications"
+	"github.com/natebrennand/twiliogo/conference"
 	"github.com/natebrennand/twiliogo/notifications"
 	"github.com/natebrennand/twiliogo/recording"
 	"github.com/natebrennand/twiliogo/sms"
@@ -31,6 +32,7 @@ type Account struct {
 	Voice          voice.Account
 	Recordings     recording.Account
 	Transcriptions transcription.Account
+	Conferences    conference.Account
 	Applications   applications.Account
 	Notifications  notifications.Account
 }
@@ -68,6 +70,11 @@ func NewAccount(sid, token string) Account {
 			Client:     http.Client{},
 		},
 		Applications: applications.Account{
+			AccountSid: sid,
+			Token:      token,
+			Client:     http.Client{},
+		},
+		Conferences: conference.Account{
 			AccountSid: sid,
 			Token:      token,
 			Client:     http.Client{},
