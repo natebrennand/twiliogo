@@ -27,7 +27,7 @@ func (act Account) GetClient() http.Client {
 	return act.Client
 }
 
-type Post struct {
+type Core struct {
 	FriendlyName         string
 	APIVersion           string
 	VoiceURL             string
@@ -43,10 +43,25 @@ type Post struct {
 	SmsFallbackURL       string
 	SmsFallbackMethod    string
 	SmsApplicationSid    string
-	AccountSid           string
 }
 
-func (p Post) GetReader() io.Reader {
+type Post struct {
+	Core
+	AccountSid string
+}
+
+type NumberSelector struct {
+	Core
+	PhoneNumber string
+	AreaCode    string
+}
+
+type Selector struct {
+	Core
+	PhoneNumber string
+}
+
+func setCoreValues(p Core) url.Values {
 	vals := url.Values{}
 	if p.FriendlyName != "" {
 		vals.Set("FriendlyName", p.FriendlyName)
@@ -93,14 +108,56 @@ func (p Post) GetReader() io.Reader {
 	if p.SmsApplicationSid != "" {
 		vals.Set("SmsApplicationSid", p.SmsApplicationSid)
 	}
+	return vals
+}
+
+func (p Post) GetReader() io.Reader {
+	vals := setCoreValues(p.Core)
 	if p.AccountSid != "" {
 		vals.Set("AccountSid", p.AccountSid)
 	}
 	return strings.NewReader(vals.Encode())
 }
 
+func (n NumberSelector) GetReader() io.Reader {
+	vals := setCoreValues(n.Core)
+	if n.PhoneNumber != "" {
+		vals.Set("PhoneNumber", n.PhoneNumber)
+	}
+	if n.AreaCode != "" {
+		vals.Set("AreaCode", n.AreaCode)
+	}
+	return strings.NewReader(vals.Encode())
+
+}
+
+func (s Selector) GetReader() io.Reader {
+	vals := setCoreValues(s.Core)
+	if s.PhoneNumber != "" {
+		vals.Set("PhoneNumber", s.PhoneNumber)
+	}
+
+	return strings.NewReader(vals.Encode())
+
+}
+
 func (p Post) Validate() error {
 	// All params are optional
+	return nil
+}
+
+func (n NumberSelector) Validate() error {
+	if n.PhoneNumber == "" && n.AreaCode == "" {
+		return errors.New("Must set either the phone number or area code")
+	}
+	return nil
+}
+
+func (p Selector) Validate() error {
+	// All params are optional
+	if p.PhoneNumber == "" {
+		return errors.New("Must set phone number to purchase")
+	}
 	return nil
 }
 
@@ -122,6 +179,12 @@ func (act Account) Post(numberSid string, update Post) (Number, error) {
 		return p, errors.New("Invalid sid")
 	}
 	err := common.SendPostRequest(fmt.Sprintf(getURL, act.AccountSid, numberSid), update, act, &p)
+	return p, err
+}
+
+func (act Account) PostNumber(n NumberSelector) (Number, error) {
+	var p Number
+	err := common.SendPostRequest(fmt.Sprintf(listURL, act.AccountSid), n, act, &p)
 	return p, err
 }
 
@@ -168,4 +231,49 @@ func (act Account) List(f ListFilter) (NumberList, error) {
 	var nl NumberList
 	err := common.SendGetRequest(fmt.Sprintf(listURL, act.AccountSid)+f.GetQueryString(), act, &nl)
 	return nl, err
+}
+
+// Grabs a list of local phone numbers for a given account with optional filters - no toll free
+// Not sure if can filter
+func (act Account) ListLocal(f ListFilter) (NumberList, error) {
+	var nl NumberList
+	err := common.SendGetRequest(fmt.Sprintf(localURL, act.AccountSid)+f.GetQueryString(), act, &nl)
+	return nl, err
+}
+
+// Posts to list of local numbers if an appropriate number is found
+func (act Account) PostLocal(n Selector) (Number, error) {
+	var p Number
+	err := common.SendPostRequest(fmt.Sprintf(localURL, act.AccountSid), n, act, &p)
+	return p, err
+}
+
+// Grabs a list of toll free phone numbers for a given account with optional filters - no toll free
+// Not sure if can filter
+func (act Account) ListTollFree(f ListFilter) (NumberList, error) {
+	var nl NumberList
+	err := common.SendGetRequest(fmt.Sprintf(tollFreeURL, act.AccountSid)+f.GetQueryString(), act, &nl)
+	return nl, err
+}
+
+// Posts to list of toll free numbers if an appropriate number is found
+func (act Account) PostTollFree(n Selector) (Number, error) {
+	var p Number
+	err := common.SendPostRequest(fmt.Sprintf(tollFreeURL, act.AccountSid), n, act, &p)
+	return p, err
+}
+
+// Grabs a list of mobile phone numbers for a given account with optional filters - no toll free
+// Not sure if can filter
+func (act Account) ListMobile(f ListFilter) (NumberList, error) {
+	var nl NumberList
+	err := common.SendGetRequest(fmt.Sprintf(mobileURL, act.AccountSid)+f.GetQueryString(), act, &nl)
+	return nl, err
+}
+
+// Posts to list of mobile numbers if an appropriate number is found
+func (act Account) PostMobile(n Selector) (Number, error) {
+	var p Number
+	err := common.SendPostRequest(fmt.Sprintf(mobileURL, act.AccountSid), n, act, &p)
+	return p, err
 }
