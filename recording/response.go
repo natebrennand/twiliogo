@@ -2,7 +2,6 @@ package recording
 
 import (
 	"github.com/natebrennand/twiliogo/common"
-	"regexp"
 )
 
 type Recording struct {
@@ -19,9 +18,4 @@ type Recording struct {
 type RecordingList struct {
 	common.ListResponseCore
 	Recordings *[]Recording `json:"recordings"`
-}
-
-func validateRecSid(sid string) bool {
-	match, _ := regexp.MatchString(`^RE[0-9a-z]{32}$`, string(sid))
-	return match
 }

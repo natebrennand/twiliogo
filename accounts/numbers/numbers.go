@@ -33,11 +33,7 @@ func (act Account) GetClient() http.Client {
 	return act.Client
 }
 
-var countryRegex = regexp.MustCompile(`^(AU|AT|BH|BE|BR|BG|CA|CY|CZ|DK|DO|SV|EE|FI|FR|GR|HK|IE|IL|IT|JP|LV|LT|LU|MT|MX|NL|NO|NZ|PE|PL|PT|PR|RO|SK|ZA|ES|SE|CH|GB|US)$`)
-
-func validateIsoCountry(code string) bool {
-	return countryRegex.MatchString(code)
-}
+var validateIsoCountry = regexp.MustCompile(`^(AU|AT|BH|BE|BR|BG|CA|CY|CZ|DK|DO|SV|EE|FI|FR|GR|HK|IE|IL|IT|JP|LV|LT|LU|MT|MX|NL|NO|NZ|PE|PL|PT|PR|RO|SK|ZA|ES|SE|CH|GB|US)$`).MatchString
 
 // Can filter Local
 // https://www.twilio.com/docs/api/rest/available-phone-numbers#local-instance-properties

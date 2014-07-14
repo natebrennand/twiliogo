@@ -12,10 +12,7 @@ const (
 	listConnectAppURL = "https://api.twilio.com/2010-04-01/Accounts/%s/AuthorizedConnectApps.json"    // takes an AccountSid
 )
 
-func validateConnectAppSid(sid string) bool {
-	match, _ := regexp.MatchString(`^CN[0-9a-z]{32}$`, string(sid))
-	return match
-}
+var validateConnectAppSid = regexp.MustCompile(`^CN[0-9a-z]{32}$`).MatchString
 
 // https://www.twilio.com/docs/api/rest/authorized-connect-apps
 type ConnectApp struct {

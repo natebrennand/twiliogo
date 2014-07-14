@@ -36,10 +36,7 @@ func (act Account) GetClient() http.Client {
 	return act.Client
 }
 
-func validateApplicationSid(sid string) bool {
-	match, _ := regexp.MatchString(`^AP[0-9a-z]{32}$`, string(sid))
-	return match
-}
+var validateApplicationSid = regexp.MustCompile(`^AP[0-9a-z]{32}$`).MatchString
 
 // Resource represents an Application resource
 //

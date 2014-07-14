@@ -23,12 +23,7 @@ type CallList struct {
 	Calls *[]Call `json:"calls"`
 }
 
-func validateCallSid(sid string) bool {
-	match, _ := regexp.MatchString(`^CA[0-9a-z]{32}$`, string(sid))
-	return match
-}
-
-func validateRecSid(sid string) bool {
-	match, _ := regexp.MatchString(`^RE[0-9a-z]{32}$`, string(sid))
-	return match
-}
+var (
+	validateCallSid      = regexp.MustCompile(`^CA[0-9a-z]{32}$`).MatchString
+	validateRecordingSid = regexp.MustCompile(`^RE[0-9a-z]{32}$`).MatchString
+)
