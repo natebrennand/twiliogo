@@ -54,14 +54,17 @@ func TestCallbackHandler(t *testing.T) {
 	req := makeTestCallbackReq()
 	cbChan := make(chan Callback)
 	handler := CallbackHandler(cbChan)
-	go func() {
-		cb := <-cbChan
-		if cb.AccountSid != testSmsCallbackFixture.AccountSid {
-			t.Error("CallbackHandler failed to parse the Callback properly")
-		}
-	}()
 
+	// send HTTP request to handler
 	handler(resp, req)
+	// HTTP request ends and is THEN sends the callback into the channel
+	cb := <-cbChan
+	if cb.AccountSid != testSmsCallbackFixture.AccountSid {
+		t.Error("CallbackHandler failed to parse the Callback properly")
+	}
+	if cb.AccountSid != testSmsCallbackFixture.AccountSid {
+		t.Error("CallbackHandler failed to parse the Callback properly")
+	}
 	if resp.Code != http.StatusOK {
 		t.Error("CallbackHandler failed to write successful status")
 	}
@@ -74,8 +77,11 @@ func TestCallbackHandlerOnFailure(t *testing.T) {
 	cbChan := make(chan Callback)
 	handler := CallbackHandler(cbChan)
 
+	// call handler with an httptest response recorder and an invalid request
 	handler(resp, req)
 	if resp.Code != 400 {
 		t.Errorf("CallbackHandler failed to write failure status, wrote %d", resp.Code)
+	} else if len(cbChan) > 1 {
+		t.Errorf("Value found in callback chennel after processing invalid request.")
 	}
 }
