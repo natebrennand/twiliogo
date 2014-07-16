@@ -12,9 +12,8 @@ import (
 )
 
 func makeCall(to string, act twiliogo.Account) string {
-	fmt.Println("Create conference?")
+	fmt.Println("Add participant?")
 	bufio.NewReader(os.Stdin).ReadString('\n')
-	fmt.Println("Here we gooo")
 	resp, err := act.Voice.Call(voice.Post{
 		From: "+16162882901",
 		To:   to,
@@ -23,8 +22,9 @@ func makeCall(to string, act twiliogo.Account) string {
 
 	if err != nil {
 		fmt.Println("Error making call: ", err.Error())
+	} else {
+		fmt.Println("Participant added")
 	}
-	fmt.Printf("%#v\n", resp)
 
 	return resp.Sid
 }
@@ -38,6 +38,8 @@ func muteParticipant(confSid string, callSid string, act twiliogo.Account) {
 	})
 	if err != nil {
 		fmt.Println("Error muting participant: ", err.Error())
+	} else {
+		fmt.Println("Participant muting")
 	}
 }
 
@@ -45,6 +47,8 @@ func kickParticipant(confSid string, callSid string, act twiliogo.Account) {
 	err := act.Conferences.Kick(confSid, callSid)
 	if err != nil {
 		fmt.Println("Error kicking participant: ", err.Error())
+	} else {
+		fmt.Println("Participant kicked")
 	}
 }
 
@@ -56,7 +60,7 @@ func main() {
 	bufio.NewReader(os.Stdin).ReadString('\n')
 	resp, err := act.Conferences.List(conference.ListFilter{
 		Status:      "in-progress",
-		DateCreated: &(common.JSONTime{Time: time.Date(2014, time.July, 11, 3, 45, 01, 0, &time.Location{})}),
+		DateCreated: &(common.JSONTime{time.Now()}), //Set to today's date
 	})
 	if err != nil {
 		fmt.Println("Error getting conferences: ", err.Error())
@@ -66,6 +70,15 @@ func main() {
 
 	for _, c := range *resp.Conferences {
 		confSid = c.Sid
+	}
+
+	part_resp, err := act.Conferences.Participant(confSid, sid2)
+
+	if err != nil {
+		fmt.Println("Error getting participant: ", err.Error())
+	} else {
+		fmt.Printf("%#v\n", part_resp)
+
 	}
 
 	muteParticipant(confSid, sid2, act)

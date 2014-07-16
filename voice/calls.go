@@ -105,23 +105,11 @@ func (p Post) Validate() error {
 	return nil
 }
 
-// Internal function for sending the post request to twilio.
-func (act Account) makeCall(dest string, msg Post, resp *Call) error {
-	// send post request to twilio
-	return common.SendPostRequest(dest, msg, act, resp)
-}
-
 // Sends a post request to Twilio to create a call.
 func (act Account) Call(p Post) (Call, error) {
 	var r Call
-	err := act.makeCall(fmt.Sprintf(postURL, act.AccountSid), p, &r)
+	err := common.SendPostRequest(fmt.Sprintf(postURL, act.AccountSid), p, act, &r)
 	return r, err
-}
-
-// Internal function for sending the post request to twilio.
-func (act Account) getCall(destURL string, resp *Call) error {
-	// send get request to twilio
-	return common.SendGetRequest(destURL, act, resp)
 }
 
 func (act Account) Get(sid string) (Call, error) {
@@ -129,8 +117,7 @@ func (act Account) Get(sid string) (Call, error) {
 	if !validateCallSid(sid) {
 		return m, errors.New("Invalid sid")
 	}
-
-	err := act.getCall(fmt.Sprintf(getURL, act.AccountSid, string(sid)), &m)
+	err := common.SendGetRequest(fmt.Sprintf(getURL, act.AccountSid, sid), act, &m)
 	return m, err
 }
 
@@ -144,7 +131,7 @@ type ListFilter struct {
 	PageSize      int
 }
 
-func (f ListFilter) GetQueryString() string {
+func (f ListFilter) getQueryString() string {
 	v := url.Values{}
 	if f.To != "" {
 		v.Set("To", f.To)
@@ -168,12 +155,8 @@ func (f ListFilter) GetQueryString() string {
 	return encoded
 }
 
-func (act Account) getList(destURL string, f ListFilter, resp *CallList) error {
-	return common.SendGetRequest(destURL+f.GetQueryString(), act, resp)
-}
-
 func (act Account) List(f ListFilter) (CallList, error) {
 	var callList CallList
-	err := act.getList(fmt.Sprintf(listURL, act.AccountSid), f, &callList)
+	err := common.SendGetRequest(fmt.Sprintf(listURL, act.AccountSid)+f.getQueryString(), act, &callList)
 	return callList, err
 }

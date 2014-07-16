@@ -33,9 +33,9 @@ type Participant struct {
 	DateCreated            common.JSONTime `json:"date_created"`
 	DateUpdated            common.JSONTime `json:"date_updated"`
 	AccountSid             string          `json:"account_sid"`
-	Muted                  *bool           `json:"muted"`
-	StartConferenceOnEnter *bool           `json:"start_conference_on_enter"`
-	EndConferenceOnExit    *bool           `json:"end_conference_on_exit"`
+	Muted                  bool            `json:"muted"`
+	StartConferenceOnEnter bool            `json:"start_conference_on_enter"`
+	EndConferenceOnExit    bool            `json:"end_conference_on_exit"`
 	URI                    string          `json:"uri"`
 }
 
