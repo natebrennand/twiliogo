@@ -13,8 +13,8 @@ import (
 var short = struct {
 	Get, List string
 }{
-	Get:  "https://api.twilio.com/2010-04-01/Accounts/%s/SMS/ShortCodes/%s.json", // takes an AccountSid & ShortcodeSid
-	List: "https://api.twilio.com/2010-04-01/Accounts/%s/SMS/ShortCodes.json",    // takes an AccountSid
+	Get:  "/2010-04-01/Accounts/%s/SMS/ShortCodes/%s.json", // takes an AccountSid & ShortcodeSid
+	List: "/2010-04-01/Accounts/%s/SMS/ShortCodes.json",    // takes an AccountSid
 }
 
 // Account wraps the act Account struct to embed the AccountSid & Token.
@@ -24,10 +24,10 @@ type Account struct {
 
 var validateShortcodeSid = regexp.MustCompile(`^SC[0-9a-z]{32}$`).MatchString
 
-// Resource represents a short code message resource.
+// Message represents a short code message resource.
 //
 // https://www.twilio.com/docs/api/rest/short-codes
-type Resource struct {
+type Message struct {
 	Sid            string          `json:"sid"`
 	DateCreated    common.JSONTime `json:"date_created"`
 	DateUpdated    common.JSONTime `json:"date_updated"`
@@ -42,8 +42,8 @@ type Resource struct {
 }
 
 // Get returns a shortcode message resource given a sid.
-func (act Account) Get(sid string) (Resource, error) {
-	var r Resource
+func (act Account) Get(sid string) (Message, error) {
+	var r Message
 	if !validateShortcodeSid(sid) {
 		return r, errors.New("Invalid sid")
 	}
@@ -73,15 +73,26 @@ func (f ListFilter) getQueryString() string {
 	return encoded
 }
 
-// ResourceList contains a list of all shortcode messages that matched the given filtered query.
-type ResourceList struct {
+// MessageList contains a list of all shortcode messages that matched the given filtered query.
+type MessageList struct {
 	common.ListResponseCore
-	ShortCodes *[]Resource
+	ShortCodes *[]Message
+	act        *Account
+}
+
+// Next sets the MessageList to the next page of the list resource, returnss an error in the
+// case that there are no more pages left.
+func (ml *MessageList) Next() error {
+	if ml.Page == ml.NumPages-1 {
+		return errors.New("No more new pages")
+	}
+	return common.SendGetRequest(ml.NextPageURI, *ml.act, ml)
 }
 
 // List returns a list of all shortcode messages that matched the given filter
-func (act Account) List(f ListFilter) (ResourceList, error) {
-	var r ResourceList
+func (act Account) List(f ListFilter) (MessageList, error) {
+	var r MessageList
 	err := common.SendGetRequest(fmt.Sprintf(short.List+f.getQueryString(), act.AccountSid), act, &r)
+	r.act = &act
 	return r, err
 }
