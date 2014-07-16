@@ -12,6 +12,7 @@ func decodeError(err error, body []byte) error {
 	return fmt.Errorf("Error while decoding json => %s, recieved msg => %s", err.Error(), string(body))
 }
 
+// Error represents an error returned by the Twilio API
 type Error struct {
 	Code     int    `json:"code"`
 	Message  string `json:"message"`
@@ -19,10 +20,12 @@ type Error struct {
 	Status   int    `json:"status"`
 }
 
+// Error generates a string representation of the Error.
 func (e Error) Error() string {
 	return fmt.Sprintf("Twilio Error %d => %s, more info @ %s", e.Code, e.Message, e.MoreInfo)
 }
 
+// NewTwilioError is the constructer for a Twilio error given an erroneous http response.
 func NewTwilioError(resp http.Response) error {
 	var twilioErr Error
 	var buf bytes.Buffer

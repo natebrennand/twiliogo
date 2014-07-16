@@ -5,13 +5,16 @@ import (
 	"time"
 )
 
+// These time formats are used throughout the Twilio API.
 const (
 	TwilioTimeFormat = time.RFC1123Z
 	GMTTimeLayout    = "2006-01-02" // YYYY-MM-DD
 )
 
+// JSONFloat is a wrapper around float for json encoding
 type JSONFloat float64
 
+// UnmarshalJSON unmarshals json JSONFloat objects
 func (j *JSONFloat) UnmarshalJSON(b []byte) error {
 	t, err := strconv.ParseFloat(string(b), 64)
 	if err != nil {
@@ -21,10 +24,13 @@ func (j *JSONFloat) UnmarshalJSON(b []byte) error {
 	return err
 }
 
+// JSONTime is a wrapper for parsing time into a time.Time object at the point of
+// unmarshaling
 type JSONTime struct {
 	time.Time
 }
 
+// UnmarshalJSON unmarshals the json string into a time.Time object.
 func (j *JSONTime) UnmarshalJSON(b []byte) error {
 	s := string(b)
 	if s == "null" {
@@ -36,6 +42,7 @@ func (j *JSONTime) UnmarshalJSON(b []byte) error {
 	return err
 }
 
+// ResponseCore is a set of attributes found in many Twilio resource responses.
 type ResponseCore struct {
 	AccountSid   string   `json:"account_sid"`
 	APIVersion   string   `json:"api_version"`
@@ -51,6 +58,7 @@ type ResponseCore struct {
 	DateUpdated  JSONTime `json:"date_updated"`
 }
 
+// ListResponseCore is a set of attributes found all Twilio list resources.
 type ListResponseCore struct {
 	Start           int    `json:"start"`
 	Total           int    `json:"total"`
