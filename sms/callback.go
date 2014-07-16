@@ -67,6 +67,9 @@ func CallbackHandler(callbackChan chan Callback) http.HandlerFunc {
 			return
 		}
 		resp.WriteHeader(http.StatusOK)
-		callbackChan <- cb
+		// start seperate goroutine to allow http request to return.
+		go func() {
+			callbackChan <- cb
+		}()
 	})
 }
