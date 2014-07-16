@@ -47,9 +47,9 @@ func (tcb *TriggerCallback) Parse(req *http.Request) error {
 		CurrentUsageValue: req.PostFormValue("CurrentUsageValue"),
 		UsageRecordURI:    req.PostFormValue("UsageRecordURI"),
 		URI:               req.PostFormValue("URI"),
-		DateFired:         common.JSONTime{dateFired},
-		DateCreated:       common.JSONTime{dateCreated},
-		DateUpdated:       common.JSONTime{dateUpdated},
+		DateFired:         common.JSONTime{Time: dateFired},
+		DateCreated:       common.JSONTime{Time: dateCreated},
+		DateUpdated:       common.JSONTime{Time: dateUpdated},
 	}
 	return nil
 }

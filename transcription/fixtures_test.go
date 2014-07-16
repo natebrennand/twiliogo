@@ -21,8 +21,8 @@ var testResponseFixtureString = `{
 
 var testResponseFixture = Transcription{
 	Sid:               "TRc8009ae243230394bc84437e1a9f4650",
-	DateCreated:       common.JSONTime{time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
-	DateUpdated:       common.JSONTime{time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
+	DateCreated:       common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
+	DateUpdated:       common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
 	AccountSid:        "AC5116d5d4df9f61ceae2f0732e1ea9f1b",
 	Duration:          "45",
 	URI:               "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/Calls/CAd88cd5b804dbcfb0ae6e0ccbbca67b83.json",
@@ -50,8 +50,8 @@ var testListFixture = TranscriptionList{
 	Transcriptions: &[]Transcription{
 		Transcription{
 			Sid:               "TRc8009ae243230394bc84437e1a9f4650",
-			DateCreated:       common.JSONTime{time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
-			DateUpdated:       common.JSONTime{time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
+			DateCreated:       common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
+			DateUpdated:       common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
 			AccountSid:        "AC5116d5d4df9f61ceae2f0732e1ea9f1b",
 			Duration:          "45",
 			URI:               "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/Calls/CAd88cd5b804dbcfb0ae6e0ccbbca67b83.json",

@@ -147,7 +147,7 @@ func (act Account) Modify(sid string, m Modification) (Resource, error) {
 	if m.Validate() != nil {
 		return r, m.Validate()
 	}
-	err := common.SendPostRequest(fmt.Sprintf(updateURL, act.AccountSid), m, act, &r)
+	err := common.SendPostRequest(fmt.Sprintf(updateURL, act.AccountSid, sid), m, act, &r)
 	return r, err
 }
 
