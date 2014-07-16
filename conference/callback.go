@@ -26,6 +26,8 @@ func CallbackHandler(callbackChan chan Callback) http.HandlerFunc {
 			return
 		}
 		resp.WriteHeader(http.StatusOK)
-		callbackChan <- cb
+		go func() {
+			callbackChan <- cb
+		}()
 	})
 }
