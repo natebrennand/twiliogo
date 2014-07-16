@@ -131,7 +131,7 @@ type ListFilter struct {
 	PageSize      int
 }
 
-func (f ListFilter) GetQueryString() string {
+func (f ListFilter) getQueryString() string {
 	v := url.Values{}
 	if f.To != "" {
 		v.Set("To", f.To)
@@ -157,6 +157,6 @@ func (f ListFilter) GetQueryString() string {
 
 func (act Account) List(f ListFilter) (CallList, error) {
 	var callList CallList
-	err := common.SendGetRequest(fmt.Sprintf(listURL, act.AccountSid)+f.GetQueryString(), act, &callList)
+	err := common.SendGetRequest(fmt.Sprintf(listURL, act.AccountSid)+f.getQueryString(), act, &callList)
 	return callList, err
 }
