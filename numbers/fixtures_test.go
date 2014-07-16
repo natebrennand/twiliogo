@@ -10,7 +10,7 @@ var testResponseFixture = Number{
 	DateCreated: common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
 	DateUpdated: common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
 	PhoneNumber: "+15105647903",
-	Capabilities: Capabilities{
+	Capabilities: capabilities{
 		true,
 		true,
 		false,
@@ -76,7 +76,7 @@ var testListFixture = NumberList{
 			DateCreated: common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
 			DateUpdated: common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
 			PhoneNumber: "+15105647903",
-			Capabilities: Capabilities{
+			Capabilities: capabilities{
 				Voice: true,
 				SMS:   true,
 				MMS:   false,
