@@ -1,6 +1,7 @@
 package twiliogo
 
 import (
+	"fmt"
 	"github.com/natebrennand/twiliogo/act"
 	"github.com/natebrennand/twiliogo/applications"
 	"github.com/natebrennand/twiliogo/conference"
@@ -11,8 +12,6 @@ import (
 	"github.com/natebrennand/twiliogo/sms/shortcodes"
 	"github.com/natebrennand/twiliogo/transcription"
 	"github.com/natebrennand/twiliogo/voice"
-
-	"fmt"
 	"net/http"
 	"os"
 	"regexp"

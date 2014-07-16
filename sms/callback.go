@@ -1,9 +1,8 @@
 package sms
 
 import (
-	"github.com/natebrennand/twiliogo/common"
-
 	"fmt"
+	"github.com/natebrennand/twiliogo/common"
 	"net/http"
 	"strconv"
 )

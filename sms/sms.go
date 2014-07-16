@@ -1,11 +1,10 @@
 package sms
 
 import (
-	"github.com/natebrennand/twiliogo/act"
-	"github.com/natebrennand/twiliogo/common"
-
 	"errors"
 	"fmt"
+	"github.com/natebrennand/twiliogo/act"
+	"github.com/natebrennand/twiliogo/common"
 	"io"
 	"net/url"
 	"regexp"
