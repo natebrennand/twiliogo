@@ -12,7 +12,7 @@ type Call struct {
 	PhoneNumberSid string
 	StartTime      common.JSONTime `json:"start_time"`
 	EndTime        common.JSONTime `json:"end_time"`
-	Duration       string          `json:"duration"`
+	Duration       int64           `json:"duration,string"`
 	AnsweredBy     string          `json:"answered_by"`
 	ForwardedFrom  string          `json:"fowarded_from"`
 	CallerName     string          `json:"caller_name"`
