@@ -1,10 +1,6 @@
 package voice
 
 import (
-	"fmt"
-	"net/http"
-	"net/http/httptest"
-	"strings"
 	"testing"
 )
 
@@ -51,20 +47,4 @@ func TestValidatePostFailure(t *testing.T) {
 	if nil == p.Validate() {
 		t.Error("Validation of invalid voice post failed with bad SendDigits.")
 	}
-}
-
-func startMockHTTPServer(requests *int) *httptest.Server {
-	// start a server to recieve post request
-	testServer := httptest.NewServer(http.HandlerFunc(func(resp http.ResponseWriter, r *http.Request) {
-		*requests++
-		if strings.Contains(r.URL.Path, validEndpoint) {
-			resp.WriteHeader(201)
-			fmt.Fprint(resp, testResponseFixtureString)
-		} else if strings.Contains(r.URL.Path, errorEndpoint) {
-			resp.WriteHeader(400)
-		} else if strings.Contains(r.URL.Path, badJSONEndpoint) {
-			fmt.Fprint(resp, testResponseFixtureString[0:20])
-		}
-	}))
-	return testServer
 }
