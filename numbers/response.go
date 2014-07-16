@@ -6,9 +6,9 @@ import (
 )
 
 type capabilities struct {
-	Voice bool `json:"voice,string"`
-	SMS   bool `json:"sms,string"`
-	MMS   bool `json:"mms,string"`
+	Voice bool `json:"voice"`
+	SMS   bool `json:"sms"`
+	MMS   bool `json:"mms"`
 }
 
 type Number struct {
