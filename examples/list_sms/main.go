@@ -8,14 +8,26 @@ import (
 
 func main() {
 	act := twiliogo.NewAccountFromEnv()
-	resp, err := act.Sms.List(sms.Filter{
-		From: "+{ Your phone # }",
-	})
+	messageList, err := act.Sms.List(sms.Filter{})
 	if err != nil {
-		fmt.Println("Error sending sms: ", err.Error())
+		fmt.Println("Error retrieving sms: ", err.Error())
+		return
 	}
-	fmt.Printf("%#v\n", resp)
-	for _, m := range *resp.Messages {
-		fmt.Printf("%#v\n", m)
+	fmt.Printf("%#v\n", messageList)
+	for _, m := range *messageList.Messages {
+		fmt.Println(m.Sid)
+	}
+
+	for {
+		// keep trying to get the next page of results
+		err = messageList.Next()
+		if err != nil {
+			fmt.Println("Error retrieving sms: ", err.Error())
+			return
+		}
+		fmt.Printf("%#v\n", messageList)
+		for _, m := range *messageList.Messages {
+			fmt.Println(m.Sid)
+		}
 	}
 }

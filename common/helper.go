@@ -8,6 +8,8 @@ import (
 	"net/http"
 )
 
+var baseURL = "https://api.twilio.com"
+
 type TwilioAccount interface {
 	GetSid() string
 	GetToken() string
@@ -45,7 +47,7 @@ func SendPostRequest(url string, msg TwilioPost, t TwilioAccount, resp TwilioRes
 		return fmt.Errorf("Error validating post => %s.\n", msg.Validate().Error())
 	}
 
-	req, err := http.NewRequest("POST", url, msg.GetReader())
+	req, err := http.NewRequest("POST", baseURL+url, msg.GetReader())
 	req.SetBasicAuth(t.GetSid(), t.GetToken())
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
@@ -63,7 +65,7 @@ func SendPostRequest(url string, msg TwilioPost, t TwilioAccount, resp TwilioRes
 }
 
 func SendGetRequest(url string, t TwilioAccount, resp TwilioResponse) error {
-	req, err := http.NewRequest("GET", url, nil)
+	req, err := http.NewRequest("GET", baseURL+url, nil)
 	req.SetBasicAuth(t.GetSid(), t.GetToken())
 	req.Header.Add("Accept", "application/json")
 
@@ -80,7 +82,7 @@ func SendGetRequest(url string, t TwilioAccount, resp TwilioResponse) error {
 }
 
 func SendDeleteRequest(url string, t TwilioAccount) error {
-	req, err := http.NewRequest("DELETE", url, nil)
+	req, err := http.NewRequest("DELETE", baseURL+url, nil)
 	req.SetBasicAuth(t.GetSid(), t.GetToken())
 	req.Header.Add("Accept", "application/json")
 

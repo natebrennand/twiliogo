@@ -17,6 +17,7 @@ const (
 
 func startMockHTTPServer(requests *int) *httptest.Server {
 	// start a server to recieve post request
+	baseURL = "" // reset the base url of all queries
 	testServer := httptest.NewServer(http.HandlerFunc(func(resp http.ResponseWriter, r *http.Request) {
 		*requests++
 		if strings.Contains(r.URL.Path, validEndpoint200) {
