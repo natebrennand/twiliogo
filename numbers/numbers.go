@@ -154,7 +154,6 @@ func (n NumberSelector) Validate() error {
 }
 
 func (p Selector) Validate() error {
-	// All params are optional
 	if p.PhoneNumber == "" {
 		return errors.New("Must set phone number to purchase")
 	}
@@ -173,7 +172,7 @@ func (act Account) Get(numberSid string) (Number, error) {
 }
 
 // Updates properties of a phone number via a post
-func (act Account) Post(numberSid string, update Post) (Number, error) {
+func (act Account) Update(numberSid string, update Post) (Number, error) {
 	var p Number
 	if !validateNumberSid(numberSid) {
 		return p, errors.New("Invalid sid")
@@ -185,16 +184,6 @@ func (act Account) Post(numberSid string, update Post) (Number, error) {
 func (act Account) PurchaseNumber(n NumberSelector) (Number, error) {
 	var p Number
 	err := common.SendPostRequest(fmt.Sprintf(listURL, act.AccountSid), n, act, &p)
-	return p, err
-}
-
-// Updates properties of a phone number via a put
-func (act Account) Put(numberSid string, update Post) (Number, error) {
-	var p Number
-	if !validateNumberSid(numberSid) {
-		return p, errors.New("Invalid sid")
-	}
-	err := common.SendPutRequest(fmt.Sprintf(getURL, act.AccountSid, numberSid), update, act, &p)
 	return p, err
 }
 
@@ -234,7 +223,6 @@ func (act Account) List(f ListFilter) (NumberList, error) {
 }
 
 // Grabs a list of local phone numbers for a given account with optional filters - no toll free
-// Not sure if can filter
 func (act Account) ListLocal(f ListFilter) (NumberList, error) {
 	var nl NumberList
 	err := common.SendGetRequest(fmt.Sprintf(localURL, act.AccountSid)+f.getQueryString(), act, &nl)
@@ -249,7 +237,6 @@ func (act Account) PurchaseLocal(n Selector) (Number, error) {
 }
 
 // Grabs a list of toll free phone numbers for a given account with optional filters - no toll free
-// Not sure if can filter
 func (act Account) ListTollFree(f ListFilter) (NumberList, error) {
 	var nl NumberList
 	err := common.SendGetRequest(fmt.Sprintf(tollFreeURL, act.AccountSid)+f.getQueryString(), act, &nl)
@@ -264,7 +251,6 @@ func (act Account) PurchaseTollFree(n Selector) (Number, error) {
 }
 
 // Grabs a list of mobile phone numbers for a given account with optional filters - no toll free
-// Not sure if can filter
 func (act Account) ListMobile(f ListFilter) (NumberList, error) {
 	var nl NumberList
 	err := common.SendGetRequest(fmt.Sprintf(mobileURL, act.AccountSid)+f.getQueryString(), act, &nl)

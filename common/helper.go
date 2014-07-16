@@ -62,28 +62,6 @@ func SendPostRequest(url string, msg TwilioPost, t TwilioAccount, resp TwilioRes
 	return buildResp(&resp, httpResp)
 }
 
-func SendPutRequest(url string, msg TwilioPost, t TwilioAccount, resp TwilioResponse) error {
-	if nil != msg.Validate() {
-		return fmt.Errorf("Error validating put => %s.\n", msg.Validate().Error())
-	}
-
-	req, err := http.NewRequest("PUT", url, msg.GetReader())
-	req.SetBasicAuth(t.GetSid(), t.GetToken())
-	req.Header.Add("Accept", "application/json")
-	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-
-	client := t.GetClient()
-	httpResp, err := client.Do(req)
-	if err != nil {
-		return fmt.Errorf("Error sending req => %s", err.Error())
-	}
-	if !successfulResponse(httpResp.StatusCode) {
-		return NewTwilioError(*httpResp)
-	}
-
-	return buildResp(&resp, httpResp)
-}
-
 func SendGetRequest(url string, t TwilioAccount, resp TwilioResponse) error {
 	req, err := http.NewRequest("GET", url, nil)
 	req.SetBasicAuth(t.GetSid(), t.GetToken())
