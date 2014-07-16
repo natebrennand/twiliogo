@@ -49,8 +49,7 @@ func (act Account) Participant(confSid string, callSid string) (Participant, err
 	} else if !validateCallSid(callSid) {
 		return p, errors.New("Invalid call sid")
 	}
-
-	err := common.SendGetRequest(fmt.Sprintf(getURL, act.AccountSid, confSid, callSid), act, &p)
+	err := common.SendGetRequest(fmt.Sprintf(participantURL, act.AccountSid, confSid, callSid), act, &p)
 	return p, err
 }
 
@@ -62,7 +61,7 @@ func (act Account) SetMute(confSid string, callSid string, a ParticipantAttr) (P
 	} else if !validateCallSid(callSid) {
 		return p, errors.New("Invalid call sid")
 	}
-	err := common.SendPostRequest(fmt.Sprintf(modifyURL, act.AccountSid, confSid, callSid), a, act, &p)
+	err := common.SendPostRequest(fmt.Sprintf(participantURL, act.AccountSid, confSid, callSid), a, act, &p)
 	return p, err
 }
 
@@ -73,7 +72,7 @@ func (act Account) Kick(confSid string, callSid string) error {
 	} else if !validateCallSid(callSid) {
 		return errors.New("Invalid call sid for participant")
 	}
-	return common.SendDeleteRequest(fmt.Sprintf(modifyURL, act.AccountSid, confSid, callSid), act)
+	return common.SendDeleteRequest(fmt.Sprintf(participantURL, act.AccountSid, confSid, callSid), act)
 }
 
 // Get list of participants in conference with confSid
