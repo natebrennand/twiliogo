@@ -23,7 +23,7 @@ var testResponseFixture = Recording{
 	DateUpdated: common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
 	AccountSid:  "AC5116d5d4df9f61ceae2f0732e1ea9f1b",
 	CallSid:     "CAd88cd5b804dbcfb0ae6e0ccbbca67b83",
-	Duration:    new(int64),
+	Duration:    0,
 	APIVersion:  "2010-04-01",
 	URI:         "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/Calls/CAd88cd5b804dbcfb0ae6e0ccbbca67b83.json",
 }
@@ -49,7 +49,7 @@ var testListFixture = RecordingList{
 			DateUpdated: common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
 			AccountSid:  "AC5116d5d4df9f61ceae2f0732e1ea9f1b",
 			CallSid:     "CAd88cd5b804dbcfb0ae6e0ccbbca67b83",
-			Duration:    new(int64),
+			Duration:    0,
 			APIVersion:  "2010-04-01",
 			URI:         "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/Calls/CAd88cd5b804dbcfb0ae6e0ccbbca67b83.json",
 		},

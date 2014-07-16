@@ -12,7 +12,7 @@ type Transcription struct {
 	AccountSid        string           `json:"account_sid"`
 	Status            string           `json:"status"`
 	RecordingSid      string           `json:"recording_sid"`
-	Duration          *int64           `json:"duration,string"`
+	Duration          int64            `json:"duration,string"`
 	TranscriptionText string           `json:"transcription_text"`
 	Price             common.JSONFloat `json:"price"`
 	PriceUnit         string           `json:"price_unit"`
