@@ -35,4 +35,4 @@ type NumberList struct {
 	IncomingPhoneNumbers *[]Number `json:"incoming_phone_numbers"`
 }
 
-var validateNumberSid = regexp.MustCompile(`^PN[0-9a-z]{32}$`).MatchString(sid)
+var validateNumberSid = regexp.MustCompile(`^PN[0-9a-z]{32}$`).MatchString

@@ -36,7 +36,7 @@ type Core struct {
 	VoiceFallbackMethod  string
 	StatusCallback       string
 	StatusCallbackMethod string
-	VoiceCallerIdLookup  *bool
+	VoiceCallerIdLookup  bool
 	VoiceApplicationSid  string
 	SmsURL               string
 	SmsMethod            string
@@ -87,9 +87,9 @@ func setCoreValues(p Core) url.Values {
 	if p.StatusCallbackMethod != "" {
 		vals.Set("StatusCallbackMethod", p.StatusCallbackMethod)
 	}
-	if p.VoiceCallerIdLookup != nil {
-		vals.Set("VoiceCallerIdLookup", strconv.FormatBool(*p.VoiceCallerIdLookup))
-	}
+
+	vals.Set("VoiceCallerIdLookup", strconv.FormatBool(p.VoiceCallerIdLookup))
+
 	if p.VoiceApplicationSid != "" {
 		vals.Set("ApplicationSid", p.VoiceApplicationSid)
 	}

@@ -50,7 +50,6 @@ func (act Account) Participant(confSid string, callSid string) (Participant, err
 		return p, errors.New("Invalid call sid")
 	}
 	err := common.SendGetRequest(fmt.Sprintf(participantURL, act.AccountSid, confSid, callSid), act, &p)
-	fmt.Println("p: ", p.CallSid)
 	return p, err
 }
 
