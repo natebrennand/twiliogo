@@ -47,11 +47,6 @@ func (f ListFilter) GetQueryString() string {
 	return encoded
 }
 
-func (act Account) getRecording(destURL string, resp *Recording) error {
-	// send get request to twilio
-	return common.SendGetRequest(destURL, act, resp)
-}
-
 // Returns data about recording as json
 // Can get .mp3 or .wav of recording from the uri provided in Recording
 func (act Account) Get(recSid string) (Recording, error) {
@@ -59,24 +54,14 @@ func (act Account) Get(recSid string) (Recording, error) {
 	if !validateRecordingSid(recSid) {
 		return r, errors.New("Invalid sid")
 	}
-
-	err := act.getRecording(fmt.Sprintf(getURL, act.AccountSid, recSid), &r)
+	err := common.SendGetRequest(fmt.Sprintf(getURL, act.AccountSid, recSid), act, &r)
 	return r, err
-}
-
-func (act Account) getRecordingList(destURL string, f ListFilter, resp *RecordingList) error {
-	return common.SendGetRequest(destURL+f.GetQueryString(), act, resp)
 }
 
 func (act Account) List(f ListFilter) (RecordingList, error) {
 	var rl RecordingList
-	err := act.getRecordingList(fmt.Sprintf(listURL, act.AccountSid), f, &rl)
+	err := common.SendGetRequest(fmt.Sprintf(listURL, act.AccountSid)+f.GetQueryString(), act, &rl)
 	return rl, err
-}
-
-func (act Account) deleteRecording(destURL string) error {
-	// send get request to twilio
-	return common.SendDeleteRequest(destURL, act)
 }
 
 // Returns data about recording as json
@@ -85,6 +70,5 @@ func (act Account) Delete(recSid string) error {
 	if !validateRecordingSid(recSid) {
 		return errors.New("Invalid sid")
 	}
-
-	return act.deleteRecording(fmt.Sprintf(getURL, act.AccountSid, recSid))
+	return common.SendDeleteRequest(fmt.Sprintf(getURL, act.AccountSid, recSid), act)
 }

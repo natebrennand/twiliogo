@@ -7,8 +7,6 @@ import (
 	"strconv"
 )
 
-// Represents the callback sent everytime the status of the call is updated.
-//
 // https://www.twilio.com/docs/api/rest/making-calls#status-callback-parameter
 type Callback struct {
 	common.StandardRequest
