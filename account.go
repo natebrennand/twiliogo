@@ -2,8 +2,8 @@ package twiliogo
 
 import (
 	"fmt"
-	"github.com/natebrennand/twiliogo/act"
 	"github.com/natebrennand/twiliogo/applications"
+	"github.com/natebrennand/twiliogo/common"
 	"github.com/natebrennand/twiliogo/conference"
 	"github.com/natebrennand/twiliogo/notifications"
 	"github.com/natebrennand/twiliogo/numbers"
@@ -44,7 +44,7 @@ func NewAccount(sid, token string) Account {
 		panic("Invalid Account Sid")
 	}
 
-	a := act.Account{
+	a := common.Account{
 		AccountSid: sid,
 		Token:      token,
 		Client:     http.Client{},

@@ -1,11 +1,9 @@
 package shortcodes
 
 import (
-	"github.com/natebrennand/twiliogo/act"
-	"github.com/natebrennand/twiliogo/common"
-
 	"errors"
 	"fmt"
+	"github.com/natebrennand/twiliogo/common"
 	"net/url"
 	"regexp"
 )
@@ -17,9 +15,9 @@ var short = struct {
 	List: "/2010-04-01/Accounts/%s/SMS/ShortCodes.json",    // takes an AccountSid
 }
 
-// Account wraps the act Account struct to embed the AccountSid & Token.
+// Account wraps the common Account struct to embed the AccountSid & Token.
 type Account struct {
-	act.Account
+	common.Account
 }
 
 var validateShortcodeSid = regexp.MustCompile(`^SC[0-9a-z]{32}$`).MatchString

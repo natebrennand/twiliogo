@@ -3,7 +3,6 @@ package numbers
 import (
 	"errors"
 	"fmt"
-	"github.com/natebrennand/twiliogo/act"
 	"github.com/natebrennand/twiliogo/common"
 	"net/url"
 	"regexp"
@@ -19,9 +18,9 @@ var numbers = struct {
 	all:      "/2010-04-01/Accounts/%s/AvailablePhoneNumbers.json",             // takes an AccountSid
 }
 
-// Account wraps the act Account struct to embed the AccountSid & Token.
+// Account wraps the common Account struct to embed the AccountSid & Token.
 type Account struct {
-	act.Account
+	common.Account
 }
 
 var validateIsoCountry = regexp.MustCompile(`^(AU|AT|BH|BE|BR|BG|CA|CY|CZ|DK|DO|SV|EE|FI|FR|GR|HK|IE|IL|IT|JP|LV|LT|LU|MT|MX|NL|NO|NZ|PE|PL|PT|PR|RO|SK|ZA|ES|SE|CH|GB|US)$`).MatchString

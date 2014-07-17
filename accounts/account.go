@@ -3,7 +3,6 @@ package account
 import (
 	"errors"
 	"fmt"
-	"github.com/natebrennand/twiliogo/act"
 	"github.com/natebrennand/twiliogo/common"
 	"io"
 	"net/url"
@@ -21,9 +20,9 @@ var account = struct {
 
 var validateAccountSid = regexp.MustCompile(`^AC[0-9a-z]{32}$`).MatchString
 
-// Account wraps the act Account struct to embed the AccountSid & Token.
+// Account wraps the common Account struct to embed the AccountSid & Token.
 type Account struct {
-	act.Account
+	common.Account
 }
 
 // Resource represents an Account resource

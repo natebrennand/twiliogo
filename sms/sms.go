@@ -3,7 +3,6 @@ package sms
 import (
 	"errors"
 	"fmt"
-	"github.com/natebrennand/twiliogo/act"
 	"github.com/natebrennand/twiliogo/common"
 	"io"
 	"net/url"
@@ -12,9 +11,9 @@ import (
 	"time"
 )
 
-// Account wraps the act Account struct to embed the AccountSid & Token.
+// Account wraps the common Account struct to embed the AccountSid & Token.
 type Account struct {
-	act.Account
+	common.Account
 }
 
 // holds url values used in queries
