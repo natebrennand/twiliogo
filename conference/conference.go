@@ -10,8 +10,8 @@ import (
 var conference = struct {
 	Get, List string
 }{
-	Get:  "https://api.twilio.com/2010-04-01/Accounts/%s/Conferences/%s.json", // takes account sid, conference sid
-	List: "https://api.twilio.com/2010-04-01/Accounts/%s/Conferences.json",    // takes account sid
+	Get:  "/2010-04-01/Accounts/%s/Conferences/%s.json", // takes account sid, conference sid
+	List: "/2010-04-01/Accounts/%s/Conferences.json",    // takes account sid
 }
 
 // Account wraps the common Account struct to embed the AccountSid & Token.

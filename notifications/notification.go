@@ -14,9 +14,9 @@ import (
 var notifications = struct {
 	Get, Delete, List string
 }{
-	Get:    "https://api.twilio.com/2010-04-01/Accounts/%s/Notifications/%s.json", // takes an AccountSid & NotifcationSid
-	Delete: "https://api.twilio.com/2010-04-01/Accounts/%s/Notifications/%s.json", // takes an AccountSid & NotifcationSid
-	List:   "https://api.twilio.com/2010-04-01/Accounts/%s/Notifications.json",    // takes an AccountSid
+	Get:    "/2010-04-01/Accounts/%s/Notifications/%s.json", // takes an AccountSid & NotifcationSid
+	Delete: "/2010-04-01/Accounts/%s/Notifications/%s.json", // takes an AccountSid & NotifcationSid
+	List:   "/2010-04-01/Accounts/%s/Notifications.json",    // takes an AccountSid
 }
 
 // Account wraps the common Account struct to embed the AccountSid & Token.
