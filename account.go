@@ -24,6 +24,7 @@ const (
 
 var validateAccountSid = regexp.MustCompile("^AC[a-z0-9]{32}$").MatchString
 
+// Account is a catch-all account object that holds references to all Twilio resources.
 type Account struct {
 	AccountSid string
 	Token      string
@@ -39,6 +40,7 @@ type Account struct {
 	Numbers        numbers.Account
 }
 
+// NewAccount builds an Account resource from a sid & token.
 func NewAccount(sid, token string) Account {
 	if !validateAccountSid(sid) {
 		panic("Invalid Account Sid")
@@ -75,12 +77,8 @@ func NewAccount(sid, token string) Account {
 			Token:      token,
 			Client:     http.Client{},
 		},
-		Conferences: conference.Account{Account: a},
-		Notifications: notifications.Account{
-			AccountSid: sid,
-			Token:      token,
-			Client:     http.Client{},
-		},
+		Conferences:   conference.Account{Account: a},
+		Notifications: notifications.Account{Account: a},
 		Numbers: numbers.Account{
 			AccountSid: sid,
 			Token:      token,
@@ -89,6 +87,7 @@ func NewAccount(sid, token string) Account {
 	}
 }
 
+// NewAccountFromEnv builds an Account resource from environment variables.
 func NewAccountFromEnv() Account {
 	sid := os.Getenv(twilioAccount)
 	token := os.Getenv(twilioToken)
