@@ -5,12 +5,18 @@ import (
 	"regexp"
 )
 
+type capabilities struct {
+	Voice bool `json:"voice"`
+	SMS   bool `json:"sms"`
+	MMS   bool `json:"mms"`
+}
+
 type Number struct {
 	Sid                  string          `json:"sid"`
 	DateCreated          common.JSONTime `json:"date_created"`
 	DateUpdated          common.JSONTime `json:"date_updated"`
 	PhoneNumber          string          `json:"phone_number"`
-	Capabilities         []string        `json:"capabilities"`
+	Capabilities         capabilities    `json:"capabilities"`
 	URI                  string          `json:"uri"`
 	FriendlyName         string          `json:"friendly_name"`
 	APIVersion           string          `json:"api_version"`
