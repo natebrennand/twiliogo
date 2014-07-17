@@ -21,7 +21,7 @@ func TestConferenceBuild(t *testing.T) {
 }
 
 func TestConferenceListBuild(t *testing.T) {
-	var cl ConferenceList
+	var cl List
 	err := json.Unmarshal([]byte(testFixtureListString), &cl)
 	if err != nil {
 		t.Error("Building Transcription from json string failed with error => %s", err.Error())

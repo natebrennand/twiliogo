@@ -37,22 +37,6 @@ type Message struct {
 	Price       common.JSONFloat `json:"price"`
 }
 
-// MessageList represents an list of a SMS resources
-type MessageList struct {
-	common.ListResponseCore
-	Messages *[]Message `json:"messages"`
-	act      *Account
-}
-
-// Next sets the MessageList to the next page of the list resource, returns an error in the
-// case that there are no more pages left.
-func (ml *MessageList) Next() error {
-	if ml.Page == ml.NumPages-1 {
-		return errors.New("No more new pages")
-	}
-	return common.SendGetRequest(ml.NextPageURI, *ml.act, ml)
-}
-
 // Get a message given that message's sid.
 func (act Account) Get(sid string) (Message, error) {
 	var m Message
@@ -119,6 +103,13 @@ func (act Account) Send(p Post) (Message, error) {
 	return m, err
 }
 
+// MessageList represents an list of a SMS resources
+type MessageList struct {
+	common.ListResponseCore
+	Messages *[]Message `json:"messages"`
+	act      *Account
+}
+
 // Filter is used to filter list SMS results
 type Filter struct {
 	To       string
@@ -150,4 +141,13 @@ func (act Account) List(f Filter) (MessageList, error) {
 	err := common.SendGetRequest(fmt.Sprintf(sms.List, act.AccountSid)+f.getQueryString(), act, &ml)
 	ml.act = &act // make a copy of the act for use in further paging
 	return ml, err
+}
+
+// Next sets the MessageList to the next page of the list resource, returns an error in the
+// case that there are no more pages left.
+func (ml *MessageList) Next() error {
+	if ml.Page == ml.NumPages-1 {
+		return errors.New("No more new pages")
+	}
+	return common.SendGetRequest(ml.NextPageURI, *ml.act, ml)
 }

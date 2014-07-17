@@ -61,7 +61,7 @@ var testFixtureListString = ` {
     ]
 }`
 
-var testFixtureList = ConferenceList{
+var testFixtureList = List{
 	ListResponseCore: common.ListResponseCore{
 		Start:           0,
 		Total:           261,
