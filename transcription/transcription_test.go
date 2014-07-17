@@ -24,7 +24,7 @@ func TestTranscriptionListBuild(t *testing.T) {
 	var trans TranscriptionList
 	err := json.Unmarshal([]byte(testListFixtureString), &trans)
 	if err != nil {
-		t.Error("Building Transcription from json string failed with error => %s", err.Error())
+		t.Errorf("Building Transcription from json string failed with error => %s", err.Error())
 	}
 
 	if len(*trans.Transcriptions) != len(*testListFixture.Transcriptions) {

@@ -24,7 +24,7 @@ func TestConferenceListBuild(t *testing.T) {
 	var cl List
 	err := json.Unmarshal([]byte(testFixtureListString), &cl)
 	if err != nil {
-		t.Error("Building Transcription from json string failed with error => %s", err.Error())
+		t.Errorf("Building Transcription from json string failed with error => %s", err.Error())
 	}
 
 	if len(*cl.Conferences) != len(*testFixtureList.Conferences) {
@@ -44,7 +44,7 @@ func TestParticipantBuild(t *testing.T) {
 	}
 	if p.Muted != testParticipantFixture.Muted {
 		t.Errorf(
-			"Building Transcription from json string failed to properly set Sid of recording, expected %s, found %s",
+			"Building Transcription from json string failed to properly set Sid of recording, expected %t, found %t",
 			testParticipantFixture.Muted,
 			p.Muted,
 		)
