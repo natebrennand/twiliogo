@@ -62,16 +62,12 @@ func NewAccount(sid, token string) Account {
 			Token:      token,
 			Client:     http.Client{},
 		},
-		Recordings: recording.Account{Account: a},
-		Transcriptions: transcription.Account{
-			AccountSid: sid,
-			Token:      token,
-			Client:     http.Client{},
-		},
-		Applications:  applications.Account{Account: a},
-		Conferences:   conference.Account{Account: a},
-		Notifications: notifications.Account{Account: a},
-		Numbers:       numbers.Account{Account: a},
+		Recordings:     recording.Account{Account: a},
+		Transcriptions: transcription.Account{Account: a},
+		Applications:   applications.Account{Account: a},
+		Conferences:    conference.Account{Account: a},
+		Notifications:  notifications.Account{Account: a},
+		Numbers:        numbers.Account{Account: a},
 	}
 }
 
