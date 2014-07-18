@@ -55,15 +55,11 @@ func NewAccount(sid, token string) Account {
 	}
 
 	return Account{
-		AccountSid: sid,
-		Token:      token,
-		Sms:        sms.Account{Account: a},
-		ShortCode:  shortcodes.Account{Account: a},
-		Voice: voice.Account{
-			AccountSid: sid,
-			Token:      token,
-			Client:     http.Client{},
-		},
+		AccountSid:     sid,
+		Token:          token,
+		Sms:            sms.Account{Account: a},
+		ShortCode:      shortcodes.Account{Account: a},
+		Voice:          voice.Account{Account: a},
 		Usage:          usage.Account{Account: a},
 		Recordings:     recording.Account{Account: a},
 		Transcriptions: transcription.Account{Account: a},

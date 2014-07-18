@@ -17,7 +17,7 @@ var testPostFixtureString = `{
 		"from":"+14158141829",
 	}`
 
-var testPostFixture = Post{
+var testPostFixture = Call{
 	URL:  "http://twimlbin.com/558a498f",
 	To:   "+15558675309",
 	From: "+14158141829",
@@ -54,7 +54,7 @@ var testResponseFixtureString = `{
 	}
 }`
 
-var testResponseFixture = Call{
+var testResponseFixture = Resource{
 	ResponseCore: common.ResponseCore{
 		AccountSid:   "ACd03387e99bf959daa1e4810cc945708d",
 		APIVersion:   "2010-04-01",
@@ -107,8 +107,8 @@ var testListFixture = CallList{
 		NextPageURI:     "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/Calls.json?Page=1&PageSize=50",
 		PreviousPageURI: "",
 	},
-	Calls: &[]Call{
-		Call{
+	Calls: &[]Resource{
+		Resource{
 			ResponseCore: common.ResponseCore{
 				AccountSid:   "AC5116d5d4df9f61ceae2f0732e1ea9f1b",
 				APIVersion:   "2010-04-01",
