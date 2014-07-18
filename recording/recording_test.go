@@ -21,17 +21,17 @@ func TestRecordingBuild(t *testing.T) {
 }
 
 func TestRecordingListBuild(t *testing.T) {
-	var r RecordingList
-	err := json.Unmarshal([]byte(testListFixtureString), &r)
+	var rl List
+	err := json.Unmarshal([]byte(testListFixtureString), &rl)
 	if err != nil {
 		t.Errorf("Building Transcription from json string failed with error => %s", err.Error())
 	}
 
-	if len(*r.Recordings) != len(*testListFixture.Recordings) {
+	if len(*rl.Recordings) != len(*testListFixture.Recordings) {
 		t.Errorf(
 			"Building TranscriptionList from json string failed to properly allocate the list of media, expected: %d, found %d",
 			len(*testListFixture.Recordings),
-			len(*r.Recordings),
+			len(*rl.Recordings),
 		)
 	}
 }
