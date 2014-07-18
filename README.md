@@ -1,6 +1,6 @@
 # Twilio Go
 ![alt text](http://upload.wikimedia.org/wikipedia/commons/7/73/Burrowing_owls_in_summer.jpg)
-
+Write Twilio applications with our Go helper library. To get started, there are some example applications in the examples folder. 
 
 [![Build Status](https://travis-ci.org/natebrennand/twiliogo.svg?branch=master)](https://travis-ci.org/natebrennand/twiliogo)
 
