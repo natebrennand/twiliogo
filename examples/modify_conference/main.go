@@ -14,7 +14,7 @@ import (
 func makeCall(to string, act twiliogo.Account) string {
 	fmt.Println("Add participant?")
 	bufio.NewReader(os.Stdin).ReadString('\n')
-	resp, err := act.Voice.Call(voice.Post{
+	resp, err := act.Voice.Call(voice.Call{
 		From: "+16162882901",
 		To:   to,
 		URL:  "http://twimlbin.com/de26e328",
@@ -69,12 +69,12 @@ func main() {
 		confSid = c.Sid
 	}
 
-	part_resp, err := act.Conferences.GetParticipant(confSid, sid2)
+	partResp, err := act.Conferences.GetParticipant(confSid, sid2)
 
 	if err != nil {
 		fmt.Println("Error getting participant: ", err.Error())
 	} else {
-		fmt.Printf("%#v\n", part_resp)
+		fmt.Printf("%#v\n", partResp)
 
 	}
 

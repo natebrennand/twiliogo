@@ -6,6 +6,7 @@ type record struct {
 	Action *string `xml:"action,attr,omitempty"`
 }
 
+// RecordOpts configures a Record TwiML block
 type RecordOpts struct {
 	Method             string `xml:"method,attr,omitempty"`
 	Timeout            int    `xml:"timeout,attr,omitempty"`

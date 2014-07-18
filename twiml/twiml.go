@@ -18,26 +18,27 @@ type twimlResponse interface {
 	appendContents(interface{})
 }
 
-type TwimlInterface interface {
+type twimlInterface interface {
 	xml.Marshaler
 	Render() ([]byte, error)
 	RenderReader() (io.Reader, error)
-	Say(SayOpts, ...string) TwimlInterface
-	Play(PlayOpts, ...string) TwimlInterface
-	Dial(DialOpts, DialBody) TwimlInterface
-	Record(RecordOpts, string) TwimlInterface
-	Gather(GatherOpts, GatherBody) TwimlInterface
-	Sms(SmsOpts, string) TwimlInterface
-	Enqueue(EnqueueOpts, string) TwimlInterface
-	Leave() TwimlInterface
-	Hangup() TwimlInterface
-	Redirect(RedirectOpts, string) TwimlInterface
-	Pause(int) TwimlInterface
-	Reject(string) TwimlInterface
-	Message(MessageOpts, ...string) TwimlInterface
-	MessageMedia(MessageOpts, MessageBody) TwimlInterface
+	Say(SayOpts, ...string) twimlInterface
+	Play(PlayOpts, ...string) twimlInterface
+	Dial(DialOpts, dialBody) twimlInterface
+	Record(RecordOpts, string) twimlInterface
+	Gather(GatherOpts, gatherBody) twimlInterface
+	Sms(SmsOpts, string) twimlInterface
+	Enqueue(EnqueueOpts, string) twimlInterface
+	Leave() twimlInterface
+	Hangup() twimlInterface
+	Redirect(RedirectOpts, string) twimlInterface
+	Pause(int) twimlInterface
+	Reject(string) twimlInterface
+	Message(MessageOpts, ...string) twimlInterface
+	MessageMedia(MessageOpts, messageBody) twimlInterface
 }
 
+// Response is the Twiml container
 type Response struct {
 	baseTwiml
 	cache struct {
@@ -51,12 +52,12 @@ func (t *Response) appendContents(v interface{}) {
 	t.contents = append(t.contents, v)
 }
 
-// Forcibly clear the internal cache. See Render for an explanation.
+// ClearCache forcibly clear the internal cache. See Render for an explanation.
 func (t *Response) ClearCache() {
 	t.cache.valid = false
 }
 
-// Returns a TwiML representation of the previous calls on the struct as a byte
+// Render returns a TwiML representation of the previous calls on the struct as a byte
 // slice.
 // TODO: the caching implemented here will fail if someone retroactively updates
 // one of the nested structs in Dial, Gather, or Message. This should be fixed
@@ -82,7 +83,7 @@ func (t *Response) Render() (result []byte, err error) {
 	return
 }
 
-// Returns a TwiML representation of the previous calls on the struct, enclosed
+// RenderReader returns a TwiML representation of the previous calls on the struct, enclosed
 // in a Reader interface.
 func (t *Response) RenderReader() (io.Reader, error) {
 	result, err := t.Render()
@@ -93,7 +94,7 @@ func (t *Response) RenderReader() (io.Reader, error) {
 	return bytes.NewReader(result), nil
 }
 
-// Returns an implements http.Handler so a Response object can be passed
+// ServeHTTP implements http.Handler so a Response object can be passed
 // directly to http.Handle
 func (t *Response) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
 	output, err := t.Render()

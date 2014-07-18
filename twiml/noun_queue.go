@@ -6,8 +6,11 @@ type queue struct {
 	Name *string `xml:",chardata"`
 }
 
+// QueueOpts sets the Twiml callback for a queue
+//
+// https://www.twilio.com/docs/api/twiml/queue
 type QueueOpts struct {
-	Url    string `xml:"url,attr,omitempty"`
+	URL    string `xml:"url,attr,omitempty"`
 	Method string `xml:"method,attr,omitempty"`
 }
 

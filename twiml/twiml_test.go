@@ -29,15 +29,15 @@ func TestResponseSatisfiesHttpHandlerInterface(t *testing.T) {
 }
 
 func TestGatherTwimlSatisfiesGatherBody(t *testing.T) {
-	assert.Implements(t, (*GatherBody)(nil), new(GatherTwiml))
+	assert.Implements(t, (*gatherBody)(nil), new(GatherTwiml))
 }
 
 func TestMessageTwimlSatisfiesMessageBody(t *testing.T) {
-	assert.Implements(t, (*MessageBody)(nil), new(MessageTwiml))
+	assert.Implements(t, (*messageBody)(nil), new(MessageTwiml))
 }
 
 func TestDialTwimlSatisfiesDialBody(t *testing.T) {
-	assert.Implements(t, (*DialBody)(nil), new(DialTwiml))
+	assert.Implements(t, (*dialBody)(nil), new(DialTwiml))
 }
 
 func TestEmptyResponse(t *testing.T) {
