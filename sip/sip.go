@@ -99,6 +99,15 @@ func (act Account) ListDomains() (DomainList, error) {
 	return dl, err
 }
 
+// Next sets the DomainList to the next page of the list resource, returns an error in the
+// case that there are no more pages left
+func (dl *DomainList) Next() error {
+	if dl.Page == dl.NumPages-1 {
+		return errors.New("No more new pages")
+	}
+	return common.SendGetRequest(dl.NextPageURI, *dl.act, dl)
+}
+
 // NewDomain contains fields for creating a new sip domain
 type NewDomain struct {
 	DomainName                string
