@@ -81,7 +81,6 @@ func (act Account) List(f ListFilter) (List, error) {
 }
 
 // Delete removes a recording from Twilio servers.
-// Can get .mp3 or .wav of recording from the uri provided in Recording
 func (act Account) Delete(recSid string) error {
 	if !validateRecordingSid(recSid) {
 		return errors.New("Invalid sid")
