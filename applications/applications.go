@@ -184,7 +184,7 @@ func (rl *ResourceList) next() error {
 	return common.SendGetRequest(rl.NextPageURI, *rl.act, rl)
 }
 
-// NewResource represents a new application to be ssociated with a Twilio account.
+// NewResource represents a new application to be associated with a Twilio account.
 type NewResource struct {
 	FriendlyName          string
 	AccountSid            string

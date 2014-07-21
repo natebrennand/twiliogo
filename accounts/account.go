@@ -52,7 +52,7 @@ type Resource struct {
 	OwnerAccountSid string `json:"owner_account_sid"`
 }
 
-// Get retrieves the accunt resource
+// Get retrieves the account resource
 func (act Account) Get(sid string) (Resource, error) {
 	var r Resource
 	if !validateAccountSid(sid) {
