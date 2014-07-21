@@ -22,6 +22,10 @@ type Account struct {
 	common.Account
 }
 
+var validateDomainSid = regexp.MustCompile("^SD[a-z0-9]{32}$").MatchString
+var validateMappingSid = regexp.MustCompile("^AL[a-z0-9]{32}$").MatchString
+var validateCredentialSid = regexp.MustCompile("^CL[a-z0-9]{32}$").MatchString
+
 type capabilities struct {
 	Voice bool `json:"voice"`
 	SMS   bool `json:"sms"`
@@ -57,7 +61,7 @@ type common struct {
 	FriendlyName string          `json:"friendly_name"`
 	DateCreated  common.JSONTime `json:"date_created"`
 	DateUpdated  common.JSONTime `json:"date_updated"`
-	Uri          string          `json:"uri"`
+	URI          string          `json:"uri"`
 }
 
 type Mapping struct {
@@ -77,9 +81,9 @@ type Domain struct {
 	ApiVersion                string          `json:"api_version"`
 	DomainName                string          `json:"domain_name"`
 	AuthType                  string          `json:"auth_type"`
-	VoiceUrl                  string          `json:"voice_url"`
+	VoiceURL                 string          `json:"voice_url"`
 	VoiceMethod               string          `json:"voice_method"`
-	VoiceFallbackUrl          string          `json:"voice_fallback_url"`
+	VoiceFallbackURL          string          `json:"voice_fallback_url"`
 	VoiceFallbackMethod       string          `json:"voice_fallback_method"`
 	VoiceStatusCallback       string          `json:"voice_status_callback"`
 	VoiceStatusCallbackMethod string          `json:"voice_status_callback_method"`
@@ -99,9 +103,9 @@ func (act Account) ListDomains() (DomainList, error) {
 type NewDomain struct {
 	DomainName                string
 	FriendlyName              string
-	VoiceUrl                  string
+	VoiceURL                string
 	VoiceMethod               string
-	VoiceFallbackUrl          string
+	VoiceFallbackURL         string
 	VoiceFallbackMethod       string
 	VoiceStatusCallback       string
 	VoiceStatusCallbackMethod string
@@ -124,14 +128,14 @@ func (n NewDomain) GetReader() io.Reader {
 	if n.FriendlyName != "" {
 		vals.Set("FriendlyName", n.FriendlyName)
 	}
-	if n.VoiceUrl != "" {
-		vals.Set("VoiceUrl", n.VoiceUrl)
+	if n.VoiceURL != "" {
+		vals.Set("VoiceUrl", n.VoiceURL)
 	}
 	if n.VoiceMethod != "" {
 		vals.Set("VoiceMethod", n.VoiceMethod)
 	}
-	if n.VoiceFallbackUrl != "" {
-		vals.Set("VoiceFallbackUrl", n.VoiceFallbackUrl)
+	if n.VoiceFallbackURL != "" {
+		vals.Set("VoiceFallbackUrl", n.VoiceFallbackURL)
 	}
 	if n.VoiceFallbackMethod != "" {
 		vals.Set("VoiceFallbackMethod", n.VoiceFallbackMethod)
@@ -153,46 +157,46 @@ func (n NewDomain) Validate() error {
 	return nil
 }
 
-var validateDomainSid = regexp.MustCompile("^SD[a-z0-9]{32}$").MatchString
-
 // Domain gets a domain with a given SIP sid for this account
 // https://www.twilio.com/docs/api/rest/domain#instance-get
-func (act Account) Domain(sipSid string) (Domain, error) {
+func (act Account) Domain(domainSid string) (Domain, error) {
 	var d Domain
-	if !validateDomainSid(sipSid) {
+	if !validateDomainSid(domainSid) {
 		return d, errors.New("Invalid SIP sid")
 	}
-	err := common.SendGetRequest(fmt.Sprintf(sip.Domain, act.AccountSid, sipSid), act, &d)
+	err := common.SendGetRequest(fmt.Sprintf(sip.Domain, act.AccountSid, domain
+		Sid), act, &d)
 	return d, err
 }
 
 // Update a SIP domain with any parameters in a NewDomain
 // https://www.twilio.com/docs/api/rest/domain#instance-post
-func (act Account) UpdateDomain(n NewDomain, sipSid string) (Domain, error) {
+func (act Account) UpdateDomain(n NewDomain, domainSid string) (Domain, error) {
 	var d Domain
-	if !validateDomainSid(sipSid) {
+	if !validateDomainSid(domainSid) {
 		return d, errors.New("Invalid SIP sid")
 	}
-	err := common.SendPostRequest(fmt.Sprintf(sip.Domain, act.AccountSid, sipSid), n, act, &d)
+	err := common.SendPostRequest(fmt.Sprintf(sip.Domain, act.AccountSid, domainSid), n, act, &d)
 	return d, err
 }
 
 // Delete a sip domain with the given SIP sid
 // https://www.twilio.com/docs/api/rest/domain#instance-delete
-func (act Account) DeleteDomain(sipSid string) err {
-	if !validateDomainSid(sipSid) {
+func (act Account) DeleteDomain(domainSid string) err {
+	if !validateDomainSid(domainSid) {
 		return errors.New("Invalid SIP sid")
 	}
-	return common.SendDeleteRequest(fmt.Sprintf(sip.Domain, act.AccountSid, sipSid), act)
+	return common.SendDeleteRequest(fmt.Sprintf(sip.Domain, act.AccountSid, domainSid), act)
 }
 
-var validateMappingSid = regexp.MustCompile("^AL[a-z0-9]{32}$").MatchString
-
 // Mapping gets a control list mapping for this sid
-func (act Account) Mapping(mappingSid string, domainSid string) (Mapping, error) {
+func (act Account) Mapping(mappingSid, domainSid string) (Mapping, error) {
 	var m Mapping
-	if !validateMappingSid(mappingSid) || !validateDomainSid(domainSid) {
-		return m, errors.New("Invalid sid")
+	if !validateMappingSid(mappingSid) {
+		return m, errors.New("Invalid control sid")
+	}
+	if !validateDomainSid(domainSid) {
+		return m, errors.New("Invalid domain sid")
 	}
 	err := common.SendGetRequest(fmt.Sprintf(sip.Control, act.AccountSid, domainSid, mappingSid), act, &m)
 	m.act = &act
@@ -234,9 +238,12 @@ func (act Account) AddMapping(c ControlListUpdate, domainSid string) (Mapping, e
 
 // Delete a mapping with the given sid from this domain
 // https://www.twilio.com/docs/api/rest/domain#subresource-list-delete-ipacl
-func (act Account) DeleteMapping(domainSid string, mappingSid string) err {
-	if !validateMappingSid(mappingSid) || !validateDomainSid(domainSid) {
-		return errors.New("Invalid sid")
+func (act Account) DeleteMapping(domainSid, mappingSid string) err {
+	if !validateMappingSid(mappingSid) {
+		return errors.New("Invalid control sid")
+	}
+	if !validateDomainSid(domainSid) {
+		return errors.New("Invalid domain sid")
 	}
 	return common.SendDeleteRequest(fmt.Sprintf(sip.Control, act.AccountSid, domainSid, mappingSid), act)
 }
@@ -252,8 +259,6 @@ func (act Account) ListCredentials(domainSid string) (CredentialList, error) {
 	cl.act = &act
 	return cl, err
 }
-
-var validateCredentialSid = regexp.MustCompile("^CL[a-z0-9]{32}$").MatchString
 
 // CredentialListUpdate contains fields for adding a credential
 type CredentialListUpdate struct {
@@ -282,7 +287,7 @@ func (c CredentialListUpdate) Validate() error {
 func (act Account) AddCredential(u CredentialListUpdate, domainSid string) (Credential, error) {
 	var c Credential
 	if !validateDomainSid(domainSid) {
-		return c, errors.New("Invalid sid")
+		return c, errors.New("Invalid domain sid")
 	}
 	err := common.SendPostRequest(fmt.Sprintf(sip.CredentialList, act.AccountSid, domainSid), u, act, &c)
 	return c, err
@@ -290,9 +295,12 @@ func (act Account) AddCredential(u CredentialListUpdate, domainSid string) (Cred
 
 // Delete a credential with the given sid from this domain
 // https://www.twilio.com/docs/api/rest/domain#list-delete-clm
-func (act Account) DeleteMapping(domainSid string, credentialSid string) err {
-	if !validateCredentialSid(credentialSid) || !validateDomainSid(domainSid) {
-		return errors.New("Invalid sid")
+func (act Account) DeleteMapping(domainSid, credentialSid string) err {
+	if !validateCredentialSid(credentialSid) {
+		return errors.New("Invalid credential sid")
+	}
+	if !validateDomainSid(domainSid) {
+		return errors.New("Invalid domain sid")
 	}
 	return common.SendDeleteRequest(fmt.Sprintf(sip.Credential, act.AccountSid, domainSid, credentialSid), act)
 }
