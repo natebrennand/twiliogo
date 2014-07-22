@@ -30,7 +30,7 @@ var validateNotificationSid = regexp.MustCompile(`^NO[0-9a-z]{32}$`).MatchString
 //
 // https://www.twilio.com/docs/api/rest/notification#instance-properties
 type Notification struct {
-	common.ResponseCore2
+	common.ResourceInfo
 	CallSid          string `json:"call_sid"`
 	APIVersion       string `json:"api_version"`
 	Log              int64  `json:"log,string"`
@@ -65,7 +65,7 @@ func (act Account) Delete(sid string) error {
 // ReducedNotification is similar to a full Notification but lacks
 // RequestVariables, ResponseHeaders, &ResponseBody. It is used in list responses.
 type ReducedNotification struct {
-	common.ResponseCore2
+	common.ResourceInfo
 	CallSid       string `json:"call_sid"`
 	APIVersion    string `json:"api_version"`
 	Log           int    `json:"log,string"`

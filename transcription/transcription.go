@@ -26,7 +26,7 @@ type Account struct {
 
 // Transcription contains data from a recording transcription.
 type Transcription struct {
-	common.ResponseCore2
+	common.ResourceInfo
 	Status            string           `json:"status"`
 	RecordingSid      string           `json:"recording_sid"`
 	Duration          int64            `json:"duration,string"`

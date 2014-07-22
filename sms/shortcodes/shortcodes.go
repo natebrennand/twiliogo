@@ -26,7 +26,7 @@ var validateShortcodeSid = regexp.MustCompile(`^SC[0-9a-z]{32}$`).MatchString
 //
 // https://www.twilio.com/docs/api/rest/short-codes
 type Message struct {
-	common.ResponseCore2
+	common.ResourceInfo
 	FriendlyName   string `json:"friendly_name"`
 	ShortCode      string `json:"short_code"`
 	APIVersion     string `json:"api_version"`

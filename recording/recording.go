@@ -25,7 +25,7 @@ type Account struct {
 
 // Recording represents a voice recording from a phone call.
 type Recording struct {
-	common.ResponseCore2
+	common.ResourceInfo
 	CallSid    string `json:"call_sid"`
 	Duration   int64  `json:"duration,string"`
 	APIVersion string `json:"api_version"`

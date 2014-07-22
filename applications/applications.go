@@ -32,7 +32,7 @@ var validateApplicationSid = regexp.MustCompile(`^AP[0-9a-z]{32}$`).MatchString
 //
 // https://www.twilio.com/docs/api/rest/applications
 type Resource struct {
-	common.ResponseCore2
+	common.ResourceInfo
 	FriendlyName          string `json:"friendly_name"`
 	APIVersion            string `json:"api_version"`
 	VoiceURL              string `json:"voice_url"`

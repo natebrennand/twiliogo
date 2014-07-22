@@ -31,7 +31,7 @@ var validateTriggerSid = regexp.MustCompile(`^UT[0-9a-z]{32}$`).MatchString
 //
 // https://www.twilio.com/docs/api/rest/usage-triggers
 type Trigger struct {
-	common.ResponseCore2
+	common.ResourceInfo
 	FriendlyName   string          `json:"friendly_name"`
 	Recurring      string          `json:"recurring"`
 	UsageCategory  string          `json:"usage_category"`
