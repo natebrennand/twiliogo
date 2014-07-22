@@ -62,30 +62,23 @@ type CredentialList struct {
 	act                    *Account
 }
 
-// Common is a struct that contains common fields between a Domain, Credential, and Mapping
-type Common struct {
-	Sid          string          `json:"sid"`
-	AccountSid   string          `json:"account_sid"`
-	FriendlyName string          `json:"friendly_name"`
-	DateCreated  common.JSONTime `json:"date_created"`
-	DateUpdated  common.JSONTime `json:"date_updated"`
-	URI          string          `json:"uri"`
-}
-
 type Mapping struct {
-	Common
+	common.ResourceInfo
+	FriendlyName    string            `json:"friendly_name"`
 	SubresourceURIs mapSubresourceURI `json:"subresource_uris"`
 }
 
 type Credential struct {
-	Common
+	common.ResourceInfo
+	FriendlyName    string                   `json:"friendly_name"`
 	SubresourceURIs credentialSubresourceURI `json:"subresource_uris"`
 }
 
 // Domain contains fields for a Domain resource
 // Find details here: https://www.twilio.com/docs/api/rest/domain#instance-properties
 type Domain struct {
-	Common
+	common.ResourceInfo
+	FriendlyName              string          `json:"friendly_name"`
 	ApiVersion                string          `json:"api_version"`
 	DomainName                string          `json:"domain_name"`
 	AuthType                  string          `json:"auth_type"`
