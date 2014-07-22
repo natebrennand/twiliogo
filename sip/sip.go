@@ -4,7 +4,10 @@ import (
 	"errors"
 	"fmt"
 	"github.com/natebrennand/twiliogo/common"
+	"io"
 	"net/url"
+	"regexp"
+	"strings"
 )
 
 var sip = struct {
@@ -22,9 +25,11 @@ type Account struct {
 	common.Account
 }
 
-var validateDomainSid = regexp.MustCompile("^SD[a-z0-9]{32}$").MatchString
-var validateMappingSid = regexp.MustCompile("^AL[a-z0-9]{32}$").MatchString
-var validateCredentialSid = regexp.MustCompile("^CL[a-z0-9]{32}$").MatchString
+var (
+	validateDomainSid     = regexp.MustCompile("^SD[a-z0-9]{32}$").MatchString
+	validateMappingSid    = regexp.MustCompile("^AL[a-z0-9]{32}$").MatchString
+	validateCredentialSid = regexp.MustCompile("^CL[a-z0-9]{32}$").MatchString
+)
 
 type capabilities struct {
 	Voice bool `json:"voice"`
@@ -48,14 +53,17 @@ type credentialSubresourceURI struct {
 type DomainList struct {
 	common.ListResponseCore
 	SipDomains *[]Domain `json:"sip_domains"`
+	act        *Account
 }
 
 type CredentialList struct {
 	common.ListResponseCore
 	CredentialListMappings *[]Credential `json:"credential_list_mappings"`
+	act                    *Account
 }
 
-type common struct {
+// Common is a struct that contains common fields between a Domain, Credential, and Mapping
+type Common struct {
 	Sid          string          `json:"sid"`
 	AccountSid   string          `json:"account_sid"`
 	FriendlyName string          `json:"friendly_name"`
@@ -65,23 +73,23 @@ type common struct {
 }
 
 type Mapping struct {
-	common
+	Common
 	SubresourceURIs mapSubresourceURI `json:"subresource_uris"`
 }
 
 type Credential struct {
-	common
+	Common
 	SubresourceURIs credentialSubresourceURI `json:"subresource_uris"`
 }
 
 // Domain contains fields for a Domain resource
 // Find details here: https://www.twilio.com/docs/api/rest/domain#instance-properties
 type Domain struct {
-	common
+	Common
 	ApiVersion                string          `json:"api_version"`
 	DomainName                string          `json:"domain_name"`
 	AuthType                  string          `json:"auth_type"`
-	VoiceURL                 string          `json:"voice_url"`
+	VoiceURL                  string          `json:"voice_url"`
 	VoiceMethod               string          `json:"voice_method"`
 	VoiceFallbackURL          string          `json:"voice_fallback_url"`
 	VoiceFallbackMethod       string          `json:"voice_fallback_method"`
@@ -112,9 +120,9 @@ func (dl *DomainList) Next() error {
 type NewDomain struct {
 	DomainName                string
 	FriendlyName              string
-	VoiceURL                string
+	VoiceURL                  string
 	VoiceMethod               string
-	VoiceFallbackURL         string
+	VoiceFallbackURL          string
 	VoiceFallbackMethod       string
 	VoiceStatusCallback       string
 	VoiceStatusCallbackMethod string
@@ -122,7 +130,7 @@ type NewDomain struct {
 
 // Create a new SIP domain which will be added to list of domains via a post
 // https://www.twilio.com/docs/api/rest/domain#list-post
-func (act Account) CreateDomain(n NewDomain) (Domain, err) {
+func (act Account) CreateDomain(n NewDomain) (Domain, error) {
 	var d Domain
 	err := common.SendPostRequest(fmt.Sprintf(sip.DomainList, act.AccountSid), n, act, &d)
 	return d, err
@@ -168,13 +176,12 @@ func (n NewDomain) Validate() error {
 
 // Domain gets a domain with a given SIP sid for this account
 // https://www.twilio.com/docs/api/rest/domain#instance-get
-func (act Account) Domain(domainSid string) (Domain, error) {
+func (act Account) GetDomain(domainSid string) (Domain, error) {
 	var d Domain
 	if !validateDomainSid(domainSid) {
 		return d, errors.New("Invalid SIP sid")
 	}
-	err := common.SendGetRequest(fmt.Sprintf(sip.Domain, act.AccountSid, domain
-		Sid), act, &d)
+	err := common.SendGetRequest(fmt.Sprintf(sip.Domain, act.AccountSid, domainSid), act, &d)
 	return d, err
 }
 
@@ -191,7 +198,7 @@ func (act Account) UpdateDomain(n NewDomain, domainSid string) (Domain, error) {
 
 // Delete a sip domain with the given SIP sid
 // https://www.twilio.com/docs/api/rest/domain#instance-delete
-func (act Account) DeleteDomain(domainSid string) err {
+func (act Account) DeleteDomain(domainSid string) error {
 	if !validateDomainSid(domainSid) {
 		return errors.New("Invalid SIP sid")
 	}
@@ -199,7 +206,7 @@ func (act Account) DeleteDomain(domainSid string) err {
 }
 
 // Mapping gets a control list mapping for this sid
-func (act Account) Mapping(mappingSid, domainSid string) (Mapping, error) {
+func (act Account) GetMapping(mappingSid, domainSid string) (Mapping, error) {
 	var m Mapping
 	if !validateMappingSid(mappingSid) {
 		return m, errors.New("Invalid control sid")
@@ -208,7 +215,6 @@ func (act Account) Mapping(mappingSid, domainSid string) (Mapping, error) {
 		return m, errors.New("Invalid domain sid")
 	}
 	err := common.SendGetRequest(fmt.Sprintf(sip.Control, act.AccountSid, domainSid, mappingSid), act, &m)
-	m.act = &act
 	return m, err
 }
 
@@ -236,7 +242,7 @@ func (c ControlListUpdate) Validate() error {
 
 // Add a mapping to the control list on this domain
 // https://www.twilio.com/docs/api/rest/domain#subresource-list-post-ipacl
-func (act Account) AddMapping(c ControlListUpdate, domainSid string) (Mapping, err) {
+func (act Account) AddMapping(c ControlListUpdate, domainSid string) (Mapping, error) {
 	var m Mapping
 	if !validateDomainSid(domainSid) {
 		return m, errors.New("Invalid sid")
@@ -247,7 +253,7 @@ func (act Account) AddMapping(c ControlListUpdate, domainSid string) (Mapping, e
 
 // Delete a mapping with the given sid from this domain
 // https://www.twilio.com/docs/api/rest/domain#subresource-list-delete-ipacl
-func (act Account) DeleteMapping(domainSid, mappingSid string) err {
+func (act Account) DeleteMapping(domainSid, mappingSid string) error {
 	if !validateMappingSid(mappingSid) {
 		return errors.New("Invalid control sid")
 	}
@@ -255,6 +261,15 @@ func (act Account) DeleteMapping(domainSid, mappingSid string) err {
 		return errors.New("Invalid domain sid")
 	}
 	return common.SendDeleteRequest(fmt.Sprintf(sip.Control, act.AccountSid, domainSid, mappingSid), act)
+}
+
+// Next sets the CredentialList to the next page of the list resource, returns an error in the
+// case that there are no more pages left
+func (cl *CredentialList) Next() error {
+	if cl.Page == cl.NumPages-1 {
+		return errors.New("No more new pages")
+	}
+	return common.SendGetRequest(cl.NextPageURI, *cl.act, cl)
 }
 
 // List grabs a list of all credential mappings for this account and domain
@@ -304,7 +319,7 @@ func (act Account) AddCredential(u CredentialListUpdate, domainSid string) (Cred
 
 // Delete a credential with the given sid from this domain
 // https://www.twilio.com/docs/api/rest/domain#list-delete-clm
-func (act Account) DeleteMapping(domainSid, credentialSid string) err {
+func (act Account) DeleteCredential(domainSid, credentialSid string) error {
 	if !validateCredentialSid(credentialSid) {
 		return errors.New("Invalid credential sid")
 	}
