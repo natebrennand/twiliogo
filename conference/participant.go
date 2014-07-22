@@ -19,8 +19,8 @@ var (
 var participant = struct {
 	Get, List string
 }{
-	List: "https://api.twilio.com/2010-04-01/Accounts/%s/Conferences/%s/Participants.json",    // takes account sid, conference sid
-	Get:  "https://api.twilio.com/2010-04-01/Accounts/%s/Conferences/%s/Participants/%s.json", // takes account sid, conference sid, callsid
+	List: "/2010-04-01/Accounts/%s/Conferences/%s/Participants.json",    // takes account sid, conference sid
+	Get:  "/2010-04-01/Accounts/%s/Conferences/%s/Participants/%s.json", // takes account sid, conference sid, callsid
 }
 
 // Participant represents a user on a conference call.

@@ -17,7 +17,7 @@ var testResponseFixture = Number{
 	},
 	URI:        "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/IncomingPhoneNumbers/PN2a0747eba6abf96b7e3c3ff0b4530f6e.json",
 	AccountSid: "AC5116d5d4df9f61ceae2f0732e1ea9f1b",
-	Core: Core{
+	core: core{
 		FriendlyName:        "My Company Line",
 		APIVersion:          "2010-04-01",
 		VoiceURL:            "http://demo.twilio.com/docs/voice.xml",
@@ -84,7 +84,7 @@ var testListFixture = NumberList{
 				MMS:   false,
 			},
 			URI: "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/IncomingPhoneNumbers/PN2a0747eba6abf96b7e3c3ff0b4530f6e.json",
-			Core: Core{
+			core: core{
 				FriendlyName:        "My Company Line",
 				APIVersion:          "2010-04-01",
 				VoiceURL:            "http://demo.twilio.com/docs/voice.xml",

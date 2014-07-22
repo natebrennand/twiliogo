@@ -62,20 +62,10 @@ func (act Account) Get(sid string) (Resource, error) {
 	return r, err
 }
 
-// private type so that it must be set using a pre-defined constant
-type accountStatus string
-
-// These constants are for changing the status of an account.
-const (
-	Closed    accountStatus = "closed"
-	Suspended accountStatus = "suspended"
-	Active    accountStatus = "active"
-)
-
 // Modification represents an update to an account's info.
 type Modification struct {
 	FriendlyName string
-	Status       accountStatus
+	Status       string
 }
 
 // Validate guarantees that a proposed account update is valid

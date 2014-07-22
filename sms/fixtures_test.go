@@ -157,12 +157,14 @@ var (
 	*                     MEDIA
 	********************************************************/
 	testMediaFixture = Media{
-		Sid:         "ME85ebf7e12cb821f84b319340424dcb02",
-		AccountSid:  "AC381707b751dbe4c74b15c5697ba67afd",
+		ResponseCore2: common.ResponseCore2{
+			Sid:         "ME85ebf7e12cb821f84b319340424dcb02",
+			AccountSid:  "AC381707b751dbe4c74b15c5697ba67afd",
+			DateCreated: common.JSONTime{Time: time.Date(2013, time.September, 25, 22, 47, 40, 18, &time.Location{})},
+			DateUpdated: common.JSONTime{Time: time.Date(2013, time.September, 25, 22, 47, 40, 19, &time.Location{})},
+			URI:         "/2010-04-01/Accounts/AC381707b751dbe4c74b15c5697ba67afd/Messages/MM800f449d0399ed014aae2bcc0cc2f2ec/Media/ME85ebf7e12cb821f84b319340424dcb02.json",
+		},
 		ContentType: "image/png",
-		DateCreated: common.JSONTime{Time: time.Date(2013, time.September, 25, 22, 47, 40, 18, &time.Location{})},
-		DateUpdated: common.JSONTime{Time: time.Date(2013, time.September, 25, 22, 47, 40, 19, &time.Location{})},
-		URI:         "/2010-04-01/Accounts/AC381707b751dbe4c74b15c5697ba67afd/Messages/MM800f449d0399ed014aae2bcc0cc2f2ec/Media/ME85ebf7e12cb821f84b319340424dcb02.json",
 	}
 	testMediaFixtureString = `{
 	"sid":"ME85ebf7e12cb821f84b319340424dcb02",
@@ -189,22 +191,26 @@ var (
 		},
 		MediaList: &[]Media{
 			Media{
-				Sid:         "ME85ebf7e12cb821f84b319340424dcb02",
-				AccountSid:  "AC381707b751dbe4c74b15c5697ba67afd",
 				ParentSid:   "MM800f449d0399ed014aae2bcc0cc2f2ec",
 				ContentType: "image/png",
-				DateCreated: common.JSONTime{Time: time.Date(2013, time.September, 25, 22, 47, 40, 18, &time.Location{})},
-				DateUpdated: common.JSONTime{Time: time.Date(2013, time.September, 25, 22, 47, 40, 19, &time.Location{})},
-				URI:         "/2010-04-01/Accounts/AC381707b751dbe4c74b15c5697ba67afd/Messages/MM800f449d0399ed014aae2bcc0cc2f2ec/Media/ME85ebf7e12cb821f84b319340424dcb02.json",
+				ResponseCore2: common.ResponseCore2{
+					Sid:         "ME85ebf7e12cb821f84b319340424dcb02",
+					AccountSid:  "AC381707b751dbe4c74b15c5697ba67afd",
+					DateCreated: common.JSONTime{Time: time.Date(2013, time.September, 25, 22, 47, 40, 18, &time.Location{})},
+					DateUpdated: common.JSONTime{Time: time.Date(2013, time.September, 25, 22, 47, 40, 19, &time.Location{})},
+					URI:         "/2010-04-01/Accounts/AC381707b751dbe4c74b15c5697ba67afd/Messages/MM800f449d0399ed014aae2bcc0cc2f2ec/Media/ME85ebf7e12cb821f84b319340424dcb02.json",
+				},
 			},
 			Media{
-				Sid:         "ME8d8f717e2d6e5383055b3cd150ac5f54",
-				AccountSid:  "AC381707b751dbe4c74b15c5697ba67afd",
 				ParentSid:   "MM800f449d0399ed014aae2bcc0cc2f2ec",
 				ContentType: "image/png",
-				DateCreated: common.JSONTime{Time: time.Date(2013, time.September, 25, 22, 47, 40, 18, &time.Location{})},
-				DateUpdated: common.JSONTime{Time: time.Date(2013, time.September, 25, 22, 47, 40, 19, &time.Location{})},
-				URI:         "/2010-04-01/Accounts/AC381707b751dbe4c74b15c5697ba67afd/Messages/MM800f449d0399ed014aae2bcc0cc2f2ec/Media/ME85ebf7e12cb821f84b319340424dcb02.json",
+				ResponseCore2: common.ResponseCore2{
+					Sid:         "ME8d8f717e2d6e5383055b3cd150ac5f54",
+					AccountSid:  "AC381707b751dbe4c74b15c5697ba67afd",
+					DateCreated: common.JSONTime{Time: time.Date(2013, time.September, 25, 22, 47, 40, 18, &time.Location{})},
+					DateUpdated: common.JSONTime{Time: time.Date(2013, time.September, 25, 22, 47, 40, 19, &time.Location{})},
+					URI:         "/2010-04-01/Accounts/AC381707b751dbe4c74b15c5697ba67afd/Messages/MM800f449d0399ed014aae2bcc0cc2f2ec/Media/ME85ebf7e12cb821f84b319340424dcb02.json",
+				},
 			},
 		},
 	}
