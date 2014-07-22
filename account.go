@@ -8,6 +8,7 @@ import (
 	"github.com/natebrennand/twiliogo/notifications"
 	"github.com/natebrennand/twiliogo/numbers"
 	"github.com/natebrennand/twiliogo/recording"
+	"github.com/natebrennand/twiliogo/sip"
 	"github.com/natebrennand/twiliogo/sms"
 	"github.com/natebrennand/twiliogo/sms/shortcodes"
 	"github.com/natebrennand/twiliogo/transcription"
@@ -40,6 +41,7 @@ type Account struct {
 	Notifications  notifications.Account
 	Usage          usage.Account
 	Numbers        numbers.Account
+	SIP            sip.Account
 }
 
 // NewAccount builds an Account resource from a sid & token.
@@ -67,6 +69,7 @@ func NewAccount(sid, token string) Account {
 		Conferences:    conference.Account{Account: a},
 		Notifications:  notifications.Account{Account: a},
 		Numbers:        numbers.Account{Account: a},
+		SIP:            sip.Account{Account: a},
 	}
 }
 
