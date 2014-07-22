@@ -18,10 +18,10 @@ var (
 )
 
 const (
-	postURL   = "https://api.twilio.com/2010-04-01/Accounts/%s/Calls.json"
-	updateURL = "https://api.twilio.com/2010-04-01/Accounts/%s/Calls/%s.json"
-	getURL    = "https://api.twilio.com/2010-04-01/Accounts/%s/Calls/%s.json"
-	listURL   = "https://api.twilio.com/2010-04-01/Accounts/%s/Calls.json"
+	postURL   = "/2010-04-01/Accounts/%s/Calls.json"
+	updateURL = "/2010-04-01/Accounts/%s/Calls/%s.json"
+	getURL    = "/2010-04-01/Accounts/%s/Calls/%s.json"
+	listURL   = "/2010-04-01/Accounts/%s/Calls.json"
 )
 
 // Account wraps the common Account struct to embed the AccountSid & Token.

@@ -30,22 +30,18 @@ var validateNotificationSid = regexp.MustCompile(`^NO[0-9a-z]{32}$`).MatchString
 //
 // https://www.twilio.com/docs/api/rest/notification#instance-properties
 type Notification struct {
-	Sid              string          `json:"sid"`
-	AccountSid       string          `json:"account_sid"`
-	DateCreated      common.JSONTime `json:"date_created"`
-	DateUpdated      common.JSONTime `json:"date_updated"`
-	CallSid          string          `json:"call_sid"`
-	APIVersion       string          `json:"api_version"`
-	Log              int64           `json:"log,string"`
-	ErrorCode        string          `json:"error_code"`
-	MoreInfo         string          `json:"more_info"`
-	MessageText      string          `json:"message_text"`
-	RequestURL       string          `json:"request_url"`
-	RequestMethod    string          `json:"request_method"`
-	RequestVariables string          `json:"request_variables"`
-	ResponseHeaders  string          `json:"response_headers"`
-	ResponseBody     string          `json:"response_body"`
-	URI              string          `json:"uri"`
+	common.ResponseCore2
+	CallSid          string `json:"call_sid"`
+	APIVersion       string `json:"api_version"`
+	Log              int64  `json:"log,string"`
+	ErrorCode        string `json:"error_code"`
+	MoreInfo         string `json:"more_info"`
+	MessageText      string `json:"message_text"`
+	RequestURL       string `json:"request_url"`
+	RequestMethod    string `json:"request_method"`
+	RequestVariables string `json:"request_variables"`
+	ResponseHeaders  string `json:"response_headers"`
+	ResponseBody     string `json:"response_body"`
 }
 
 // Get retrieves a Twilio error log based off of the sid of the notification.
@@ -69,19 +65,15 @@ func (act Account) Delete(sid string) error {
 // ReducedNotification is similar to a full Notification but lacks
 // RequestVariables, ResponseHeaders, &ResponseBody. It is used in list responses.
 type ReducedNotification struct {
-	Sid           string          `json:"sid"`
-	AccountSid    string          `json:"account_sid"`
-	DateCreated   common.JSONTime `json:"date_created"`
-	DateUpdated   common.JSONTime `json:"date_updated"`
-	CallSid       string          `json:"call_sid"`
-	APIVersion    string          `json:"api_version"`
-	Log           int             `json:"log,string"`
-	ErrorCode     string          `json:"error_code"`
-	MoreInfo      string          `json:"more_info"`
-	MessageText   string          `json:"message_text"`
-	RequestURL    string          `json:"request_url"`
-	RequestMethod string          `json:"request_method"`
-	URI           string          `json:"uri"`
+	common.ResponseCore2
+	CallSid       string `json:"call_sid"`
+	APIVersion    string `json:"api_version"`
+	Log           int    `json:"log,string"`
+	ErrorCode     string `json:"error_code"`
+	MoreInfo      string `json:"more_info"`
+	MessageText   string `json:"message_text"`
+	RequestURL    string `json:"request_url"`
+	RequestMethod string `json:"request_method"`
 }
 
 // NotificationList represents a list of notifications returne by a query.
