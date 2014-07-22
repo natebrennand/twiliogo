@@ -4,39 +4,32 @@ import (
 	"errors"
 	"fmt"
 	"github.com/natebrennand/twiliogo/common"
-	"net/http"
 	"net/url"
 	"regexp"
 	"strconv"
 	"time"
 )
 
-const (
-	getURL    = "https://api.twilio.com/2010-04-01/Accounts/%s/Notifications/%s.json" // takes an AccountSid & NotifcationSid
-	deleteURL = "https://api.twilio.com/2010-04-01/Accounts/%s/Notifications/%s.json" // takes an AccountSid & NotifcationSid
-	listURL   = "https://api.twilio.com/2010-04-01/Accounts/%s/Notifications.json"    // takes an AccountSid
-)
+// holds url values used in queries
+var notifications = struct {
+	Get, Delete, List string
+}{
+	Get:    "/2010-04-01/Accounts/%s/Notifications/%s.json", // takes an AccountSid & NotifcationSid
+	Delete: "/2010-04-01/Accounts/%s/Notifications/%s.json", // takes an AccountSid & NotifcationSid
+	List:   "/2010-04-01/Accounts/%s/Notifications.json",    // takes an AccountSid
+}
 
+// Account wraps the common Account struct to embed the AccountSid & Token.
 type Account struct {
-	AccountSid string
-	Token      string
-	Client     http.Client
-}
-
-func (act Account) GetSid() string {
-	return act.AccountSid
-}
-func (act Account) GetToken() string {
-	return act.Token
-}
-func (act Account) GetClient() http.Client {
-	return act.Client
+	common.Account
 }
 
 var validateNotificationSid = regexp.MustCompile(`^NO[0-9a-z]{32}$`).MatchString
 
+// Notification represents an error logged by Twilio.
+//
 // https://www.twilio.com/docs/api/rest/notification#instance-properties
-type Resource struct {
+type Notification struct {
 	Sid              string          `json:"sid"`
 	AccountSid       string          `json:"account_sid"`
 	DateCreated      common.JSONTime `json:"date_created"`
@@ -55,25 +48,27 @@ type Resource struct {
 	URI              string          `json:"uri"`
 }
 
-func (act Account) Get(sid string) (Resource, error) {
-	var r Resource
+// Get retrieves a Twilio error log based off of the sid of the notification.
+func (act Account) Get(sid string) (Notification, error) {
+	var r Notification
 	if !validateNotificationSid(sid) {
 		return r, errors.New("Invalid sid")
 	}
-	err := common.SendGetRequest(fmt.Sprintf(getURL, act.AccountSid, sid), act, &r)
+	err := common.SendGetRequest(fmt.Sprintf(notifications.Get, act.AccountSid, sid), act, &r)
 	return r, err
 }
 
+// Delete removes a Twilio error notification based off of the sid.
 func (act Account) Delete(sid string) error {
 	if !validateNotificationSid(sid) {
 		return errors.New("Invalid sid")
 	}
-	return common.SendDeleteRequest(fmt.Sprintf(getURL, act.AccountSid, sid), act)
+	return common.SendDeleteRequest(fmt.Sprintf(notifications.Get, act.AccountSid, sid), act)
 }
 
-// Is similar to a full resource but lacks
-//	RequestVariables, ResponseHeaders, &ResponseBody
-type ReducedResource struct {
+// ReducedNotification is similar to a full Notification but lacks
+// RequestVariables, ResponseHeaders, &ResponseBody. It is used in list responses.
+type ReducedNotification struct {
 	Sid           string          `json:"sid"`
 	AccountSid    string          `json:"account_sid"`
 	DateCreated   common.JSONTime `json:"date_created"`
@@ -89,12 +84,13 @@ type ReducedResource struct {
 	URI           string          `json:"uri"`
 }
 
-type ResourceList struct {
+// NotificationList represents a list of notifications returne by a query.
+type NotificationList struct {
 	common.ListResponseCore
-	Notifications *[]ReducedResource `json:"notifications"`
+	Notifications *[]ReducedNotification `json:"notifications"`
 }
 
-// Used to filter notification lists. You may set OnMessageDate or a combination of
+// Filter is used to filter notification lists. You may set OnMessageDate or a combination of
 // BeforeMessageDate and AfterMessageDate.
 //
 // https://www.twilio.com/docs/api/rest/notification#list-get-filters
@@ -112,7 +108,7 @@ func (f Filter) validate() error {
 	return nil
 }
 
-func (f Filter) GetQueryString() string {
+func (f Filter) getQueryString() string {
 	v := url.Values{}
 	if f.Log != nil {
 		v.Set("To", strconv.FormatInt(*f.Log, 10))
@@ -135,12 +131,13 @@ func (f Filter) GetQueryString() string {
 	return encoded
 }
 
-func (act Account) List(f Filter) (ResourceList, error) {
-	var rl ResourceList
+// List returns a list of recent Twilio error notifications that pass a filter you supply.
+func (act Account) List(f Filter) (NotificationList, error) {
+	var rl NotificationList
 	err := f.validate()
 	if err != nil {
 		return rl, err
 	}
-	err = common.SendGetRequest(fmt.Sprintf(listURL, act.AccountSid)+f.GetQueryString(), act, &rl)
+	err = common.SendGetRequest(fmt.Sprintf(notifications.List, act.AccountSid)+f.getQueryString(), act, &rl)
 	return rl, err
 }

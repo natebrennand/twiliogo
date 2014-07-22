@@ -7,6 +7,8 @@ import (
 	"strconv"
 )
 
+// Callback holds information given by voice callbacks.
+//
 // https://www.twilio.com/docs/api/rest/making-calls#status-callback-parameter
 type Callback struct {
 	common.StandardRequest
@@ -22,7 +24,7 @@ type Callback struct {
 	CallerName        string
 }
 
-// Creates a Callback struct from a form
+// Parse creates a Callback struct from a form
 func (cb *Callback) Parse(req *http.Request) error {
 	callDurString := req.PostFormValue("CallDuration")
 
@@ -62,6 +64,7 @@ func (cb *Callback) Parse(req *http.Request) error {
 	return nil
 }
 
+// CallbackHandler feeds Callbacks into a channel for ocnsumption
 func CallbackHandler(callbackChan chan Callback) http.HandlerFunc {
 	var cb Callback
 	return http.HandlerFunc(func(resp http.ResponseWriter, req *http.Request) {

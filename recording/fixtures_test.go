@@ -28,7 +28,7 @@ var testResponseFixture = Recording{
 	URI:         "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/Calls/CAd88cd5b804dbcfb0ae6e0ccbbca67b83.json",
 }
 
-var testListFixture = RecordingList{
+var testListFixture = List{
 	ListResponseCore: common.ListResponseCore{
 		Start:           0,
 		Total:           261,

@@ -5,37 +5,24 @@ import (
 	"fmt"
 	"github.com/natebrennand/twiliogo/common"
 	"io"
-	"net/http"
 	"net/url"
+	"regexp"
 	"strings"
 )
 
-const (
-	getURL    = "https://api.twilio.com/2010-04-01/Accounts/%s.json" // takes an AccountSid
-	updateURL = "https://api.twilio.com/2010-04-01/Accounts/%s.json" // takes an AccountSid
-	listURL   = "https://api.twilio.com/2010-04-01/Accounts.json"    // takes nothing
-)
-
-var accountStatuses = map[string]bool{
-	"closed":    true,
-	"suspended": true,
-	"active":    true,
+var account = struct {
+	Get, Update, List string
+}{
+	Get:    "/2010-04-01/Accounts/%s.json", // takes an AccountSid
+	Update: "/2010-04-01/Accounts/%s.json", // takes an AccountSid
+	List:   "/2010-04-01/Accounts.json",    // takes nothing
 }
 
+var validateAccountSid = regexp.MustCompile(`^AC[0-9a-z]{32}$`).MatchString
+
+// Account wraps the common Account struct to embed the AccountSid & Token.
 type Account struct {
-	AccountSid string
-	Token      string
-	Client     http.Client
-}
-
-func (act Account) GetSid() string {
-	return act.AccountSid
-}
-func (act Account) GetToken() string {
-	return act.Token
-}
-func (act Account) GetClient() http.Client {
-	return act.Client
+	common.Account
 }
 
 // Resource represents an Account resource
@@ -65,58 +52,86 @@ type Resource struct {
 	OwnerAccountSid string `json:"owner_account_sid"`
 }
 
-func (act Account) Get() (Resource, error) {
+// Get retrieves the account resource
+func (act Account) Get(sid string) (Resource, error) {
 	var r Resource
-	err := common.SendGetRequest(fmt.Sprintf(getURL, act.AccountSid), act, &r)
+	if !validateAccountSid(sid) {
+		return r, errors.New("Invalid account sid")
+	}
+	err := common.SendGetRequest(fmt.Sprintf(account.Get, sid), act, &r)
 	return r, err
 }
 
+// private type so that it must be set using a pre-defined constant
+type accountStatus string
+
+// These constants are for changing the status of an account.
+const (
+	Closed    accountStatus = "closed"
+	Suspended accountStatus = "suspended"
+	Active    accountStatus = "active"
+)
+
+// Modification represents an update to an account's info.
 type Modification struct {
 	FriendlyName string
-	Status       string
+	Status       accountStatus
 }
 
+// Validate guarantees that a proposed account update is valid
 func (m Modification) Validate() error {
 	if len(m.FriendlyName) > 64 {
 		return errors.New("Invalid FriendlyName, must be <= 64 characters")
 	}
-	if m.Status != "" {
-		_, exists := accountStatuses[m.Status]
-		if !exists {
-			return errors.New("Invalid updated status for account")
-		}
-	}
 	return nil
 }
 
+// GetReader encodes the Post into an io.Reader for consumption while building a HTTP request to
+// Twilio.
 func (m Modification) GetReader() io.Reader {
 	v := url.Values{}
 	if m.FriendlyName != "" {
 		v.Add("FriendlyName", m.FriendlyName)
 	}
 	if m.Status != "" {
-		v.Add("Status", m.Status)
+		v.Add("Status", string(m.Status))
 	}
 	return strings.NewReader(v.Encode())
 }
 
+// Modify sends an update to the account for the info of an account. The new version of the
+// account is returned.
 func (act Account) Modify(m Modification) (Resource, error) {
 	var r Resource
-	err := common.SendPostRequest(fmt.Sprintf(updateURL, act.AccountSid), m, act, &r)
+	err := common.SendPostRequest(fmt.Sprintf(account.Update, act.AccountSid), m, act, &r)
 	return r, err
 }
 
+// ResourceList represents the list of all accounts controlled by the querying account.
 type ResourceList struct {
 	common.ListResponseCore
 	Accounts *[]Resource `json:"accounts"`
+	act      *Account
 }
 
+// Next sets the ResourceList to the next page of the list, returns an error in the
+// case that there are no more pages left.
+func (rl *ResourceList) Next() error {
+	if rl.Page == rl.NumPages-1 {
+		return errors.New("No more new pages")
+	}
+	return common.SendGetRequest(rl.NextPageURI, *rl.act, rl)
+}
+
+// ListFilter allows filtering of accounts controlled by the querying account in a List()
+// query.
 type ListFilter struct {
 	FriendlyName string
 	Status       string
 }
 
-func (f ListFilter) GetQueryString() string {
+// generates a querystring to filter the accounts returned by List()
+func (f ListFilter) getQueryString() string {
 	v := url.Values{}
 	if f.FriendlyName != "" {
 		v.Add("FriendlyName", f.FriendlyName)
@@ -131,8 +146,10 @@ func (f ListFilter) GetQueryString() string {
 	return qs
 }
 
+// List returns a list of all accounts that pass the filter.
 func (act Account) List(f ListFilter) (ResourceList, error) {
 	var rl ResourceList
-	err := common.SendGetRequest(listURL+f.GetQueryString(), act, &rl)
+	err := common.SendGetRequest(account.List+f.getQueryString(), act, &rl)
+	rl.act = &act
 	return rl, err
 }

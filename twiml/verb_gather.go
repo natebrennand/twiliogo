@@ -5,9 +5,10 @@ import "encoding/xml"
 type gather struct {
 	XMLName int `xml:"Gather"`
 	*GatherOpts
-	Body *GatherBody
+	Body *gatherBody
 }
 
+// GatherOpts sets the options on a gather verb.
 type GatherOpts struct {
 	Action      string `xml:"action,attr,omitempty"`
 	Method      string `xml:"method,attr,omitempty"`
@@ -16,36 +17,41 @@ type GatherOpts struct {
 	NumDigits   int    `xml:"numDigits,attr,omitempty"`
 }
 
-type GatherBody interface {
+type gatherBody interface {
 	xml.Marshaler
-	Say(SayOpts, ...string) GatherBody
-	Play(PlayOpts, ...string) GatherBody
-	Pause(int) GatherBody
+	Say(SayOpts, ...string) gatherBody
+	Play(PlayOpts, ...string) gatherBody
+	Pause(int) gatherBody
 }
 
+// GatherTwiml contains the TwiML in a gather block.
 type GatherTwiml struct {
 	baseTwiml
 }
 
-func addGather(t twimlResponse, opts *GatherOpts, body *GatherBody) {
+func addGather(t twimlResponse, opts *GatherOpts, body *gatherBody) {
 	t.appendContents(&gather{GatherOpts: opts, Body: body})
 }
 
+// MarshalXML implements the XML marshaler interface
 func (t *GatherTwiml) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 	return marshalTwiml(t, e, &start)
 }
 
-func (t *GatherTwiml) Play(opts PlayOpts, urls ...string) GatherBody {
+// Play adds a Play instruction to the gather block
+func (t *GatherTwiml) Play(opts PlayOpts, urls ...string) gatherBody {
 	addPlay(t, &opts, urls)
 	return t
 }
 
-func (t *GatherTwiml) Say(opts SayOpts, lines ...string) GatherBody {
+// Say adds a Say instruction to the gather block
+func (t *GatherTwiml) Say(opts SayOpts, lines ...string) gatherBody {
 	addSay(t, &opts, lines)
 	return t
 }
 
-func (t *GatherTwiml) Pause(length int) GatherBody {
+// Pause adds a Pause instruction to the gather block
+func (t *GatherTwiml) Pause(length int) gatherBody {
 	addPause(t, length)
 	return t
 }

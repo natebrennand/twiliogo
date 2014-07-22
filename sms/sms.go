@@ -3,7 +3,6 @@ package sms
 import (
 	"errors"
 	"fmt"
-	"github.com/natebrennand/twiliogo/act"
 	"github.com/natebrennand/twiliogo/common"
 	"io"
 	"net/url"
@@ -12,18 +11,18 @@ import (
 	"time"
 )
 
-// Account wraps the act Account struct to embed the AccountSid & Token.
+// Account wraps the common Account struct to embed the AccountSid & Token.
 type Account struct {
-	act.Account
+	common.Account
 }
 
 // holds url values used in queries
 var sms = struct {
 	Post, Get, List string
 }{
-	Post: "https://api.twilio.com/2010-04-01/Accounts/%s/Messages.json",    // takes an AccountSid
-	Get:  "https://api.twilio.com/2010-04-01/Accounts/%s/Messages/%s.json", // takes an AccountSid & MessageSdi
-	List: "https://api.twilio.com/2010-04-01/Accounts/%s/Messages.json",    // takes an AccountSid
+	Post: "/2010-04-01/Accounts/%s/Messages.json",    // takes an AccountSid
+	Get:  "/2010-04-01/Accounts/%s/Messages/%s.json", // takes an AccountSid & MessageSdi
+	List: "/2010-04-01/Accounts/%s/Messages.json",    // takes an AccountSid
 }
 
 var validateSmsSid = regexp.MustCompile(`^(SM|MM)[0-9a-z]{32}$`).MatchString
@@ -36,12 +35,6 @@ type Message struct {
 	NumSegments int              `json:"num_segments,string"`
 	NumMedia    int              `json:"num_media,string"`
 	Price       common.JSONFloat `json:"price"`
-}
-
-// MessageList represents an list of a SMS resources
-type MessageList struct {
-	common.ListResponseCore
-	Messages *[]Message `json:"messages"`
 }
 
 // Get a message given that message's sid.
@@ -110,6 +103,13 @@ func (act Account) Send(p Post) (Message, error) {
 	return m, err
 }
 
+// MessageList represents an list of a SMS resources
+type MessageList struct {
+	common.ListResponseCore
+	Messages *[]Message `json:"messages"`
+	act      *Account
+}
+
 // Filter is used to filter list SMS results
 type Filter struct {
 	To       string
@@ -139,5 +139,15 @@ func (f Filter) getQueryString() string {
 func (act Account) List(f Filter) (MessageList, error) {
 	var ml MessageList
 	err := common.SendGetRequest(fmt.Sprintf(sms.List, act.AccountSid)+f.getQueryString(), act, &ml)
+	ml.act = &act // make a copy of the act for use in further paging
 	return ml, err
+}
+
+// Next sets the MessageList to the next page of the list resource, returns an error in the
+// case that there are no more pages left.
+func (ml *MessageList) Next() error {
+	if ml.Page == ml.NumPages-1 {
+		return errors.New("No more new pages")
+	}
+	return common.SendGetRequest(ml.NextPageURI, *ml.act, ml)
 }

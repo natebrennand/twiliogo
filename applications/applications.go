@@ -5,35 +5,25 @@ import (
 	"fmt"
 	"github.com/natebrennand/twiliogo/common"
 	"io"
-	"net/http"
 	"net/url"
 	"regexp"
 	"strconv"
 	"strings"
 )
 
-const (
-	getURL    = "https://api.twilio.com/2010-04-01/Accounts/%s/Applications/%s.json" // takes an AccountSid & ApplicationSid
-	updateURL = "https://api.twilio.com/2010-04-01/Accounts/%s/Applications/%s.json" // takes an AccountSid & ApplicationSid
-	listURL   = "https://api.twilio.com/2010-04-01/Accounts/%s/Applications.json"    // takes an AccountSid
-	newURL    = "https://api.twilio.com/2010-04-01/Accounts/%s/Applications.json"    // takes an AccountSid
+// holds url values used in queries
+var applications = struct {
+	Get, Update, List, Create string
+}{
+	Get:    "/2010-04-01/Accounts/%s/Applications/%s.json", // takes an AccountSid & ApplicationSid
+	Update: "/2010-04-01/Accounts/%s/Applications/%s.json", // takes an AccountSid & ApplicationSid
+	List:   "/2010-04-01/Accounts/%s/Applications.json",    // takes an AccountSid
+	Create: "/2010-04-01/Accounts/%s/Applications.json",    // takes an AccountSid
+}
 
-)
-
+// Account wraps the common Account struct to embed the AccountSid & Token.
 type Account struct {
-	AccountSid string
-	Token      string
-	Client     http.Client
-}
-
-func (act Account) GetSid() string {
-	return act.AccountSid
-}
-func (act Account) GetToken() string {
-	return act.Token
-}
-func (act Account) GetClient() http.Client {
-	return act.Client
+	common.Account
 }
 
 var validateApplicationSid = regexp.MustCompile(`^AP[0-9a-z]{32}$`).MatchString
@@ -52,7 +42,7 @@ type Resource struct {
 	VoiceMethod           string          `json:"voice_method"`
 	VoiceFallbackURL      string          `json:"voice_fallback_url"`
 	VoiceFallbackMethod   string          `json:"voice_fallback_method"`
-	VoiceCallerIdLookup   bool            `json:"voice_caller_id_lookup"`
+	VoiceCallerIDLookup   bool            `json:"voice_caller_id_lookup"`
 	SmsURL                string          `json:"sms_url"`
 	SmsMethod             string          `json:"sms_method"`
 	SmsFallbackURL        string          `json:"sms_fallback_url"`
@@ -62,15 +52,17 @@ type Resource struct {
 	URI                   string          `json:"uri"`
 }
 
+// Get returns all information about an Application.
 func (act Account) Get(sid string) (Resource, error) {
 	var r Resource
 	if !validateApplicationSid(sid) {
 		return r, errors.New("Invalid sid")
 	}
-	err := common.SendGetRequest(fmt.Sprintf(getURL, act.AccountSid, sid), act, &r)
+	err := common.SendGetRequest(fmt.Sprintf(applications.Get, act.AccountSid, sid), act, &r)
 	return r, err
 }
 
+// Modification is used to change the state of an application.
 type Modification struct {
 	FriendlyName          string
 	APIVersion            string
@@ -78,7 +70,7 @@ type Modification struct {
 	VoiceMethod           string
 	VoiceFallbackURL      string
 	VoiceFallbackMethod   string
-	VoiceCallerIdLookup   *bool
+	VoiceCallerIDLookup   *bool
 	SmsURL                string
 	SmsMethod             string
 	SmsFallbackURL        string
@@ -87,6 +79,7 @@ type Modification struct {
 	MessageStatusCallback string
 }
 
+// Validate is implemented for the common.twilioPost interface.
 func (m Modification) Validate() error {
 	if len(m.FriendlyName) > 64 {
 		return errors.New("Modification: Invalid FriendlyName, must be <= 64 characters")
@@ -94,6 +87,7 @@ func (m Modification) Validate() error {
 	return nil
 }
 
+// GetReader is implemented for the common.twilioPost interface.
 func (m Modification) GetReader() io.Reader {
 	v := url.Values{}
 	if m.FriendlyName != "" {
@@ -115,8 +109,8 @@ func (m Modification) GetReader() io.Reader {
 	if m.VoiceFallbackMethod != "" {
 		v.Add("VoiceFallbackMethod", m.VoiceFallbackMethod)
 	}
-	if m.VoiceCallerIdLookup != nil {
-		v.Add("VoiceCallerIdLookup", strconv.FormatBool(*m.VoiceCallerIdLookup))
+	if m.VoiceCallerIDLookup != nil {
+		v.Add("VoiceCallerIdLookup", strconv.FormatBool(*m.VoiceCallerIDLookup))
 	}
 	if m.SmsURL != "" {
 		v.Add("SmsUrl", m.SmsURL)
@@ -139,6 +133,7 @@ func (m Modification) GetReader() io.Reader {
 	return strings.NewReader(v.Encode())
 }
 
+// Modify is used with a Modification struc to alter the settings of an Application.
 func (act Account) Modify(sid string, m Modification) (Resource, error) {
 	var r Resource
 	if !validateApplicationSid(sid) {
@@ -147,20 +142,23 @@ func (act Account) Modify(sid string, m Modification) (Resource, error) {
 	if m.Validate() != nil {
 		return r, m.Validate()
 	}
-	err := common.SendPostRequest(fmt.Sprintf(updateURL, act.AccountSid, sid), m, act, &r)
+	err := common.SendPostRequest(fmt.Sprintf(applications.Update, act.AccountSid, sid), m, act, &r)
 	return r, err
 }
 
+// ResourceList is used to contain the list of applications associated with this account.
 type ResourceList struct {
 	common.ListResponseCore
 	Applications *[]Resource `json:"applications"`
+	act          *Account
 }
 
+// ListFilter is used to limit the number of applications returned in a List() query.
 type ListFilter struct {
 	FriendlyName string
 }
 
-func (f ListFilter) GetQueryString() string {
+func (f ListFilter) getQueryString() string {
 	v := url.Values{}
 	if f.FriendlyName != "" {
 		v.Add("FriendlyName", f.FriendlyName)
@@ -169,29 +167,42 @@ func (f ListFilter) GetQueryString() string {
 	return ""
 }
 
+// List returns the list of all applications the fulfill the filter provided.
 func (act Account) List(f ListFilter) (ResourceList, error) {
 	var rl ResourceList
-	err := common.SendGetRequest(fmt.Sprintf(listURL, act.AccountSid)+f.GetQueryString(), act, &rl)
+	err := common.SendGetRequest(fmt.Sprintf(applications.List, act.AccountSid)+f.getQueryString(), act, &rl)
+	rl.act = &act
 	return rl, err
 }
 
-type NewResource struct {
-	FriendlyName          string `json:"friendly_name"`
-	AccountSid            string `json:"account_sid,omitempty,omitempty"`
-	APIVersion            string `json:"api_version,omitempty,omitempty"`
-	VoiceURL              string `json:"voice_url,omitempty,omitempty"`
-	VoiceMethod           string `json:"voice_method,omitempty,omitempty"`
-	VoiceFallbackURL      string `json:"voice_fallback_url,omitempty,omitempty"`
-	VoiceFallbackMethod   string `json:"voice_fallback_method,omitempty,omitempty"`
-	VoiceCallerIdLookup   bool   `json:"voice_caller_id_lookup,omitempty,omitempty"`
-	SmsURL                string `json:"sms_url,omitempty,omitempty"`
-	SmsMethod             string `json:"sms_method,omitempty,omitempty"`
-	SmsFallbackURL        string `json:"sms_fallback_url,omitempty,omitempty"`
-	SmsFallbackMethod     string `json:"sms_fallback_method,omitempty,omitempty"`
-	SmsStatusCallback     string `json:"sms_status_callback,omitempty,omitempty"`
-	MessageStatusCallback string `json:"message_status_callback,omitempty,omitempty"`
+// Next sets the ResourceList to the next page of the list resource, returns an error in the
+// case that there are no more pages left.
+func (rl *ResourceList) next() error {
+	if rl.Page == rl.NumPages-1 {
+		return errors.New("no more new pages")
+	}
+	return common.SendGetRequest(rl.NextPageURI, *rl.act, rl)
 }
 
+// NewResource represents a new application to be associated with a Twilio account.
+type NewResource struct {
+	FriendlyName          string
+	AccountSid            string
+	APIVersion            string
+	VoiceURL              string
+	VoiceMethod           string
+	VoiceFallbackURL      string
+	VoiceFallbackMethod   string
+	VoiceCallerIDLookup   bool
+	SmsURL                string
+	SmsMethod             string
+	SmsFallbackURL        string
+	SmsFallbackMethod     string
+	SmsStatusCallback     string
+	MessageStatusCallback string
+}
+
+// GetReader is implemented for the common.twilioPost interface.
 func (r NewResource) GetReader() io.Reader {
 	v := url.Values{}
 	if r.FriendlyName != "" {
@@ -230,10 +241,11 @@ func (r NewResource) GetReader() io.Reader {
 	if r.MessageStatusCallback != "" {
 		v.Add("MessageStatusCallback", r.MessageStatusCallback)
 	}
-	v.Add("VoiceCallerIdLookup", strconv.FormatBool(r.VoiceCallerIdLookup))
+	v.Add("VoiceCallerIdLookup", strconv.FormatBool(r.VoiceCallerIDLookup))
 	return strings.NewReader(v.Encode())
 }
 
+// Validate is implemented for the common.twilioPost interface.
 func (r NewResource) Validate() error {
 	if r.FriendlyName == "" {
 		return errors.New("NewResource: FriendlyName must be set when creating a new Application")
@@ -242,11 +254,12 @@ func (r NewResource) Validate() error {
 	return nil
 }
 
+// Create send a request to create a new Twilio Application.
 func (act Account) Create(nr NewResource) (Resource, error) {
 	var r Resource
 	if nr.Validate() != nil {
 		return r, nr.Validate()
 	}
-	err := common.SendPostRequest(fmt.Sprintf(newURL, act.AccountSid), nr, act, &r)
+	err := common.SendPostRequest(fmt.Sprintf(applications.Create, act.AccountSid), nr, act, &r)
 	return r, err
 }

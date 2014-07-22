@@ -6,6 +6,7 @@ type redirect struct {
 	Target *string `xml:",chardata"`
 }
 
+// RedirectOpts configures a redirect block
 type RedirectOpts struct {
 	Method string `xml:"method,attr,omitempty"`
 }

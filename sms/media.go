@@ -10,8 +10,8 @@ import (
 var media = struct {
 	Get, List string
 }{
-	Get:  "https://api.twilio.com/2010-04-01/Accounts/%s/Messages/%s/Media/%s.json", // takes an AccountSid, MessageSid & MediaSid,
-	List: "https://api.twilio.com/2010-04-01/Accounts/%s/Messages/%s/Media.json",    // takes an AccountSid & MessageSid
+	Get:  "/2010-04-01/Accounts/%s/Messages/%s/Media/%s.json", // takes an AccountSid, MessageSid & MediaSid,
+	List: "/2010-04-01/Accounts/%s/Messages/%s/Media.json",    // takes an AccountSid & MessageSid
 }
 
 var (
@@ -45,6 +45,8 @@ func (act Account) GetMedia(mmsSid, mediaSid string) (Media, error) {
 }
 
 // MediaList contains a list of Media instances as well as paging information for further querying.
+// MediaList does not have a Next() method because there is a constant limit of the number of
+// media items that may be associated with a Media resource.
 type MediaList struct {
 	common.ListResponseCore
 	MediaList *[]Media `json:"media_list"`

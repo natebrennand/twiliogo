@@ -6,6 +6,9 @@ type sms struct {
 	Text *string `xml:",chardata"`
 }
 
+// SmsOpts sets the attributes of the SMS message.
+//
+// https://www.twilio.com/docs/api/twiml/sms
 type SmsOpts struct {
 	To             string `xml:"to,attr,omitempty"`
 	From           string `xml:"from,attr,omitempty"`

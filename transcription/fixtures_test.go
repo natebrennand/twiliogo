@@ -33,7 +33,7 @@ var testResponseFixture = Transcription{
 	TranscriptionText: "Nate is a go-ru",
 }
 
-var testListFixture = TranscriptionList{
+var testListFixture = List{
 	ListResponseCore: common.ListResponseCore{
 		Start:           0,
 		Total:           261,
