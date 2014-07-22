@@ -21,8 +21,8 @@ var testFixtureString = `{
 var testFixture = Conference{
 	AccountSid:   "AC5116d5d4df9f61ceae2f0732e1ea9f1b",
 	APIVersion:   "2010-04-01",
-	DateCreated:  common.JSONTime{time.Date(2010, time.August, 16, 3, 45, 01, 0, &time.Location{})},
-	DateUpdated:  common.JSONTime{time.Date(2010, time.August, 16, 3, 45, 03, 0, &time.Location{})},
+	DateCreated:  common.JSONTime{Time: time.Date(2010, time.August, 16, 3, 45, 01, 0, &time.Location{})},
+	DateUpdated:  common.JSONTime{Time: time.Date(2010, time.August, 16, 3, 45, 03, 0, &time.Location{})},
 	FriendlyName: "Go Team Conference",
 	Sid:          "CFbbe46ff1274e283f7e3ac1df0072ab39",
 	Status:       "completed",
@@ -61,7 +61,7 @@ var testFixtureListString = ` {
     ]
 }`
 
-var testFixtureList = ConferenceList{
+var testFixtureList = List{
 	ListResponseCore: common.ListResponseCore{
 		Start:           0,
 		Total:           261,
@@ -106,8 +106,8 @@ var testParticipantFixtureString = `{
 
 var testParticipantFixture = Participant{
 	AccountSid:          "AC5116d5d4df9f61ceae2f0732e1ea9f1b",
-	DateCreated:         common.JSONTime{time.Date(2010, time.August, 16, 3, 45, 01, 0, &time.Location{})},
-	DateUpdated:         common.JSONTime{time.Date(2010, time.August, 16, 3, 45, 03, 0, &time.Location{})},
+	DateCreated:         common.JSONTime{Time: time.Date(2010, time.August, 16, 3, 45, 01, 0, &time.Location{})},
+	DateUpdated:         common.JSONTime{Time: time.Date(2010, time.August, 16, 3, 45, 03, 0, &time.Location{})},
 	ConferenceSid:       "CFbbe46ff1274e283f7e3ac1df0072ab39",
 	CallSid:             "CA386025c9bf5d6052a1d1ea42b4d16662",
 	EndConferenceOnExit: true,
@@ -160,8 +160,8 @@ var testParticipantFixtureList = ParticipantList{
 	Participants: &[]Participant{
 		Participant{
 			AccountSid:          "AC5116d5d4df9f61ceae2f0732e1ea9f1b",
-			DateCreated:         common.JSONTime{time.Date(2010, time.August, 16, 3, 45, 01, 0, &time.Location{})},
-			DateUpdated:         common.JSONTime{time.Date(2010, time.August, 16, 3, 45, 03, 0, &time.Location{})},
+			DateCreated:         common.JSONTime{Time: time.Date(2010, time.August, 16, 3, 45, 01, 0, &time.Location{})},
+			DateUpdated:         common.JSONTime{Time: time.Date(2010, time.August, 16, 3, 45, 03, 0, &time.Location{})},
 			ConferenceSid:       "CFbbe46ff1274e283f7e3ac1df0072ab39",
 			CallSid:             "CA386025c9bf5d6052a1d1ea42b4d16662",
 			EndConferenceOnExit: true,

@@ -3,9 +3,10 @@ package twiml
 type play struct {
 	XMLName int `xml:"Play"`
 	*PlayOpts
-	Url string `xml:",chardata"`
+	URL string `xml:",chardata"`
 }
 
+// PlayOpts sets the configuration for playing audio files.
 type PlayOpts struct {
 	Loop   int `xml:"loop,attr,omitempty"`
 	Digits int `xml:"digits,attr,omitempty"`
@@ -13,6 +14,6 @@ type PlayOpts struct {
 
 func addPlay(t twimlResponse, opts *PlayOpts, urls []string) {
 	for _, url := range urls {
-		t.appendContents(&play{PlayOpts: opts, Url: url})
+		t.appendContents(&play{PlayOpts: opts, URL: url})
 	}
 }

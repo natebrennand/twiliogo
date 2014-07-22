@@ -6,8 +6,11 @@ type client struct {
 	Name string `xml:",chardata"`
 }
 
+// ClientOpts allows setting of a Twiml to be called upon the Client entering the call.
+//
+// https://www.twilio.com/docs/api/twiml/client
 type ClientOpts struct {
-	Url    string `xml:"url,attr,omitempty"`
+	URL    string `xml:"url,attr,omitempty"`
 	Method string `xml:"method,attr,omitempty"`
 }
 

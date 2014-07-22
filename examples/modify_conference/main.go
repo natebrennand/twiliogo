@@ -14,7 +14,7 @@ import (
 func makeCall(to string, act twiliogo.Account) string {
 	fmt.Println("Add participant?")
 	bufio.NewReader(os.Stdin).ReadString('\n')
-	resp, err := act.Voice.Call(voice.Post{
+	resp, err := act.Voice.Call(voice.Call{
 		From: "+16162882901",
 		To:   to,
 		URL:  "http://twimlbin.com/de26e328",
@@ -30,11 +30,8 @@ func makeCall(to string, act twiliogo.Account) string {
 }
 
 func muteParticipant(confSid string, callSid string, act twiliogo.Account) {
-	var muted bool
-	mutedPtr := &muted
-	*mutedPtr = true
-	_, err := act.Conferences.SetMute(confSid, callSid, conference.ParticipantAttr{
-		Muted: mutedPtr,
+	_, err := act.Conferences.SetMute(confSid, callSid, conference.ParticipantUpdate{
+		Muted: true,
 	})
 	if err != nil {
 		fmt.Println("Error muting participant: ", err.Error())
@@ -60,7 +57,7 @@ func main() {
 	bufio.NewReader(os.Stdin).ReadString('\n')
 	resp, err := act.Conferences.List(conference.ListFilter{
 		Status:      "in-progress",
-		DateCreated: &(common.JSONTime{time.Now()}), //Set to today's date
+		DateCreated: &(common.JSONTime{Time: time.Now()}), //Set to today's date
 	})
 	if err != nil {
 		fmt.Println("Error getting conferences: ", err.Error())
@@ -72,12 +69,12 @@ func main() {
 		confSid = c.Sid
 	}
 
-	part_resp, err := act.Conferences.Participant(confSid, sid2)
+	partResp, err := act.Conferences.GetParticipant(confSid, sid2)
 
 	if err != nil {
 		fmt.Println("Error getting participant: ", err.Error())
 	} else {
-		fmt.Printf("%#v\n", part_resp)
+		fmt.Printf("%#v\n", partResp)
 
 	}
 

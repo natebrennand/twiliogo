@@ -6,6 +6,9 @@ type say struct {
 	Sentence string `xml:",chardata"`
 }
 
+// SayOpts alters the attributes of the automatic voice.
+//
+// https://www.twilio.com/docs/api/twiml/say
 type SayOpts struct {
 	Voice    string `xml:"voice,attr,omitempty"`
 	Language string `xml:"language,attr,omitempty"`

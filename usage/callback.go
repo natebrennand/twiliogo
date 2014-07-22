@@ -7,6 +7,7 @@ import (
 	"time"
 )
 
+// TriggerCallback contains the information sent by a usage trigger.
 type TriggerCallback struct {
 	AccountSid        string          `json:"account_sid"`
 	UsageTriggerSid   string          `json:"usage_trigger_sid"`

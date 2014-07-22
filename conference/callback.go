@@ -4,6 +4,8 @@ import (
 	"net/http"
 )
 
+// Callback represents the callback sent by Twilio which contains the
+// url for the recording.
 type Callback struct {
 	RecordingURL string
 }
@@ -17,6 +19,8 @@ func (cb *Callback) Parse(req *http.Request) error {
 	return nil
 }
 
+// CallbackHandler creates a http handler to parse incoming callbacks
+// and pass them into a channel for consumption.
 func CallbackHandler(callbackChan chan Callback) http.HandlerFunc {
 	return http.HandlerFunc(func(resp http.ResponseWriter, req *http.Request) {
 		var cb Callback
