@@ -18,7 +18,7 @@ var testResponseFixtureString = `{
 }`
 
 var testResponseFixture = Recording{
-	ResponseCore2: common.ResponseCore2{
+	ResourceInfo: common.ResourceInfo{
 		Sid:         "REc8009ae243230394bc84437e1a9f4650",
 		DateCreated: common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
 		DateUpdated: common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
@@ -46,7 +46,7 @@ var testListFixture = List{
 	},
 	Recordings: &[]Recording{
 		Recording{
-			ResponseCore2: common.ResponseCore2{
+			ResourceInfo: common.ResourceInfo{
 				Sid:         "REc8009ae243230394bc84437e1a9f4650",
 				DateCreated: common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
 				DateUpdated: common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},

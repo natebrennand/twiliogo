@@ -157,7 +157,7 @@ var (
 	*                     MEDIA
 	********************************************************/
 	testMediaFixture = Media{
-		ResponseCore2: common.ResponseCore2{
+		ResourceInfo: common.ResourceInfo{
 			Sid:         "ME85ebf7e12cb821f84b319340424dcb02",
 			AccountSid:  "AC381707b751dbe4c74b15c5697ba67afd",
 			DateCreated: common.JSONTime{Time: time.Date(2013, time.September, 25, 22, 47, 40, 18, &time.Location{})},
@@ -193,7 +193,7 @@ var (
 			Media{
 				ParentSid:   "MM800f449d0399ed014aae2bcc0cc2f2ec",
 				ContentType: "image/png",
-				ResponseCore2: common.ResponseCore2{
+				ResourceInfo: common.ResourceInfo{
 					Sid:         "ME85ebf7e12cb821f84b319340424dcb02",
 					AccountSid:  "AC381707b751dbe4c74b15c5697ba67afd",
 					DateCreated: common.JSONTime{Time: time.Date(2013, time.September, 25, 22, 47, 40, 18, &time.Location{})},
@@ -204,7 +204,7 @@ var (
 			Media{
 				ParentSid:   "MM800f449d0399ed014aae2bcc0cc2f2ec",
 				ContentType: "image/png",
-				ResponseCore2: common.ResponseCore2{
+				ResourceInfo: common.ResourceInfo{
 					Sid:         "ME8d8f717e2d6e5383055b3cd150ac5f54",
 					AccountSid:  "AC381707b751dbe4c74b15c5697ba67afd",
 					DateCreated: common.JSONTime{Time: time.Date(2013, time.September, 25, 22, 47, 40, 18, &time.Location{})},

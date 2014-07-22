@@ -73,8 +73,8 @@ type ListResponseCore struct {
 	PreviousPageURI string `json:"previous_page_uri"`
 }
 
-// TODO: rename
-type ResponseCore2 struct {
+// ResourceInfo consolidates information contained in many structs.
+type ResourceInfo struct {
 	AccountSid  string   `json:"account_sid"`
 	Sid         string   `json:"sid"`
 	URI         string   `json:"uri"`

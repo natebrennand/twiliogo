@@ -21,7 +21,7 @@ var (
 
 // Media represents a Media resource
 type Media struct {
-	common.ResponseCore2
+	common.ResourceInfo
 	ParentSid   string `json:"parent_sid,omitempty"`
 	ContentType string `json:"content-type"`
 }
