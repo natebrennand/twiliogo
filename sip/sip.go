@@ -93,7 +93,7 @@ type Domain struct {
 	VoiceMethod               string          `json:"voice_method"`
 	VoiceFallbackURL          string          `json:"voice_fallback_url"`
 	VoiceFallbackMethod       string          `json:"voice_fallback_method"`
-	VoiceStatusCallback       string          `json:"voice_status_callback"`
+	VoiceStatusCallbackURL    string          `json:"voice_status_callback_url"`
 	VoiceStatusCallbackMethod string          `json:"voice_status_callback_method"`
 	SubresourceURIs           subresourceURIs `json:"subresource_uris"`
 }
@@ -124,7 +124,7 @@ type NewDomain struct {
 	VoiceMethod               string
 	VoiceFallbackURL          string
 	VoiceFallbackMethod       string
-	VoiceStatusCallback       string
+	VoiceStatusCallbackURL    string
 	VoiceStatusCallbackMethod string
 }
 
@@ -157,8 +157,8 @@ func (n NewDomain) GetReader() io.Reader {
 	if n.VoiceFallbackMethod != "" {
 		vals.Set("VoiceFallbackMethod", n.VoiceFallbackMethod)
 	}
-	if n.VoiceStatusCallback != "" {
-		vals.Set("VoiceStatusCallback", n.VoiceStatusCallback)
+	if n.VoiceStatusCallbackURL != "" {
+		vals.Set("VoiceStatusCallbackUrl", n.VoiceStatusCallbackURL)
 	}
 	if n.VoiceStatusCallbackMethod != "" {
 		vals.Set("VoiceStatusCallbackMethod", n.VoiceStatusCallbackMethod)
