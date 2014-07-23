@@ -58,15 +58,15 @@ var (
 		},
 		SipDomains: &[]Domain{
 			Domain{
-				Common: Common{
-					Sid:          "SD098e7b11c00d0ba152b1d3f084c4b776",
-					AccountSid:   "ACba8bc05eacf94afdae398e642c9cc32d",
-					FriendlyName: "Scranton Office",
-					DateCreated:  common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
-					DateUpdated:  common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
-					URI:          "/2010-04-01/Accounts/ACba8bc05eacf94afdae398e642c9cc32d/SIP/Domains/SD098e7b11c00d0ba152b1d3f084c4b776.json",
+				ResourceInfo: common.ResourceInfo{
+					Sid:         "SD098e7b11c00d0ba152b1d3f084c4b776",
+					AccountSid:  "ACba8bc05eacf94afdae398e642c9cc32d",
+					DateCreated: common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
+					DateUpdated: common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
+					URI:         "/2010-04-01/Accounts/ACba8bc05eacf94afdae398e642c9cc32d/SIP/Domains/SD098e7b11c00d0ba152b1d3f084c4b776.json",
 				},
-				ApiVersion:                "2010-04-01",
+				FriendlyName:              "Scranton Office",
+				APIVersion:                "2010-04-01",
 				DomainName:                "dunder-mifflin-scranton.sip.twilio.com",
 				AuthType:                  "",
 				VoiceURL:                  "https://dundermifflin.example.com/twilio/app.php",
@@ -104,15 +104,15 @@ var (
 	}`
 
 	testDomainFixture = Domain{
-		Common: Common{
-			Sid:          "SD27f0288630a668bdfbf177f8e22f5ccc",
-			AccountSid:   "ACba8bc05eacf94afdae398e642c9cc32d",
-			FriendlyName: "Scranton Office",
-			DateCreated:  common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
-			DateUpdated:  common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
-			URI:          "/2010-04-01/Accounts/ACba8bc05eacf94afdae398e642c9cc32d/SIP/Domains/SD098e7b11c00d0ba152b1d3f084c4b776.json",
+		ResourceInfo: common.ResourceInfo{
+			Sid:         "SD27f0288630a668bdfbf177f8e22f5ccc",
+			AccountSid:  "ACba8bc05eacf94afdae398e642c9cc32d",
+			DateCreated: common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
+			DateUpdated: common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
+			URI:         "/2010-04-01/Accounts/ACba8bc05eacf94afdae398e642c9cc32d/SIP/Domains/SD098e7b11c00d0ba152b1d3f084c4b776.json",
 		},
-		ApiVersion:                "2010-04-01",
+		FriendlyName:              "Scranton Office",
+		APIVersion:                "2010-04-01",
 		DomainName:                "dunder-mifflin-scranton.sip.twilio.com",
 		AuthType:                  "IP_ACL",
 		VoiceURL:                  "https://dundermifflin.example.com/twilio/app.php",
@@ -137,13 +137,13 @@ var (
 	}`
 
 	testMappingFixture = Mapping{
-		Common: Common{
-			Sid:          "AL95a47094615fe05b7c17e62a7877836c",
-			FriendlyName: "Production Gateways IP Address - Scranton",
-			DateCreated:  common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
-			DateUpdated:  common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
-			URI:          "/2010-04-01/Accounts/AC32a3c49700934481addd5ce1659f04d2/SIP/IpAccessControlLists/AL95a47094615fe05b7c17e62a7877836c.json",
+		ResourceInfo: common.ResourceInfo{
+			Sid:         "AL95a47094615fe05b7c17e62a7877836c",
+			DateCreated: common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
+			DateUpdated: common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
+			URI:         "/2010-04-01/Accounts/AC32a3c49700934481addd5ce1659f04d2/SIP/IpAccessControlLists/AL95a47094615fe05b7c17e62a7877836c.json",
 		},
+		FriendlyName: "Production Gateways IP Address - Scranton",
 		SubresourceURIs: mapSubresourceURI{
 			Addresses: "/2010-04-01/Accounts/AC32a3c49700934481addd5ce1659f04d2/SIP/IpAccessControlLists/AL95a47094615fe05b7c17e62a7877836c/Addresses.json",
 		},
@@ -190,14 +190,14 @@ var (
 		},
 		CredentialListMappings: &[]Credential{
 			Credential{
-				Common: Common{
-					Sid:          "CL32a3c49700934481addd5ce1659f04d2",
-					AccountSid:   "AC32a3c49700934481addd5ce1659f04d2",
-					FriendlyName: "Production Gateways IP Address - Scranton",
-					DateCreated:  common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
-					DateUpdated:  common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
-					URI:          "/2010-04-01/Accounts/AC32a3c49700934481addd5ce1659f04d2/SIP/CredentialLists/CL32a3c49700934481addd5ce1659f04d2.json",
+				ResourceInfo: common.ResourceInfo{
+					Sid:         "CL32a3c49700934481addd5ce1659f04d2",
+					AccountSid:  "AC32a3c49700934481addd5ce1659f04d2",
+					DateCreated: common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
+					DateUpdated: common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
+					URI:         "/2010-04-01/Accounts/AC32a3c49700934481addd5ce1659f04d2/SIP/CredentialLists/CL32a3c49700934481addd5ce1659f04d2.json",
 				},
+				FriendlyName: "Production Gateways IP Address - Scranton",
 				SubresourceURIs: credentialSubresourceURI{
 					Credentials: "/2010-04-01/Accounts/AC32a3c49700934481addd5ce1659f04d2/SIP/CredentialLists/CL32a3c49700934481addd5ce1659f04d2/Credentials.json",
 				},
@@ -218,14 +218,14 @@ var (
 	}`
 
 	testCredentialFixture = Credential{
-		Common: Common{
-			Sid:          "CL32a3c49700934481addd5ce1659f04d2",
-			AccountSid:   "AC32a3c49700934481addd5ce1659f04d2",
-			FriendlyName: "Production Gateways IP Address - Scranton",
-			DateCreated:  common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
-			DateUpdated:  common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
-			URI:          "/2010-04-01/Accounts/AC32a3c49700934481addd5ce1659f04d2/SIP/CredentialLists/CL32a3c49700934481addd5ce1659f04d2.json",
+		ResourceInfo: common.ResourceInfo{
+			Sid:         "CL32a3c49700934481addd5ce1659f04d2",
+			AccountSid:  "AC32a3c49700934481addd5ce1659f04d2",
+			DateCreated: common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
+			DateUpdated: common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
+			URI:         "/2010-04-01/Accounts/AC32a3c49700934481addd5ce1659f04d2/SIP/CredentialLists/CL32a3c49700934481addd5ce1659f04d2.json",
 		},
+		FriendlyName: "Production Gateways IP Address - Scranton",
 		SubresourceURIs: credentialSubresourceURI{
 			Credentials: "/2010-04-01/Accounts/AC32a3c49700934481addd5ce1659f04d2/SIP/CredentialLists/CL32a3c49700934481addd5ce1659f04d2/Credentials.json",
 		},

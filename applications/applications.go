@@ -32,24 +32,20 @@ var validateApplicationSid = regexp.MustCompile(`^AP[0-9a-z]{32}$`).MatchString
 //
 // https://www.twilio.com/docs/api/rest/applications
 type Resource struct {
-	Sid                   string          `json:"sid"`
-	DateCreated           common.JSONTime `json:"date_created"`
-	DateUpdated           common.JSONTime `json:"date_updated"`
-	FriendlyName          string          `json:"friendly_name"`
-	AccountSid            string          `json:"account_sid"`
-	APIVersion            string          `json:"api_version"`
-	VoiceURL              string          `json:"voice_url"`
-	VoiceMethod           string          `json:"voice_method"`
-	VoiceFallbackURL      string          `json:"voice_fallback_url"`
-	VoiceFallbackMethod   string          `json:"voice_fallback_method"`
-	VoiceCallerIDLookup   bool            `json:"voice_caller_id_lookup"`
-	SmsURL                string          `json:"sms_url"`
-	SmsMethod             string          `json:"sms_method"`
-	SmsFallbackURL        string          `json:"sms_fallback_url"`
-	SmsFallbackMethod     string          `json:"sms_fallback_method"`
-	SmsStatusCallback     string          `json:"sms_status_callback"`
-	MessageStatusCallback string          `json:"message_status_callback"`
-	URI                   string          `json:"uri"`
+	common.ResourceInfo
+	FriendlyName          string `json:"friendly_name"`
+	APIVersion            string `json:"api_version"`
+	VoiceURL              string `json:"voice_url"`
+	VoiceMethod           string `json:"voice_method"`
+	VoiceFallbackURL      string `json:"voice_fallback_url"`
+	VoiceFallbackMethod   string `json:"voice_fallback_method"`
+	VoiceCallerIDLookup   bool   `json:"voice_caller_id_lookup"`
+	SmsURL                string `json:"sms_url"`
+	SmsMethod             string `json:"sms_method"`
+	SmsFallbackURL        string `json:"sms_fallback_url"`
+	SmsFallbackMethod     string `json:"sms_fallback_method"`
+	SmsStatusCallback     string `json:"sms_status_callback"`
+	MessageStatusCallback string `json:"message_status_callback"`
 }
 
 // Get returns all information about an Application.
@@ -94,7 +90,6 @@ func (m Modification) GetReader() io.Reader {
 		v.Add("FriendlyName", m.FriendlyName)
 	}
 	if m.APIVersion != "" {
-		//TODO: validate it to the available options
 		v.Add("ApiVersion", m.APIVersion)
 	}
 	if m.VoiceURL != "" {
@@ -184,8 +179,8 @@ func (rl *ResourceList) next() error {
 	return common.SendGetRequest(rl.NextPageURI, *rl.act, rl)
 }
 
-// NewResource represents a new application to be associated with a Twilio account.
-type NewResource struct {
+// Application represents a new application to be associated with a Twilio account.
+type Application struct {
 	FriendlyName          string
 	AccountSid            string
 	APIVersion            string
@@ -203,7 +198,7 @@ type NewResource struct {
 }
 
 // GetReader is implemented for the common.twilioPost interface.
-func (r NewResource) GetReader() io.Reader {
+func (r Application) GetReader() io.Reader {
 	v := url.Values{}
 	if r.FriendlyName != "" {
 		v.Add("FriendlyName", r.FriendlyName)
@@ -246,16 +241,16 @@ func (r NewResource) GetReader() io.Reader {
 }
 
 // Validate is implemented for the common.twilioPost interface.
-func (r NewResource) Validate() error {
+func (r Application) Validate() error {
 	if r.FriendlyName == "" {
-		return errors.New("NewResource: FriendlyName must be set when creating a new Application")
+		return errors.New("Application: FriendlyName must be set when creating a new Application")
 	}
 	// TODO: validate all optional fields, https://www.twilio.com/docs/api/rest/applications#list-post-optional-parameters
 	return nil
 }
 
 // Create send a request to create a new Twilio Application.
-func (act Account) Create(nr NewResource) (Resource, error) {
+func (act Account) Create(nr Application) (Resource, error) {
 	var r Resource
 	if nr.Validate() != nil {
 		return r, nr.Validate()

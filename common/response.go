@@ -72,3 +72,12 @@ type ListResponseCore struct {
 	NextPageURI     string `json:"next_page_uri"`
 	PreviousPageURI string `json:"previous_page_uri"`
 }
+
+// ResourceInfo consolidates information contained in many structs.
+type ResourceInfo struct {
+	AccountSid  string   `json:"account_sid"`
+	Sid         string   `json:"sid"`
+	URI         string   `json:"uri"`
+	DateCreated JSONTime `json:"date_created"`
+	DateUpdated JSONTime `json:"date_updated"`
+}

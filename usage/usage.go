@@ -13,11 +13,11 @@ import (
 var usage = struct {
 	Get, Delete, Update, Create, List string
 }{
-	Get:    "https://api.twilio.com/2010-04-01/Accounts/%s/Usage/Triggers/%s.json", // takes an AccountSid & TriggerSid
-	Delete: "https://api.twilio.com/2010-04-01/Accounts/%s/Usage/Triggers/%s.json", // takes an AccountSid & TriggerSid
-	Update: "https://api.twilio.com/2010-04-01/Accounts/%s/Usage/Triggers/%s.json", // takes an AccountSid & TriggerSid
-	Create: "https://api.twilio.com/2010-04-01/Accounts/%s/Usage/Triggers.json",    // takes an AccountSid
-	List:   "https://api.twilio.com/2010-04-01/Accounts/%s/Usage/Triggers.json",    // takes an AccountSid
+	Get:    "/2010-04-01/Accounts/%s/Usage/Triggers/%s.json", // takes an AccountSid & TriggerSid
+	Delete: "/2010-04-01/Accounts/%s/Usage/Triggers/%s.json", // takes an AccountSid & TriggerSid
+	Update: "/2010-04-01/Accounts/%s/Usage/Triggers/%s.json", // takes an AccountSid & TriggerSid
+	Create: "/2010-04-01/Accounts/%s/Usage/Triggers.json",    // takes an AccountSid
+	List:   "/2010-04-01/Accounts/%s/Usage/Triggers.json",    // takes an AccountSid
 }
 
 // Account wraps the common Account struct to embed the AccountSid & Token.
@@ -31,8 +31,7 @@ var validateTriggerSid = regexp.MustCompile(`^UT[0-9a-z]{32}$`).MatchString
 //
 // https://www.twilio.com/docs/api/rest/usage-triggers
 type Trigger struct {
-	Sid            string          `json:"sid"`
-	AccountSid     string          `json:"account_sid"`
+	common.ResourceInfo
 	FriendlyName   string          `json:"friendly_name"`
 	Recurring      string          `json:"recurring"`
 	UsageCategory  string          `json:"usage_category"`
@@ -42,10 +41,7 @@ type Trigger struct {
 	UsageRecordURI string          `json:"usage_record_uri"`
 	CallbackURL    string          `json:"callback_url"`
 	CallbackMethod string          `json:"callback_method"`
-	URI            string          `json:"uri"`
 	DateFired      common.JSONTime `json:"date_fired"`
-	DateCreated    common.JSONTime `json:"date_created"`
-	DateUpdated    common.JSONTime `json:"date_updated"`
 }
 
 // GetTrigger returns a Trigger object based on the sid.

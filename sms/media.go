@@ -21,13 +21,9 @@ var (
 
 // Media represents a Media resource
 type Media struct {
-	AccountSid  string          `json:"account_sid"`
-	ParentSid   string          `json:"parent_sid,omitempty"`
-	Sid         string          `json:"sid"`
-	URI         string          `json:"uri"`
-	DateCreated common.JSONTime `json:"date_created"`
-	DateUpdated common.JSONTime `json:"date_updated"`
-	ContentType string          `json:"content-type"`
+	common.ResourceInfo
+	ParentSid   string `json:"parent_sid,omitempty"`
+	ContentType string `json:"content-type"`
 }
 
 // GetMedia returns the information for a piece of media given it's parent MMS's sid and the sid
