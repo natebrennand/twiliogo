@@ -16,13 +16,17 @@ var (
 		"body":"Jenny please?! I love you <3",
 		"to":"+15558675309",
 		"from":"+14158141829",
-		"media_url":"http://www.example.com/hearts.png"
+		"media_url":"http://www.example.com/hearts.png",
+		"status_callback":"foobar.com",
+		"application_sid":"AP5ef8732a3c49700934481addd5ce1659"
 	}`
 	testSmsPostFixture = Post{
-		Body:     "Jenny please?! I love you <3",
-		To:       "+15558675309",
-		From:     "+14158141829",
-		MediaURL: "http://www.example.com/hearts.png",
+		Body:           "Jenny please?! I love you <3",
+		To:             "+15558675309",
+		From:           "+14158141829",
+		MediaURL:       "http://www.example.com/hearts.png",
+		StatusCallback: "foobar.com",
+		ApplicationSid: "AP5ef8732a3c49700934481addd5ce1659",
 	}
 	testSmsResponseFixtureString = `{
 		"account_sid": "AC5ef8732a3c49700934481addd5ce1659",
@@ -71,7 +75,12 @@ var (
 		NumMedia:      0,
 		MessageStatus: "sent",
 		ErrorCode:     "",
-		MediaList:     []MediaReference{},
+		MediaList: []MediaReference{
+			{
+				ContentType: "XXX",
+				URL:         "foobar.com",
+			},
+		},
 		StandardRequest: common.StandardRequest{
 			AccountSid: "AC381707b751dbe4c74b15c5697ba67afd",
 			From:       "+14248004123",
@@ -79,7 +88,7 @@ var (
 			Location:   nil,
 		},
 	}
-	testSmsCallbackFixtureFormString        = `MessageSid=SMa2ff4e37c7cb43b49a820f2d7e3ee135&SmsSid=SMa2ff4e37c7cb43b49a820f2d7eee135&Body=Yo&MessageStatus=sent&AccountSid=AC381707b751dbe4c74b15c5697ba67afd&From=+14248004123&To=+13605847116`
+	testSmsCallbackFixtureFormString        = `MessageSid=SMa2ff4e37c7cb43b49a820f2d7e3ee135&SmsSid=SMa2ff4e37c7cb43b49a820f2d7eee135&Body=Yo&MessageStatus=sent&AccountSid=AC381707b751dbe4c74b15c5697ba67afd&From=+14248004123&To=+13605847116&NumMedia=1&MediaUrl1=foobar.com&MediaContentType1=XXX`
 	testSmsCallbackFixtureFormStringFailure = `MessageSid=SMa2ff4e37c7cb43b49a820f2d7e3ee135&SmsSid=SMa2ff4e37c7cb43b49a820f2d7eee135&Body=Yo&MessageStatus=sent&AccountSid=AC381707b751dbe4c74b15c5697ba67afd&From=+14248004123&To=+13605847116&NumMedia=a`
 	testSmsListFixture                      = MessageList{
 		ListResponseCore: common.ListResponseCore{
