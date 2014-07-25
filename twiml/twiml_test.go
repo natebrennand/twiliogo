@@ -2,13 +2,12 @@ package twiml
 
 import (
 	"encoding/xml"
+	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 const endToEndStr = `<?xml version="1.0" encoding="UTF-8"?>

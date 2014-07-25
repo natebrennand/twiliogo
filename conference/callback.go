@@ -12,7 +12,6 @@ type Callback struct {
 
 // Parse the form encoded callback into a Callback struct
 func (cb *Callback) Parse(req *http.Request) error {
-
 	*cb = Callback{
 		RecordingURL: req.PostFormValue("RecordingUrl"),
 	}

@@ -57,7 +57,7 @@ func (p ParticipantUpdate) Validate() error {
 
 func (p ParticipantUpdate) getParticipantQueryString() string {
 	v := url.Values{}
-	v.Set("Muted", strconv.FormatBool(p.Muted))
+	v.Set("Muted", strconv.FormatBool(p.Muted)) // TODO: should we be checking for truthiness here first?
 	encoded := v.Encode()
 	if encoded != "" {
 		encoded = "?" + encoded

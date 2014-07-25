@@ -2,7 +2,10 @@ package conference
 
 import (
 	"encoding/json"
+	"github.com/natebrennand/twiliogo/common"
+	"github.com/stretchr/testify/assert"
 	"testing"
+	"time"
 )
 
 func TestConferenceBuild(t *testing.T) {
@@ -49,4 +52,28 @@ func TestParticipantBuild(t *testing.T) {
 			p.Muted,
 		)
 	}
+}
+
+func TestQueryString(t *testing.T) {
+	f := ListFilter{
+		Status:       "completed",
+		FriendlyName: "board meeting",
+		DateCreated:  &common.JSONTime{Time: time.Date(2010, time.August, 16, 3, 45, 01, 0, &time.Location{})},
+		DateUpdated:  &common.JSONTime{Time: time.Date(2010, time.August, 16, 3, 45, 03, 0, &time.Location{})},
+	}
+	qs := f.getQueryString()
+
+	assert.Contains(t, qs, "Status=completed")
+	assert.Contains(t, qs, "FriendlyName=board+meeting")
+}
+
+func TestConferenceGetBadReq(t *testing.T) {
+	var c Conference
+	respC, err := testAccount.Get("sldfkj")
+	assert.Error(t, err)
+	assert.Equal(t, c, respC)
+}
+
+func TestConferenceList(t *testing.T) {
+	// TODO: once we concise HTTP testing
 }
