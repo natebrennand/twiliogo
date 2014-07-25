@@ -57,7 +57,7 @@ func (p ParticipantUpdate) Validate() error {
 
 func (p ParticipantUpdate) getParticipantQueryString() string {
 	v := url.Values{}
-	v.Set("Muted", strconv.FormatBool(p.Muted)) // TODO: should we be checking for truthiness here first?
+	v.Set("Muted", strconv.FormatBool(p.Muted))
 	encoded := v.Encode()
 	if encoded != "" {
 		encoded = "?" + encoded
@@ -107,12 +107,12 @@ type ParticipantList struct {
 }
 
 // ListParticipants queries for a list of participants in the conference with confSid.
-func (act Account) ListParticipants(u ParticipantUpdate, confSid string) (ParticipantList, error) {
+func (act Account) ListParticipants(confSid string) (ParticipantList, error) {
 	var pl ParticipantList
 	if !validateConferenceSid(confSid) {
 		return pl, errors.New("Invalid conference sid")
 	}
-	err := common.SendGetRequest(fmt.Sprintf(participant.List, act.AccountSid, confSid)+u.getParticipantQueryString(), act, &pl)
+	err := common.SendGetRequest(fmt.Sprintf(participant.List, act.AccountSid, confSid), act, &pl)
 	pl.act = &act
 	return pl, err
 }
