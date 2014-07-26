@@ -72,7 +72,7 @@ func TestParticipantUpdate(t *testing.T) {
 }
 
 func TestParticipantList(t *testing.T) {
-	_, err := testAccount.ListParticipants("sldkfjl")
+	_, err := testAccount.ListParticipants(ParticipantStatus{Muted: true}, "sldkfjl")
 	assert.Error(t, err)
 
 	// TODO: concisely mock out actual HTTP call

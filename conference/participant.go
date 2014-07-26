@@ -43,6 +43,21 @@ type ParticipantUpdate struct {
 	Muted bool
 }
 
+// ParticipantStatus is used to filter the list of participants from ListParticipants
+type ParticipantStatus struct {
+	Muted bool
+}
+
+func (p ParticipantStatus) getQueryString() string {
+	v := url.Values{}
+	v.Set("Muted", strconv.FormatBool(p.Muted))
+	encoded := v.Encode()
+	if encoded != "" {
+		encoded = "?" + encoded
+	}
+	return encoded
+}
+
 // GetReader creates an io.Reader for the ParticipantUpdate resource.
 func (p ParticipantUpdate) GetReader() io.Reader {
 	vals := url.Values{}
@@ -107,12 +122,12 @@ type ParticipantList struct {
 }
 
 // ListParticipants queries for a list of participants in the conference with confSid.
-func (act Account) ListParticipants(confSid string) (ParticipantList, error) {
+func (act Account) ListParticipants(p ParticipantStatus, confSid string) (ParticipantList, error) {
 	var pl ParticipantList
 	if !validateConferenceSid(confSid) {
 		return pl, errors.New("Invalid conference sid")
 	}
-	err := common.SendGetRequest(fmt.Sprintf(participant.List, act.AccountSid, confSid), act, &pl)
+	err := common.SendGetRequest(fmt.Sprintf(participant.List, act.AccountSid, confSid)+p.getQueryString(), act, &pl)
 	pl.act = &act
 	return pl, err
 }
