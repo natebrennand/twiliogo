@@ -2,11 +2,18 @@ package sms
 
 import (
 	"encoding/json"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
+var (
+	validMmsSid   = "MM800f449d0399ed014aae2bcc0cc2f2ec"
+	validMediaSid = "ME85ebf7e12cb821f84b319340424dcb02"
+	act           = Account{}
+)
+
 func TestValidateMediaSid(t *testing.T) {
-	if !validateMediaSid("ME85ebf7e12cb821f84b319340424dcb02") {
+	if !validateMediaSid(validMediaSid) {
 		t.Error("validateMediaSid failed on a valid sid")
 	}
 	if validateMediaSid("ME85ebf7e12cb8") {
@@ -15,7 +22,7 @@ func TestValidateMediaSid(t *testing.T) {
 }
 
 func TestValidateMmsSid(t *testing.T) {
-	if !validateMmsSid("MM800f449d0399ed014aae2bcc0cc2f2ec") {
+	if !validateMmsSid(validMmsSid) {
 		t.Error("validateMsSid failed on a valid sid")
 	}
 	if validateMmsSid("MM800f4") {
@@ -51,4 +58,21 @@ func TestMediaListBuild(t *testing.T) {
 			len(*m.MediaList),
 		)
 	}
+}
+
+func TestGetMedia(t *testing.T) {
+	_, err := act.GetMedia("sldkfj", "sldkfjls")
+	assert.Error(t, err)
+
+	_, err = act.GetMedia(validMmsSid, "sldkfjls")
+	assert.Error(t, err)
+
+	// TODO: test HTTP call
+}
+
+func TestGetMediaList(t *testing.T) {
+	_, err := act.GetMediaList("sldkfj")
+	assert.Error(t, err)
+
+	// TODO: test HTTP call
 }
