@@ -42,7 +42,7 @@ type subresourceURIs struct {
 	CredentialListMappings      string `json:"credential_list_mappings"`
 }
 
-type mapSubresourceURI struct {
+type addressesSubresourceURI struct {
 	Addresses string `json:"addresses"`
 }
 
@@ -72,12 +72,16 @@ type Common struct {
 	URI          string          `json:"uri"`
 }
 
-type Mapping struct {
+// IPAccessControlList is a struct that contains fields in an IpAccessControlList resource
+// https://www.twilio.com/docs/api/rest/ip-access-control-list#instance-properties
+type IPAccessControlList struct {
 	Common
-	SubresourceURIs mapSubresourceURI `json:"subresource_uris"`
+	SubresourceURIs addressesSubresourceURI `json:"subresource_uris"`
 }
 
-type Credential struct {
+// CredentialList is a struct that contains fields in a CredentialList resource
+// https://www.twilio.com/docs/api/rest/credential-list#instance-properties
+type CredentialList struct {
 	Common
 	SubresourceURIs credentialSubresourceURI `json:"subresource_uris"`
 }
@@ -206,16 +210,16 @@ func (act Account) DeleteDomain(domainSid string) error {
 }
 
 // Mapping gets a control list mapping for this sid
-func (act Account) GetMapping(mappingSid, domainSid string) (Mapping, error) {
-	var m Mapping
+func (act Account) GetMapping(mappingSid, domainSid string) (IPAccessControlList, error) {
+	var i IPAccessControlList
 	if !validateMappingSid(mappingSid) {
-		return m, errors.New("Invalid control sid")
+		return i, errors.New("Invalid control sid")
 	}
 	if !validateDomainSid(domainSid) {
-		return m, errors.New("Invalid domain sid")
+		return i, errors.New("Invalid domain sid")
 	}
-	err := common.SendGetRequest(fmt.Sprintf(sip.Control, act.AccountSid, domainSid, mappingSid), act, &m)
-	return m, err
+	err := common.SendGetRequest(fmt.Sprintf(sip.Control, act.AccountSid, domainSid, mappingSid), act, &i)
+	return i, err
 }
 
 // ControlListUpdate contains fields for updating a control list mapping
