@@ -19,8 +19,8 @@ var (
 var participant = struct {
 	Get, List string
 }{
-	List: "https://api.twilio.com/2010-04-01/Accounts/%s/Conferences/%s/Participants.json",    // takes account sid, conference sid
-	Get:  "https://api.twilio.com/2010-04-01/Accounts/%s/Conferences/%s/Participants/%s.json", // takes account sid, conference sid, callsid
+	List: "/2010-04-01/Accounts/%s/Conferences/%s/Participants.json",    // takes account sid, conference sid
+	Get:  "/2010-04-01/Accounts/%s/Conferences/%s/Participants/%s.json", // takes account sid, conference sid, callsid
 }
 
 // Participant represents a user on a conference call.
@@ -57,7 +57,7 @@ func (p ParticipantUpdate) Validate() error {
 
 func (p ParticipantUpdate) getParticipantQueryString() string {
 	v := url.Values{}
-	v.Set("Muted", strconv.FormatBool(p.Muted))
+	v.Set("Muted", strconv.FormatBool(p.Muted)) // TODO: should we be checking for truthiness here first?
 	encoded := v.Encode()
 	if encoded != "" {
 		encoded = "?" + encoded

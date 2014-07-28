@@ -32,7 +32,8 @@ func TestParseCallbackSuccess(t *testing.T) {
 
 	if testSmsCallbackFixture.AccountSid != cb.AccountSid ||
 		cb.Location != nil ||
-		len(cb.MediaList) != 0 {
+		len(cb.MediaList) != 1 ||
+		cb.MediaList[0].ContentType == testSmsCallbackFixture.MediaList[0].ContentType {
 		t.Error("parseCallback failed to read in AccountSid")
 	}
 }

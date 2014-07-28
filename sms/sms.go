@@ -96,9 +96,6 @@ func (p Post) Validate() error {
 // Send a post request to Twilio to send a sms request.
 func (act Account) Send(p Post) (Message, error) {
 	var m Message
-	if nil != p.Validate() {
-		return m, p.Validate()
-	}
 	err := common.SendPostRequest(fmt.Sprintf(sms.Post, act.AccountSid), p, act, &m)
 	return m, err
 }

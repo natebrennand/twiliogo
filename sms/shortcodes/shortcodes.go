@@ -26,17 +26,13 @@ var validateShortcodeSid = regexp.MustCompile(`^SC[0-9a-z]{32}$`).MatchString
 //
 // https://www.twilio.com/docs/api/rest/short-codes
 type Message struct {
-	Sid            string          `json:"sid"`
-	DateCreated    common.JSONTime `json:"date_created"`
-	DateUpdated    common.JSONTime `json:"date_updated"`
-	FriendlyName   string          `json:"friendly_name"`
-	AccountSid     string          `json:"account_sid"`
-	ShortCode      string          `json:"short_code"`
-	APIVersion     string          `json:"api_version"`
-	SmsURL         string          `json:"sms_url"`
-	SmsMethod      string          `json:"sms_method"`
-	SmsFallbackURL string          `json:"sms_fallback_url"`
-	URI            string          `json:"uri"`
+	common.ResourceInfo
+	FriendlyName   string `json:"friendly_name"`
+	ShortCode      string `json:"short_code"`
+	APIVersion     string `json:"api_version"`
+	SmsURL         string `json:"sms_url"`
+	SmsMethod      string `json:"sms_method"`
+	SmsFallbackURL string `json:"sms_fallback_url"`
 }
 
 // Get returns a shortcode message resource given a sid.

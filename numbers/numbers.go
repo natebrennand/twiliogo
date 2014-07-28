@@ -28,8 +28,8 @@ type Account struct {
 	common.Account
 }
 
-// Core contains attributes common to Number, Update, NumberSelector & Selector
-type Core struct {
+// core contains attributes common to Number, Update, NumberSelector & Selector
+type core struct {
 	FriendlyName         string `json:"friendly_name"`
 	APIVersion           string `json:"api_version"`
 	VoiceURL             string `json:"voice_url"`
@@ -47,7 +47,7 @@ type Core struct {
 	SmsApplicationSid    string `json:"sms_application_sid"`
 }
 
-func setCoreValues(p Core) url.Values {
+func setCoreValues(p core) url.Values {
 	vals := url.Values{}
 	if p.FriendlyName != "" {
 		vals.Set("FriendlyName", p.FriendlyName)
@@ -99,7 +99,7 @@ var validateNumberSid = regexp.MustCompile(`^PN[0-9a-z]{32}$`).MatchString
 
 // Number represent a number that your account is in control of.
 type Number struct {
-	Core
+	core
 	Sid          string          `json:"sid"`
 	DateCreated  common.JSONTime `json:"date_created"`
 	DateUpdated  common.JSONTime `json:"date_updated"`
@@ -130,7 +130,7 @@ func (act Account) Get(numberSid string) (Number, error) {
 //
 // https://www.twilio.com/docs/api/rest/incoming-phone-numbers#instance-post
 type Update struct {
-	Core
+	core
 	AccountSid string
 }
 
@@ -146,7 +146,7 @@ func (act Account) Update(numberSid string, u Update) (Number, error) {
 
 // GetReader is needed for the common.twilioPost interface
 func (p Update) GetReader() io.Reader {
-	vals := setCoreValues(p.Core)
+	vals := setCoreValues(p.core)
 	if p.AccountSid != "" {
 		vals.Set("AccountSid", p.AccountSid)
 	}
@@ -172,14 +172,14 @@ func (act Account) Delete(numberSid string) error {
 //
 // https://www.twilio.com/docs/api/rest/incoming-phone-numbers#list-post
 type NumberSelector struct {
-	Core
+	core
 	PhoneNumber string
 	AreaCode    string
 }
 
 // GetReader implemented for the common.twillioPost interface
 func (n NumberSelector) GetReader() io.Reader {
-	vals := setCoreValues(n.Core)
+	vals := setCoreValues(n.core)
 	if n.PhoneNumber != "" {
 		vals.Set("PhoneNumber", n.PhoneNumber)
 	}
@@ -208,13 +208,13 @@ func (act Account) PurchaseNumber(n NumberSelector) (Number, error) {
 
 // Selector used to detail a phone number purchase for a specific category.
 type Selector struct {
-	Core
+	core
 	PhoneNumber string
 }
 
 // GetReader implemented for the common.twillioPost interface
 func (s Selector) GetReader() io.Reader {
-	vals := setCoreValues(s.Core)
+	vals := setCoreValues(s.core)
 	if s.PhoneNumber != "" {
 		vals.Set("PhoneNumber", s.PhoneNumber)
 	}
