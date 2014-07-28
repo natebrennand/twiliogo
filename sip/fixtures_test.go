@@ -144,7 +144,7 @@ var (
 			URI:         "/2010-04-01/Accounts/AC32a3c49700934481addd5ce1659f04d2/SIP/IpAccessControlLists/AL95a47094615fe05b7c17e62a7877836c.json",
 		},
 		FriendlyName: "Production Gateways IP Address - Scranton",
-		SubresourceURIs: mapSubresourceURI{
+		SubresourceURIs: addressesSubresourceURI{
 			Addresses: "/2010-04-01/Accounts/AC32a3c49700934481addd5ce1659f04d2/SIP/IpAccessControlLists/AL95a47094615fe05b7c17e62a7877836c/Addresses.json",
 		},
 	}

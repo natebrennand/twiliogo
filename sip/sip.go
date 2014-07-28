@@ -69,8 +69,8 @@ type CredentialList struct {
 // https://www.twilio.com/docs/api/rest/domain#instance-properties-ipacl
 type Mapping struct {
 	common.ResourceInfo
-	FriendlyName    string            `json:"friendly_name"`
-	SubresourceURIs mapSubresourceURI `json:"subresource_uris"`
+	FriendlyName    string                  `json:"friendly_name"`
+	SubresourceURIs addressesSubresourceURI `json:"subresource_uris"`
 }
 
 // Credential represents a credential list mapping
