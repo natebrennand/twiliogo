@@ -6,22 +6,24 @@ import (
 	"github.com/natebrennand/twiliogo/common"
 	"io"
 	"net/url"
-	"regexp"
 	"strings"
 )
 
 var ipAccessControlList = struct {
-	ControlLists, ControlList, IPAddresses, IPAddress string
+	List, Get, Post string
 }{
-	ControlLists: "/2010-04-01/Accounts/%s/SIP/IpAccessControlLists.json",                   // takes an AccountSid
-	ControlList:  "/2010-04-01/Accounts/%s/SIP/IpAccessControlLists/%s.json",                // takes an AccountSid & IpAccessControlListSid
-	IPAddresses:  "/2010-04-01/Accounts/%s/SIP/IpAccessControlLists/%s/IpAddresses.json",    // takes an AccountSid & IpAccessControlListSid
-	IPAddress:    "/2010-04-01/Accounts/%s/SIP/IpAccessControlLists/%s/IpAddresses/%s.json", // takes an AccountSid & IpAccessControlListSid & IpAddressSid
+	List: "/2010-04-01/Accounts/%s/SIP/IpAccessControlLists.json",    // takes an AccountSid
+	Get:  "/2010-04-01/Accounts/%s/SIP/IpAccessControlLists/%s.json", // takes an AccountSid & IpAccessControlListSid
+	Post: "/2010-04-01/Accounts/%s/SIP/IpAccessControlLists/%s.json", // takes an AccountSid & IpAccessControlListSid
 }
 
-var (
-	validateIPSid = regexp.MustCompile("^IP[a-z0-9]{32}$").MatchString
-)
+var ipAddress = struct {
+	List, Get, Post string
+}{
+	List: "/2010-04-01/Accounts/%s/SIP/IpAccessControlLists/%s/IpAddresses.json",    // takes an AccountSid & IpAccessControlListSid
+	Get:  "/2010-04-01/Accounts/%s/SIP/IpAccessControlLists/%s/IpAddresses/%s.json", // takes an AccountSid & IpAccessControlListSid & IpAddressSid
+	Post: "/2010-04-01/Accounts/%s/SIP/IpAccessControlLists/%s/IpAddresses/%s.json", // takes an AccountSid & IpAccessControlListSid & IpAddressSid
+}
 
 // IPAccessControlList represents an IPAccessControlList
 // https://www.twilio.com/docs/api/rest/ip-access-control-list#instance-properties
@@ -34,8 +36,8 @@ type IPAccessControlList struct {
 // IPAccessControlLists represents a list of IPAccessControlList
 type IPAccessControlLists struct {
 	common.ListResponseCore
-	ControlLists *[]IPAccessControlList `json:"ip_access_control_lists"`
-	act          *Account
+	Lists *[]IPAccessControlList `json:"ip_access_control_lists"`
+	act   *Account
 }
 
 // Next sets the IPAccessControlLists to the next page of the list resource, returns an error in the
@@ -55,9 +57,7 @@ type UpdateControlList struct {
 // GetReader is needed for the common.twilioPost interface
 func (u UpdateControlList) GetReader() io.Reader {
 	vals := url.Values{}
-	if u.FriendlyName != "" {
-		vals.Set("FriendlyName", u.FriendlyName)
-	}
+	vals.Set("FriendlyName", u.FriendlyName)
 	return strings.NewReader(vals.Encode())
 }
 
@@ -73,16 +73,16 @@ func (u UpdateControlList) Validate() error {
 // https://www.twilio.com/docs/api/rest/ip-access-control-list#list
 func (act Account) ListControlLists() (IPAccessControlLists, error) {
 	var il IPAccessControlLists
-	err := common.SendGetRequest(fmt.Sprintf(ipAccessControlList.ControlLists, act.AccountSid), act, &il)
+	err := common.SendGetRequest(fmt.Sprintf(ipAccessControlList.List, act.AccountSid), act, &il)
 	il.act = &act
 	return il, err
 }
 
-// AddNewControlList allows you to add a new IPAccessControlList to your account
+// AddControlList allows you to add a new IPAccessControlList to your account
 // https://www.twilio.com/docs/api/rest/ip-access-control-list#list-post
-func (act Account) AddNewControlList(u UpdateControlList) (IPAccessControlList, error) {
+func (act Account) AddControlList(u UpdateControlList) (IPAccessControlList, error) {
 	var i IPAccessControlList
-	err := common.SendPostRequest(fmt.Sprintf(ipAccessControlList.ControlLists, act.AccountSid), u, act, &i)
+	err := common.SendPostRequest(fmt.Sprintf(ipAccessControlList.List, act.AccountSid), u, act, &i)
 	return i, err
 }
 
@@ -93,7 +93,7 @@ func (act Account) GetControlList(alSid string) (IPAccessControlList, error) {
 	if !validateMappingSid(alSid) {
 		return i, errors.New("Invalid ip access control sid")
 	}
-	err := common.SendGetRequest(fmt.Sprintf(ipAccessControlList.ControlList, act.AccountSid, alSid), act, i)
+	err := common.SendGetRequest(fmt.Sprintf(ipAccessControlList.Get, act.AccountSid, alSid), act, i)
 	return i, err
 }
 
@@ -104,7 +104,7 @@ func (act Account) UpdateControlList(u UpdateControlList, alSid string) (IPAcces
 	if !validateMappingSid(alSid) {
 		return i, errors.New("Invalid ip access control sid")
 	}
-	err := common.SendPostRequest(fmt.Sprintf(ipAccessControlList.ControlList, act.AccountSid, alSid), u, act, &i)
+	err := common.SendPostRequest(fmt.Sprintf(ipAccessControlList.Post, act.AccountSid, alSid), u, act, &i)
 	return i, err
 }
 
@@ -114,7 +114,7 @@ func (act Account) DeleteControlList(alSid string) error {
 	if !validateMappingSid(alSid) {
 		return errors.New("Invalid ip access control sid")
 	}
-	return common.SendDeleteRequest(fmt.Sprintf(ipAccessControlList.ControlList, act.AccountSid, alSid), act)
+	return common.SendDeleteRequest(fmt.Sprintf(ipAccessControlList.Get, act.AccountSid, alSid), act)
 }
 
 // IPAddressResource represents an IPAddress
@@ -148,7 +148,7 @@ func (act Account) ListIPAddresses(alSid string) (IPAddressList, error) {
 	if !validateMappingSid(alSid) {
 		return il, errors.New("Invalid ip access control sid")
 	}
-	err := common.SendGetRequest(fmt.Sprintf(ipAccessControlList.IPAddresses, act.AccountSid, alSid), act, &il)
+	err := common.SendGetRequest(fmt.Sprintf(ipAddress.List, act.AccountSid, alSid), act, &il)
 	il.act = &act
 	return il, err
 }
@@ -162,12 +162,8 @@ type IPAddressUpdate struct {
 // GetReader is needed for the common.twilioPost interface
 func (u IPAddressUpdate) GetReader() io.Reader {
 	vals := url.Values{}
-	if u.FriendlyName != "" {
-		vals.Set("FriendlyName", u.FriendlyName)
-	}
-	if u.IPAddress != "" {
-		vals.Set("IpAddress", u.IPAddress)
-	}
+	vals.Set("FriendlyName", u.FriendlyName)
+	vals.Set("IpAddress", u.IPAddress)
 	return strings.NewReader(vals.Encode())
 }
 
@@ -186,7 +182,7 @@ func (act Account) AddIPAddress(u IPAddressUpdate, alSid string) (IPAddressResou
 	if !validateMappingSid(alSid) {
 		return i, errors.New("Invalid ip access control sid")
 	}
-	err := common.SendPostRequest(fmt.Sprintf(ipAccessControlList.IPAddresses, act.AccountSid, alSid), u, act, &i)
+	err := common.SendPostRequest(fmt.Sprintf(ipAddress.List, act.AccountSid, alSid), u, act, &i)
 	return i, err
 }
 
@@ -196,11 +192,10 @@ func (act Account) GetIPAddress(alSid, ipSid string) (IPAddressResource, error) 
 	var i IPAddressResource
 	if !validateMappingSid(alSid) {
 		return i, errors.New("Invalid ip access control sid")
-	}
-	if !validateIPSid(ipSid) {
+	} else if !validateIPSid(ipSid) {
 		return i, errors.New("Invalid ip sid")
 	}
-	err := common.SendGetRequest(fmt.Sprintf(ipAccessControlList.IPAddress, act.AccountSid, alSid, ipSid), act, &i)
+	err := common.SendGetRequest(fmt.Sprintf(ipAddress.Get, act.AccountSid, alSid, ipSid), act, &i)
 	return i, err
 }
 
@@ -210,11 +205,10 @@ func (act Account) UpdateIPAddress(alSid, ipSid string, u IPAddressUpdate) (IPAd
 	var i IPAddressResource
 	if !validateMappingSid(alSid) {
 		return i, errors.New("Invalid ip access control sid")
-	}
-	if !validateIPSid(ipSid) {
+	} else if !validateIPSid(ipSid) {
 		return i, errors.New("Invalid ip sid")
 	}
-	err := common.SendPostRequest(fmt.Sprintf(ipAccessControlList.IPAddress, act.AccountSid, alSid, ipSid), u, act, &i)
+	err := common.SendPostRequest(fmt.Sprintf(ipAddress.Post, act.AccountSid, alSid, ipSid), u, act, &i)
 	return i, err
 }
 
@@ -223,6 +217,8 @@ func (act Account) UpdateIPAddress(alSid, ipSid string, u IPAddressUpdate) (IPAd
 func (act Account) DeleteIPAddress(alSid, ipSid string) error {
 	if !validateMappingSid(alSid) {
 		return errors.New("Invalid ip access control sid")
+	} else if !validateIPSid(ipSid) {
+		return errors.New("Invalid ip sid")
 	}
-	return common.SendDeleteRequest(fmt.Sprintf(ipAccessControlList.IPAddress, act.AccountSid, alSid, ipSid), act)
+	return common.SendDeleteRequest(fmt.Sprintf(ipAddress.Get, act.AccountSid, alSid, ipSid), act)
 }

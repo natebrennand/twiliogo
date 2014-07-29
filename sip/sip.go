@@ -10,15 +10,28 @@ import (
 	"strings"
 )
 
-var sip = struct {
-	DomainList, Domain, ControlList, Control, CredentialList, Credential string
+var domain = struct {
+	Get, List, Post string
 }{
-	DomainList:     "/2010-04-01/Accounts/%s/SIP/Domains.json",                                   // takes an AccountSid
-	Domain:         "/2010-04-01/Accounts/%s/SIP/Domains/%s.json",                                // takes an AccountSid & SipDomainSid
-	ControlList:    "/2010-04-01/Accounts/%s/SIP/Domains/%s/IpAccessControlListMappings.json",    // takes an AccountSid & SipDomainSid
-	Control:        "/2010-04-01/Accounts/%s/SIP/Domains/%s/IpAccessControlListMappings/%s.json", // takes AccountSid & SipDomainSid & ALSid
-	CredentialList: "/2010-04-01/Accounts/%s/SIP/Domains/%s/CredentialListMappings.json",         // takes an AccountSid & SipDomainSid
-	Credential:     "/2010-04-01/Accounts/%s/SIP/Domains/%s/CredentialListMappings/%s.json",      // takes AccountSid & SipDomainSid & CLSid
+	List: "/2010-04-01/Accounts/%s/SIP/Domains.json",    // takes an AccountSid
+	Get:  "/2010-04-01/Accounts/%s/SIP/Domains/%s.json", // takes an AccountSid & SipDomainSid
+	Post: "/2010-04-01/Accounts/%s/SIP/Domains/%s.json", // takes an AccountSid & SipDomainSid
+}
+
+var domainControlList = struct {
+	Get, List, Post string
+}{
+	List: "/2010-04-01/Accounts/%s/SIP/Domains/%s/IpAccessControlListMappings.json",    // takes an AccountSid & SipDomainSid
+	Get:  "/2010-04-01/Accounts/%s/SIP/Domains/%s/IpAccessControlListMappings/%s.json", // takes AccountSid & SipDomainSid & ALSid
+	Post: "/2010-04-01/Accounts/%s/SIP/Domains/%s/IpAccessControlListMappings/%s.json", // takes AccountSid & SipDomainSid & ALSid
+}
+
+var domainCredentialList = struct {
+	Get, List, Post string
+}{
+	List: "/2010-04-01/Accounts/%s/SIP/Domains/%s/CredentialListMappings.json",    // takes an AccountSid & SipDomainSid
+	Get:  "/2010-04-01/Accounts/%s/SIP/Domains/%s/CredentialListMappings/%s.json", // takes AccountSid & SipDomainSid & CLSid
+	Post: "/2010-04-01/Accounts/%s/SIP/Domains/%s/CredentialListMappings/%s.json", // takes AccountSid & SipDomainSid & CLSid
 }
 
 // Account wraps the common Account struct to embed the AccountSid & Token.
@@ -27,9 +40,11 @@ type Account struct {
 }
 
 var (
-	validateDomainSid     = regexp.MustCompile("^SD[a-z0-9]{32}$").MatchString
-	validateMappingSid    = regexp.MustCompile("^AL[a-z0-9]{32}$").MatchString
-	validateCredentialSid = regexp.MustCompile("^CL[a-z0-9]{32}$").MatchString
+	validateDomainSid         = regexp.MustCompile("^SD[a-z0-9]{32}$").MatchString
+	validateMappingSid        = regexp.MustCompile("^AL[a-z0-9]{32}$").MatchString
+	validateCredentialListSid = regexp.MustCompile("^CL[a-z0-9]{32}$").MatchString
+	validateIPSid             = regexp.MustCompile("^IP[a-z0-9]{32}$").MatchString
+	validateCredentialSid     = regexp.MustCompile("^SC[a-z0-9]{32}$").MatchString
 )
 
 type capabilities struct {
@@ -102,7 +117,7 @@ type Domain struct {
 // https://www.twilio.com/docs/api/rest/domain#list-get
 func (act Account) ListDomains() (DomainList, error) {
 	var dl DomainList
-	err := common.SendGetRequest(fmt.Sprintf(sip.DomainList, act.AccountSid), act, &dl)
+	err := common.SendGetRequest(fmt.Sprintf(domain.List, act.AccountSid), act, &dl)
 	dl.act = &act
 	return dl, err
 }
@@ -132,16 +147,14 @@ type NewDomain struct {
 // https://www.twilio.com/docs/api/rest/domain#list-post
 func (act Account) CreateDomain(n NewDomain) (Domain, error) {
 	var d Domain
-	err := common.SendPostRequest(fmt.Sprintf(sip.DomainList, act.AccountSid), n, act, &d)
+	err := common.SendPostRequest(fmt.Sprintf(domain.List, act.AccountSid), n, act, &d)
 	return d, err
 }
 
 // GetReader is needed for the common.twilioPost interface
 func (n NewDomain) GetReader() io.Reader {
 	vals := url.Values{}
-	if n.DomainName != "" {
-		vals.Set("DomainName", n.DomainName)
-	}
+	vals.Set("DomainName", n.DomainName)
 	if n.FriendlyName != "" {
 		vals.Set("FriendlyName", n.FriendlyName)
 	}
@@ -181,7 +194,7 @@ func (act Account) GetDomain(domainSid string) (Domain, error) {
 	if !validateDomainSid(domainSid) {
 		return d, errors.New("Invalid SIP sid")
 	}
-	err := common.SendGetRequest(fmt.Sprintf(sip.Domain, act.AccountSid, domainSid), act, &d)
+	err := common.SendGetRequest(fmt.Sprintf(domain.Get, act.AccountSid, domainSid), act, &d)
 	return d, err
 }
 
@@ -192,7 +205,7 @@ func (act Account) UpdateDomain(n NewDomain, domainSid string) (Domain, error) {
 	if !validateDomainSid(domainSid) {
 		return d, errors.New("Invalid SIP sid")
 	}
-	err := common.SendPostRequest(fmt.Sprintf(sip.Domain, act.AccountSid, domainSid), n, act, &d)
+	err := common.SendPostRequest(fmt.Sprintf(domain.Post, act.AccountSid, domainSid), n, act, &d)
 	return d, err
 }
 
@@ -202,7 +215,7 @@ func (act Account) DeleteDomain(domainSid string) error {
 	if !validateDomainSid(domainSid) {
 		return errors.New("Invalid SIP sid")
 	}
-	return common.SendDeleteRequest(fmt.Sprintf(sip.Domain, act.AccountSid, domainSid), act)
+	return common.SendDeleteRequest(fmt.Sprintf(domain.Get, act.AccountSid, domainSid), act)
 }
 
 // GetMapping gets a control list mapping for this sid
@@ -214,7 +227,7 @@ func (act Account) GetMapping(mappingSid, domainSid string) (Mapping, error) {
 	if !validateDomainSid(domainSid) {
 		return m, errors.New("Invalid domain sid")
 	}
-	err := common.SendGetRequest(fmt.Sprintf(sip.Control, act.AccountSid, domainSid, mappingSid), act, &m)
+	err := common.SendGetRequest(fmt.Sprintf(domainControlList.Get, act.AccountSid, domainSid, mappingSid), act, &m)
 	return m, err
 }
 
@@ -226,9 +239,7 @@ type ControlListUpdate struct {
 // GetReader is needed for the common.twilioPost interface
 func (c ControlListUpdate) GetReader() io.Reader {
 	vals := url.Values{}
-	if c.IPAccessControlListSid != "" {
-		vals.Set("IpAccessControlListSid", c.IPAccessControlListSid)
-	}
+	vals.Set("IpAccessControlListSid", c.IPAccessControlListSid)
 	return strings.NewReader(vals.Encode())
 }
 
@@ -247,7 +258,7 @@ func (act Account) AddMapping(c ControlListUpdate, domainSid string) (Mapping, e
 	if !validateDomainSid(domainSid) {
 		return m, errors.New("Invalid sid")
 	}
-	err := common.SendPostRequest(fmt.Sprintf(sip.ControlList, act.AccountSid, domainSid), c, act, &m)
+	err := common.SendPostRequest(fmt.Sprintf(domainControlList.List, act.AccountSid, domainSid), c, act, &m)
 	return m, err
 }
 
@@ -260,7 +271,7 @@ func (act Account) DeleteMapping(domainSid, mappingSid string) error {
 	if !validateDomainSid(domainSid) {
 		return errors.New("Invalid domain sid")
 	}
-	return common.SendDeleteRequest(fmt.Sprintf(sip.Control, act.AccountSid, domainSid, mappingSid), act)
+	return common.SendDeleteRequest(fmt.Sprintf(domainControlList.Get, act.AccountSid, domainSid, mappingSid), act)
 }
 
 // Next sets the CredentialList to the next page of the list resource, returns an error in the
@@ -272,14 +283,14 @@ func (cl *CredentialList) Next() error {
 	return common.SendGetRequest(cl.NextPageURI, *cl.act, cl)
 }
 
-// ListCredentials grabs a list of all credential mappings for this account and domain
+// ListCredentialMappings grabs a list of all credential mappings for this account and domain
 // https://www.twilio.com/docs/api/rest/domain#list-get-clm
-func (act Account) ListCredentials(domainSid string) (CredentialList, error) {
+func (act Account) ListCredentialMappings(domainSid string) (CredentialList, error) {
 	var cl CredentialList
 	if !validateDomainSid(domainSid) {
 		return cl, errors.New("Invalid sid")
 	}
-	err := common.SendGetRequest(fmt.Sprintf(sip.CredentialList, act.AccountSid, domainSid), act, &cl)
+	err := common.SendGetRequest(fmt.Sprintf(domainCredentialList.List, act.AccountSid, domainSid), act, &cl)
 	cl.act = &act
 	return cl, err
 }
@@ -292,9 +303,7 @@ type CredentialListUpdate struct {
 // GetReader is needed for the common.twilioPost interface
 func (c CredentialListUpdate) GetReader() io.Reader {
 	vals := url.Values{}
-	if c.CredentialListSid != "" {
-		vals.Set("CredentialListSid", c.CredentialListSid)
-	}
+	vals.Set("CredentialListSid", c.CredentialListSid)
 	return strings.NewReader(vals.Encode())
 }
 
@@ -306,25 +315,24 @@ func (c CredentialListUpdate) Validate() error {
 	return nil
 }
 
-// AddCredential adds a credential list to the domain
+// AddCredentialMapping adds a credential list to the domain
 // https://www.twilio.com/docs/api/rest/domain#list-post-clm
-func (act Account) AddCredential(u CredentialListUpdate, domainSid string) (Credential, error) {
+func (act Account) AddCredentialMapping(u CredentialListUpdate, domainSid string) (Credential, error) {
 	var c Credential
 	if !validateDomainSid(domainSid) {
 		return c, errors.New("Invalid domain sid")
 	}
-	err := common.SendPostRequest(fmt.Sprintf(sip.CredentialList, act.AccountSid, domainSid), u, act, &c)
+	err := common.SendPostRequest(fmt.Sprintf(domainCredentialList.List, act.AccountSid, domainSid), u, act, &c)
 	return c, err
 }
 
-// DeleteCredential deletes a credential with the given sid from this domain
+// DeleteCredentialMapping deletes a credential with the given sid from this domain
 // https://www.twilio.com/docs/api/rest/domain#list-delete-clm
-func (act Account) DeleteCredential(domainSid, credentialSid string) error {
-	if !validateCredentialSid(credentialSid) {
+func (act Account) DeleteCredentialMapping(domainSid, credentialSid string) error {
+	if !validateCredentialListSid(credentialSid) {
 		return errors.New("Invalid credential sid")
-	}
-	if !validateDomainSid(domainSid) {
+	} else if !validateDomainSid(domainSid) {
 		return errors.New("Invalid domain sid")
 	}
-	return common.SendDeleteRequest(fmt.Sprintf(sip.Credential, act.AccountSid, domainSid, credentialSid), act)
+	return common.SendDeleteRequest(fmt.Sprintf(domainCredentialList.Get, act.AccountSid, domainSid, credentialSid), act)
 }

@@ -270,7 +270,7 @@ var (
 			FirstPageURI: "/2010-04-01/Accounts/AC32a3c49700934481addd5ce1659f04d2/SIP/IPAccessControlLists.json?PageSize=50&Page=0",
 			LastPageURI:  "/2010-04-01/Accounts/AC32a3c49700934481addd5ce1659f04d2/SIP/IPAccessControlLists.json?PageSize=50&Page=0",
 		},
-		ControlLists: &[]IPAccessControlList{
+		Lists: &[]IPAccessControlList{
 			IPAccessControlList{
 				ResourceInfo: common.ResourceInfo{
 					Sid:         "AL32a3c49700934481addd5ce1659f04d2",
@@ -341,7 +341,6 @@ var (
 	            "date_created": "Wed, 11 Sep 2013 04:32:30 -0000",
 	            "ip_address": "55.102.123.124"
 	        },
-	        ...
 	    ],
 	    "uri": "/2010-04-01/Accounts/AC32a3c49700934481addd5ce1659f04d2/SIP/IpAccessControlLists/AL0c37d0be69a6a6fe1e270c5fa4a2cac7/Addresses.json?PageSize=50&Page=0",
 	    "page_size": 50,
@@ -377,5 +376,152 @@ var (
 				IPAddress:    "55.102.123.124",
 			},
 		},
+	}
+
+	testCredentialListsString = `{
+	    "first_page_uri": "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/SIP/CredentialLists.json?PageSize=50&Page=0",
+	    "end": 0,
+	    "credential_lists": [
+	        {
+	            "subresource_uris": {
+	                "credentials": "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/SIP/CredentialLists/CL1e9949149f055138a8c215fb7ccd5b64/Credentials.json"
+	            },
+	            "date_updated": "Wed, 11 Sep 2013 17:51:38 -0000",
+	            "friendly_name": "Low Rises",
+	            "uri": "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/SIP/CredentialLists/CL1e9949149f055138a8c215fb7ccd5b64.json",
+	            "sid": "CL1e9949149f055138a8c215fb7ccd5b64",
+	            "date_created": "Wed, 11 Sep 2013 17:51:38 -0000"
+	        },
+	    ],
+	    "previous_page_uri": null,
+	    "uri": "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/SIP/CredentialLists.json?PageSize=50&Page=0",
+	    "page_size": 50,
+	    "num_pages": 1,
+	    "start": 0,
+	    "next_page_uri": null,
+	    "last_page_uri": "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/SIP/CredentialLists.json?PageSize=50&Page=0",
+	    "total": 1,
+	    "page": 0
+	}`
+
+	testCredentialLists = CredentialLists{
+		ListResponseCore: common.ListResponseCore{
+			Start:        0,
+			Total:        1,
+			NumPages:     1,
+			Page:         0,
+			PageSize:     50,
+			End:          0,
+			URI:          "/2010-04-01/Accounts/AC32a3c49700934481addd5ce1659f04d2/SIP/IpAccessControlLists/AL0c37d0be69a6a6fe1e270c5fa4a2cac7/Addresses.json?PageSize=50&Page=0",
+			FirstPageURI: "/2010-04-01/Accounts/AC32a3c49700934481addd5ce1659f04d2/SIP/IpAccessControlLists/AL0c37d0be69a6a6fe1e270c5fa4a2cac7/Addresses.json?PageSize=50&Page=0",
+			LastPageURI:  "/2010-04-01/Accounts/AC32a3c49700934481addd5ce1659f04d2/SIP/IpAccessControlLists/AL0c37d0be69a6a6fe1e270c5fa4a2cac7/Addresses.json?PageSize=50&Page=0",
+		},
+		Lists: &[]CredentialListResource{
+			CredentialListResource{
+				ResourceInfo: common.ResourceInfo{
+					Sid:         "CL1e9949149f055138a8c215fb7ccd5b64",
+					URI:         "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/SIP/CredentialLists/CL1e9949149f055138a8c215fb7ccd5b64.json",
+					DateCreated: common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
+					DateUpdated: common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
+				},
+				SubresourceURIs: credentialSubresourceURI{
+					Credentials: "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/SIP/CredentialLists/CL1e9949149f055138a8c215fb7ccd5b64/Credentials.json",
+				},
+				FriendlyName: "Low Rises",
+			},
+		},
+	}
+
+	testCredentialListResourceString = `{
+	    "subresource_uris": {
+	        "credentials": "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/SIP/CredentialLists/CL1e9949149f055138a8c215fb7ccd5b64/Credentials.json"
+	    },
+	    "date_updated": "Wed, 11 Sep 2013 17:51:38 -0000",
+	    "friendly_name": "Low Rises",
+	    "uri": "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/SIP/CredentialLists/CL1e9949149f055138a8c215fb7ccd5b64.json",
+	    "sid": "CL1e9949149f055138a8c215fb7ccd5b64",
+	    "date_created": "Wed, 11 Sep 2013 17:51:38 -0000"
+	}`
+
+	testCredentialListResource = CredentialListResource{
+		ResourceInfo: common.ResourceInfo{
+			Sid:         "CL1e9949149f055138a8c215fb7ccd5b64",
+			URI:         "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/SIP/CredentialLists/CL1e9949149f055138a8c215fb7ccd5b64.json",
+			DateCreated: common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
+			DateUpdated: common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
+		},
+		SubresourceURIs: credentialSubresourceURI{
+			Credentials: "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/SIP/CredentialLists/CL1e9949149f055138a8c215fb7ccd5b64/Credentials.json",
+		},
+		FriendlyName: "Low Rises",
+	}
+
+	testCredentialsResourceString = `{
+		"first_page_uri":"/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/SIP/CredentialLists/CL32a3c49700934481addd5ce1659f04d2/Credentials.json?PageSize=50&Page=0",
+	    "last_page_uri":"/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/SIP/CredentialLists/CL32a3c49700934481addd5ce1659f04d2/Credentials.json?PageSize=50&Page=0",
+	    "previous_page_uri":null,
+	    "end":0,
+	    "uri":"/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/SIP/CredentialLists/CL32a3c49700934481addd5ce1659f04d2/Credentials.json?PageSize=50&Page=0",
+	    "page_size":50,
+	    "num_pages":1,
+	    "start":0,
+	    "next_page_uri":null,
+	    "credentials":[
+	       {
+	          "sid":"SC9dc76ca0b355dd39f0f52788b2e008c6",
+	          "account_sid":"AC5116d5d4df9f61ceae2f0732e1ea9f1b",
+	          "credential_list_sid":"CL32a3c49700934481addd5ce1659f04d2",
+	          "username":"WeeBey",
+	          "date_created":"Thu, 12 Sep 2013 19:06:08 -0000",
+	          "date_updated":"Thu, 12 Sep 2013 19:06:08 -0000",
+	          "uri":"/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/SIP/CredentialLists/CL32a3c49700934481addd5ce1659f04d2/Credentials/SC9dc76ca0b355dd39f0f52788b2e008c6.json"
+	       },
+	       ...
+	    ],
+	    "total":1,
+	    "page":0
+	}`
+
+	testCredentialsResource = CredentialsResource{
+		ListResponseCore: common.ListResponseCore{
+			Start:        0,
+			Total:        1,
+			NumPages:     1,
+			Page:         0,
+			PageSize:     50,
+			End:          0,
+			URI:          "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/SIP/CredentialLists/CL32a3c49700934481addd5ce1659f04d2/Credentials.json?PageSize=50&Page=0",
+			FirstPageURI: "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/SIP/CredentialLists/CL32a3c49700934481addd5ce1659f04d2/Credentials.json?PageSize=50&Page=0",
+			LastPageURI:  "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/SIP/CredentialLists/CL32a3c49700934481addd5ce1659f04d2/Credentials.json?PageSize=50&Page=0",
+		},
+		Credentials: &[]CredentialResource{
+			CredentialResource{
+				ResourceInfo: common.ResourceInfo{
+					Sid:         "SC9dc76ca0b355dd39f0f52788b2e008c6",
+					URI:         "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/SIP/CredentialLists/CL32a3c49700934481addd5ce1659f04d2/Credentials/SC9dc76ca0b355dd39f0f52788b2e008c6.json",
+					DateCreated: common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
+					DateUpdated: common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
+				},
+				Username: "WeeBey",
+			},
+		},
+	}
+
+	testCredentialResourceString = `{
+	    "username": "WeeBey",
+	    "date_created": "Wed, 11 Sep 2013 18:14:12 -0000",
+	    "uri": "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/SIP/CredentialLists/CL1e9949149f055138a8c215fb7ccd5b64/Credentials/SC9dc76ca0b355dd39f0f52788b2e008c6.json",
+	    "date_updated": "Wed, 11 Sep 2013 18:14:12 -0000",
+	    "sid": "SC9dc76ca0b355dd39f0f52788b2e008c6"
+	}`
+
+	testCredentialResource = CredentialResource{
+		ResourceInfo: common.ResourceInfo{
+			Sid:         "SC9dc76ca0b355dd39f0f52788b2e008c6",
+			URI:         "/2010-04-01/Accounts/AC5116d5d4df9f61ceae2f0732e1ea9f1b/SIP/CredentialLists/CL1e9949149f055138a8c215fb7ccd5b64/Credentials/SC9dc76ca0b355dd39f0f52788b2e008c6.json",
+			DateCreated: common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
+			DateUpdated: common.JSONTime{Time: time.Date(2010, time.August, 18, 20, 1, 40, 0, &time.Location{})},
+		},
+		Username: "WeeBey",
 	}
 )
