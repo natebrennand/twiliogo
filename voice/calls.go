@@ -107,6 +107,7 @@ func (p Call) Validate() error {
 }
 
 // Call creates a new call with Twilio.
+// https://www.twilio.com/docs/api/rest/making-calls#post
 func (act Account) Call(p Call) (Resource, error) {
 	var r Resource
 	err := common.SendPostRequest(fmt.Sprintf(postURL, act.AccountSid), p, act, &r)
@@ -114,6 +115,7 @@ func (act Account) Call(p Call) (Resource, error) {
 }
 
 // Resource represents a call record.
+// https://www.twilio.com/docs/api/rest/call#instance-properties
 type Resource struct {
 	common.ResponseCore
 	Price          common.JSONFloat `json:"price"`
@@ -128,6 +130,7 @@ type Resource struct {
 }
 
 // Get returns a call resource record.
+// https://www.twilio.com/docs/api/rest/call#instance-get
 func (act Account) Get(sid string) (Resource, error) {
 	var m Resource
 	if !validateCallSid(sid) {
@@ -138,6 +141,7 @@ func (act Account) Get(sid string) (Resource, error) {
 }
 
 // Update is used to modify a call with Twiml.
+// https://www.twilio.com/docs/api/rest/change-call-state#post-parameters
 type Update struct {
 	URL                  string `json:"url"`
 	Method               string `json:"method"`
@@ -182,12 +186,6 @@ func (p Update) Validate() error {
 		return errors.New("URL or Status or Method must all be set")
 	}
 	return nil
-}
-
-// Internal function for sending the post request to twilio.
-func (act Account) postUpdate(dest string, msg Update, resp *Resource) error {
-	// send post request to twilio
-	return common.SendPostRequest(dest, msg, act, resp)
 }
 
 // Update sends an update to a Twilio call.
