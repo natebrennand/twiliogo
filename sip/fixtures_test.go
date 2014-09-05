@@ -125,6 +125,15 @@ var (
 		},
 	}
 
+	testValidNewDomainFixture = NewDomain{
+		DomainName:                "dunder-mifflin-scranton.sip.twilio.com",
+		FriendlyName:              "Scranton Office",
+		VoiceURL:                  "https://dundermifflin.example.com/twilio/app.php",
+		VoiceMethod:               "POST",
+		VoiceFallbackMethod:       "POST",
+		VoiceStatusCallbackMethod: "POST",
+	}
+
 	testMappingFixtureString = `{
     	"subresource_uris": {
         	"addresses": "/2010-04-01/Accounts/AC32a3c49700934481addd5ce1659f04d2/SIP/IpAccessControlLists/AL95a47094615fe05b7c17e62a7877836c/Addresses.json"
