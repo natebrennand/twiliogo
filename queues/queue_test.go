@@ -15,7 +15,7 @@ import (
 const (
 	goodQsid      = "QUasdfghjklqwertyuiopzxcvbnm123456"
 	badQsid       = "QUnope"
-	mockQueueJson = `{"sid": "QUasdfghjklqwertyuiopzxcvbnm123456", ` +
+	mockQueueJSON = `{"sid": "QUasdfghjklqwertyuiopzxcvbnm123456", ` +
 		`"friendly_name": "persistent_queue1", ` +
 		`"current_size": 1, ` +
 		`"average_wait_time": 2, ` +
@@ -36,7 +36,7 @@ func TestValidateQueueSid(t *testing.T) {
 
 func TestUnmarshalQueue(t *testing.T) {
 	var q Queue
-	err := json.Unmarshal([]byte(mockQueueJson), &q)
+	err := json.Unmarshal([]byte(mockQueueJSON), &q)
 	assert.NoError(t, err)
 	assert.Exactly(t, q.Sid, goodQsid)
 	assert.Exactly(t, q.CurrentSize, 1)
@@ -50,7 +50,7 @@ func TestGetQueue(t *testing.T) {
 	acct := Account{}
 	acct.Client = http.Client{}
 	serv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, mockQueueJson)
+		fmt.Fprintln(w, mockQueueJSON)
 	}))
 	defer serv.Close()
 	q := new(Queue)
