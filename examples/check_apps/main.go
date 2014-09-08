@@ -3,10 +3,11 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"github.com/natebrennand/twiliogo"
-	"github.com/natebrennand/twiliogo/applications"
 	"os"
 	"strings"
+
+	"github.com/natebrennand/twiliogo"
+	"github.com/natebrennand/twiliogo/applications"
 )
 
 func main() {
@@ -27,7 +28,7 @@ func main() {
 	name = strings.TrimRight(name, "\n")
 	fmt.Printf("Creating a new app called %s\n", name)
 
-	newApp, err := act.Applications.Create(applications.NewResource{FriendlyName: name})
+	newApp, err := act.Applications.Create(applications.Application{FriendlyName: name})
 	if err != nil {
 		fmt.Println("Error creating app: ", err.Error())
 	}
