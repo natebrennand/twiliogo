@@ -13,7 +13,7 @@ func makeCall() string {
 	bufio.NewReader(os.Stdin).ReadString('\n')
 	fmt.Println("Here we gooo")
 	act := twiliogo.NewAccountFromEnv()
-	resp, err := act.Voice.Call(voice.Post{
+	resp, err := act.Voice.Call(voice.Call{
 		From: "+16162882901",
 		To:   "+16164601267",
 		URL:  "http://twimlbin.com/558a498f",

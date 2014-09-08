@@ -1,64 +1,62 @@
 package queues
 
 import (
-	"encoding/json"
-	"fmt"
-	"net/http"
-	"net/http/httptest"
-
-	"testing"
-
-	"github.com/natebrennand/twiliogo/common"
 	"github.com/stretchr/testify/assert"
+	"io/ioutil"
+	"testing"
 )
 
-const (
-	goodQsid      = "QUasdfghjklqwertyuiopzxcvbnm123456"
-	badQsid       = "QUnope"
-	mockQueueJSON = `{"sid": "QUasdfghjklqwertyuiopzxcvbnm123456", ` +
-		`"friendly_name": "persistent_queue1", ` +
-		`"current_size": 1, ` +
-		`"average_wait_time": 2, ` +
-		`"max_size": 10, ` +
-		`"date_created": "Mon, ` +
-		`26 Mar 2012 22:00:14 +0000", ` +
-		`"date_updated": "Mon, ` +
-		`26 Mar 2012 22:00:14 +0000", ` +
-		`"uri": "/2010-04-01/Accounts/AC5ef87.../Queues/QUasdfghjklqwertyuiopzxcvbnm123456.json" }`
+var (
+	validQueueSid = "QU5ef8732a3c49700934481addd5ce1659"
 )
 
-func TestValidateQueueSid(t *testing.T) {
-	good := validateQueueSid(goodQsid)
-	assert.True(t, good)
-	bad := validateQueueSid(badQsid)
-	assert.False(t, bad)
+func TestValidateQueuePostSuccess(t *testing.T) {
+	u := Update{MaxSize: 1000, FriendlyName: "friendly_queue"}
+	if nil != u.Validate() {
+		t.Error("Validation of valid queue update failed.")
+	}
+
+	u = Update{MaxSize: 1000}
+	if nil != u.Validate() {
+		t.Error("Validation of valid queue update failed.")
+	}
+
+	u = Update{FriendlyName: "friendly_queue"}
+	if nil != u.Validate() {
+		t.Error("Validation of valid queue update failed.")
+	}
+
 }
 
-func TestUnmarshalQueue(t *testing.T) {
-	var q Queue
-	err := json.Unmarshal([]byte(mockQueueJSON), &q)
-	assert.NoError(t, err)
-	assert.Exactly(t, q.Sid, goodQsid)
-	assert.Exactly(t, q.CurrentSize, 1)
-	assert.Exactly(t, q.AverageWaitTime, 2)
-	assert.Exactly(t, q.MaxSize, 10)
-	assert.Exactly(t, q.URI, "/2010-04-01/Accounts/AC5ef87.../Queues/QUasdfghjklqwertyuiopzxcvbnm123456.json")
+func TestValidateQueuePostFailure(t *testing.T) {
+	u := Update{}
+	if nil == u.Validate() {
+		t.Error("Validation of queue update missing both fields failed.")
+	}
+}
+
+func TestPostValidate(t *testing.T) {
+	r, err := ioutil.ReadAll(testUpdateFixture.GetReader())
+	assert.Nil(t, err)
+	form := string(r)
+
+	assert.Contains(t, form, "MaxSize=300")
+	assert.Contains(t, form, "FriendlyName=newname")
 }
 
 func TestGetQueue(t *testing.T) {
-	common.BaseURL = ""
-	acct := Account{}
-	acct.Client = http.Client{}
-	serv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, mockQueueJSON)
-	}))
-	defer serv.Close()
-	q := new(Queue)
-	err := acct.getQueue(serv.URL, q)
-	assert.NoError(t, err)
-	assert.Exactly(t, q.Sid, goodQsid)
-	assert.Exactly(t, q.CurrentSize, 1)
-	assert.Exactly(t, q.AverageWaitTime, 2)
-	assert.Exactly(t, q.MaxSize, 10)
-	assert.Exactly(t, q.URI, "/2010-04-01/Accounts/AC5ef87.../Queues/QUasdfghjklqwertyuiopzxcvbnm123456.json")
+	act := Account{}
+	_, err := act.Get("garbage")
+	assert.Error(t, err)
+
+	// TODO: test HTTP get
+}
+
+func TestNextFail(t *testing.T) {
+	var ql QueueList
+	ql.Page = 0
+	ql.NumPages = 1
+	assert.Error(t, ql.Next())
+
+	// TODO: test HTTP call
 }

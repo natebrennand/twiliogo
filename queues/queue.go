@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/url"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -52,16 +53,15 @@ func (act Account) Get(queueSid string) (Queue, error) {
 
 // Update is used to modify a queue
 type Update struct {
-	MaxSize      string
+	MaxSize      int
 	FriendlyName string
 }
 
 // GetReader implements the common.twilioPost interface
 func (u Update) GetReader() io.Reader {
 	vals := url.Values{}
-	if u.MaxSize != "" {
-		vals.Set("MaxSize", u.MaxSize)
-	}
+	vals.Set("MaxSize", strconv.Itoa(u.MaxSize))
+
 	if u.FriendlyName != "" {
 		vals.Set("FriendlyName", u.FriendlyName)
 	}
