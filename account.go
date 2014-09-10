@@ -2,11 +2,17 @@ package twiliogo
 
 import (
 	"fmt"
+
+	"net/http"
+	"os"
+	"regexp"
+
 	"github.com/natebrennand/twiliogo/applications"
 	"github.com/natebrennand/twiliogo/common"
 	"github.com/natebrennand/twiliogo/conference"
 	"github.com/natebrennand/twiliogo/notifications"
 	"github.com/natebrennand/twiliogo/numbers"
+	"github.com/natebrennand/twiliogo/queues"
 	"github.com/natebrennand/twiliogo/recording"
 	"github.com/natebrennand/twiliogo/sip"
 	"github.com/natebrennand/twiliogo/sms"
@@ -14,9 +20,6 @@ import (
 	"github.com/natebrennand/twiliogo/transcription"
 	"github.com/natebrennand/twiliogo/usage"
 	"github.com/natebrennand/twiliogo/voice"
-	"net/http"
-	"os"
-	"regexp"
 )
 
 const (
@@ -42,6 +45,7 @@ type Account struct {
 	Usage          usage.Account
 	Numbers        numbers.Account
 	SIP            sip.Account
+	Queues         queues.Account
 }
 
 // NewAccount builds an Account resource from a sid & token.
@@ -70,6 +74,7 @@ func NewAccount(sid, token string) Account {
 		Notifications:  notifications.Account{Account: a},
 		Numbers:        numbers.Account{Account: a},
 		SIP:            sip.Account{Account: a},
+		Queues:         queues.Account{Account: a},
 	}
 }
 

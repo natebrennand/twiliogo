@@ -8,7 +8,9 @@ import (
 	"net/http"
 )
 
-var baseURL = "https://api.twilio.com"
+// Base URL for API requests. You probably only want to change this if you're writing tests using
+// a mock http server.
+var BaseURL = "https://api.twilio.com"
 
 type twilioAccount interface {
 	GetSid() string
@@ -48,7 +50,7 @@ func SendPostRequest(url string, msg twilioPost, t twilioAccount, resp twilioRes
 		return fmt.Errorf("Error validating post => %s.\n", msg.Validate().Error())
 	}
 
-	req, err := http.NewRequest("POST", baseURL+url, msg.GetReader())
+	req, err := http.NewRequest("POST", BaseURL+url, msg.GetReader())
 	req.SetBasicAuth(t.GetSid(), t.GetToken())
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
@@ -67,7 +69,7 @@ func SendPostRequest(url string, msg twilioPost, t twilioAccount, resp twilioRes
 
 // SendGetRequest sends an authenticated GET request to Twilio
 func SendGetRequest(url string, t twilioAccount, resp twilioResponse) error {
-	req, err := http.NewRequest("GET", baseURL+url, nil)
+	req, err := http.NewRequest("GET", BaseURL+url, nil)
 	req.SetBasicAuth(t.GetSid(), t.GetToken())
 	req.Header.Add("Accept", "application/json")
 
@@ -85,7 +87,7 @@ func SendGetRequest(url string, t twilioAccount, resp twilioResponse) error {
 
 // SendDeleteRequest sends an authenticated DELETE request to Twilio
 func SendDeleteRequest(url string, t twilioAccount) error {
-	req, err := http.NewRequest("DELETE", baseURL+url, nil)
+	req, err := http.NewRequest("DELETE", BaseURL+url, nil)
 	req.SetBasicAuth(t.GetSid(), t.GetToken())
 	req.Header.Add("Accept", "application/json")
 

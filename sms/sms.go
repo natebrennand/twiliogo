@@ -3,12 +3,13 @@ package sms
 import (
 	"errors"
 	"fmt"
-	"github.com/natebrennand/twiliogo/common"
 	"io"
 	"net/url"
 	"regexp"
 	"strings"
 	"time"
+
+	"github.com/natebrennand/twiliogo/common"
 )
 
 // Account wraps the common Account struct to embed the AccountSid & Token.
