@@ -30,6 +30,7 @@ type Member struct {
 	DateEnqueued common.JSONTime `json:"date_enqueued"`
 	WaitTime     int             `json:"wait_time"`
 	Position     int             `json:"position"`
+	URI          string          `json:"uri"`
 }
 
 // Front returns the front member of a queue
@@ -93,7 +94,7 @@ type Action struct {
 func (a Action) GetReader() io.Reader {
 	vals := url.Values{}
 	if a.URL != "" {
-		vals.Set("URL", a.URL)
+		vals.Set("Url", a.URL)
 	}
 	if a.Method != "" {
 		vals.Set("Method", a.Method)
