@@ -12,8 +12,6 @@ You can generate a callback parser for all Twilio callbacks that will publish th
 [See the SMS example below for an example of how this works.](#sms_example)
 
 
-
-
 ## Installation
 
 ```
@@ -44,9 +42,6 @@ act := twilogo.NewAccountFromEnv()
 act := twiliogo.NewAccount("AccountSid", "AccountToken")
 ```
 
-
-
-
 ### Making a call
 
 ```go
@@ -58,9 +53,6 @@ resp, err := act.Voice.Call(voice.Post{
 	URL:  "http://twimlbin.com/mytwiml",
 })
 ```
-
-
-
 
 ### Sending a text - with a callback handler <a name="sms_example"></a>
 

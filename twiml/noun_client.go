@@ -10,8 +10,11 @@ type client struct {
 //
 // https://www.twilio.com/docs/api/twiml/client
 type ClientOpts struct {
-	URL    string `xml:"url,attr,omitempty"`
-	Method string `xml:"method,attr,omitempty"`
+	URL                  string `xml:"url,attr,omitempty"`
+	Method               string `xml:"method,attr,omitempty"`
+	StatusCallbackEvent  string `xml:"statusCallbackEvent,attr,omitempty"`
+	StatusCallback       string `xml:"statusCallback,attr,omitempty"`
+	StatusCallbackMethod string `xml:"statusCallbackMethod,attr,omitempty"`
 }
 
 func addClient(t twimlResponse, opts *ClientOpts, clients []string) {

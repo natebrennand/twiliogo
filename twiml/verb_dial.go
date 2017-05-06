@@ -12,14 +12,17 @@ type dial struct {
 //
 // https://www.twilio.com/docs/api/twiml/dial
 type DialOpts struct {
-	Action       string `xml:"action,attr,omitempty"`
-	Method       string `xml:"method,attr,omitempty"`
-	Timeout      int    `xml:"timeout,attr,omitempty"`
-	HangupOnStar bool   `xml:"hangupOnStar,attr,omitempty"`
-	TimeLimit    int    `xml:"timeLimit,attr,omitempty"`
-	CallerID     string `xml:"callerId,attr,omitempty"`
-	Record       string `xml:"record,attr,omitempty"`
-	Trim         string `xml:"trim,attr,omitempty"`
+	Action                        string `xml:"action,attr,omitempty"`
+	Method                        string `xml:"method,attr,omitempty"`
+	Timeout                       int    `xml:"timeout,attr,omitempty"`
+	HangupOnStar                  bool   `xml:"hangupOnStar,attr,omitempty"`
+	TimeLimit                     int    `xml:"timeLimit,attr,omitempty"`
+	CallerID                      string `xml:"callerId,attr,omitempty"`
+	Record                        string `xml:"record,attr,omitempty"`
+	Trim                          string `xml:"trim,attr,omitempty"`
+	RecordingStatusCallback       string `xml:"recordingStatusCallback,attr,omitempty"`
+	RecordingStatusCallbackMethod string `xml:"recordingStatusCallbackMethod,attr,omitempty"`
+	RingTone                      string `xml:"ringTone,attr,omitempty"`
 }
 
 type dialBody interface {

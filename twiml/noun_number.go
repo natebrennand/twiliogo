@@ -10,9 +10,12 @@ type number struct {
 //
 // https://www.twilio.com/docs/api/twiml/number
 type NumberOpts struct {
-	SendDigits string `xml:"sendDigits,attr,omitempty"`
-	URL        string `xml:"url,attr,omitempty"`
-	Method     string `xml:"method,attr,omitempty"`
+	SendDigits           string `xml:"sendDigits,attr,omitempty"`
+	URL                  string `xml:"url,attr,omitempty"`
+	Method               string `xml:"method,attr,omitempty"`
+	StatusCallbackEvent  string `xml:"statusCallbackEvent,attr,omitempty"`
+	StatusCallback       string `xml:"statusCallback,attr,omitempty"`
+	StatusCallbackMethod string `xml:"statusCallbackMethod,attr,omitempty"`
 }
 
 func addNumber(t twimlResponse, opts *NumberOpts, numbers []string) {
