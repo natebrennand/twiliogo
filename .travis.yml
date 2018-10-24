@@ -2,7 +2,7 @@ language: go
 go: 1.2
 before_install:
   - go get code.google.com/p/go.tools/cmd/vet
-  - go get github.com/golang/lint/golint
+  - go get golang.org/x/lint/golint
 install:
   - go get -d -v -t ./...
 script:
